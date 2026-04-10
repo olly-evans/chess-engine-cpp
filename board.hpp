@@ -9,12 +9,14 @@
 class Board {
 
 private:
-    // bitboards.
     const unsigned int win_h;
     const unsigned int win_w;
     const std::string win_name;
+    unsigned int square_size;
 
     sf::RenderWindow window;
+
+    // bitboards.
 
 
 
@@ -24,11 +26,16 @@ public:
     win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name){};
 
     void init() {
-    
-        // get_square_sizes();
+        
+        // get_square_size(&square_size);
         // draw_squares();
         // draw_starting_board();
 
+    }
+
+    const unsigned int *get_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
+
+        return sz;
     }
 
     void run() {
