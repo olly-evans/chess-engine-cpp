@@ -1,19 +1,22 @@
 #pragma once
 
+#include <memory>
+
 #include "SFML/Graphics.hpp"
 
 #define WINDOW_HEIGHT 1280
-#define WINDOW_WIDTH 1279
+#define WINDOW_WIDTH 1280
 
 #define WINDOW_NAME "Chess"
 
 class Board {
 
 private:
-    /* WINDOW CONSTS */
+    /* WINDOW */
     const unsigned int win_h;
     const unsigned int win_w;
     const std::string win_name;
+
     sf::RenderWindow window;
     
     /* GRID */
@@ -21,7 +24,7 @@ private:
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
-    std::vector<sf::RectangleShape> squares[GRID_NUM_SQUARES];
+    std::vector<std::unique_ptr<sf::RectangleShape>> squares;   
 
     // Bitboards.
 
@@ -39,19 +42,24 @@ public:
 
     void init() {
         
-        init_board_square_size(&board_square_size, win_h, win_w);
-        // init_board_squares();
-        // init_board_start();
+        init_get_board_square_size(&board_square_size, win_h, win_w);
+        init_draw_board_squares(squares);
+        // init_board_startpos();
 
     }
 
-    const unsigned int *init_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
-        if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares for chess.");
+    void init_get_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
+        if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
         if (!(win_w == win_h)) die("Window must be square!");
-        
-        *sz = win_h / GRID_SZ;
 
-        return sz;
+        *sz = win_h / GRID_SZ;
+    }
+
+    void init_draw_board_squares(std::vector<std::unique_ptr<sf::RectangleShape>> squ) {
+        // for (auto& square : squ) {
+        //     square->setFillColor(sf::Color::White);
+        //     square->setPosition(sf::Vector2f(0.f, 0.f));
+        // }        
     }
 
     void run() {
@@ -71,4 +79,3 @@ public:
         }
     };
 };
-
