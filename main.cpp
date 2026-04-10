@@ -1,16 +1,12 @@
 #include <iostream>
 #include "board.hpp"
-#include <SFML/Graphics.hpp>
-
-
-
-void get_square_size();
-
-
 
 int main() {
 
     // smfl_window_init();
+    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
+    board.init();
+    board.run();
 
     // Board board = Board();
     // board.init();
