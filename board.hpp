@@ -55,6 +55,7 @@ public:
         *sz = win_h / GRID_SZ;
     }
 
+    // split this into two. render with the window stuff, will eventually have all render stuff with pieces etc..
     void init_draw_board_squares(std::vector<sf::RectangleShape> squ) {
 
         window.clear();
@@ -70,7 +71,8 @@ public:
             squ[i].setFillColor(sf::Color::White);
             squ[i].setPosition(sf::Vector2f(x, y));
             window.draw(squ[i]);
-        }        
+        }
+        window.display();
     }
 
     void run() {
@@ -80,7 +82,6 @@ public:
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) window.close();
             }
-            window.display();
         }
     };
 };
