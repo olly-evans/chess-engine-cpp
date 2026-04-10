@@ -4,6 +4,7 @@
 
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
+#define GRID_SZ 8
 
 #define WINDOW_NAME "Chess"
 
@@ -13,8 +14,6 @@ private:
     const unsigned int win_h;
     const unsigned int win_w;
     const std::string win_name;
-
-    const unsigned int GRID_SZ = 8;
 
     unsigned int square_size;
 
@@ -38,7 +37,6 @@ public:
     void init() {
         
         get_square_size(&square_size, win_h, win_w);
-        std::cout << square_size << std::endl;
         // draw_squares();
         // draw_starting_board();
 
@@ -46,9 +44,7 @@ public:
 
     const unsigned int *get_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
         if (!(win_w == win_h)) die("Window must be square!");
-
-        *sz = win_h/GRID_SZ;
-
+        *sz = win_h / GRID_SZ;
         return sz;
     }
 
