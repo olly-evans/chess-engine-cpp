@@ -3,26 +3,10 @@
 #include "board.hpp"
 
 int main() {
-
-    // smfl_window_init();
     Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
     board.init();
     board.run();
-
-    // Board board = Board();
-    // board.init();
-        // get_square_size();
-
-
-    // sfml_window_init()
-    
-
-    
-
-
-    //
     return 0;
-    
 }
 
 /*

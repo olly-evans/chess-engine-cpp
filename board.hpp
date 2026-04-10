@@ -24,7 +24,7 @@ private:
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
-    std::vector<std::unique_ptr<sf::RectangleShape>> squares;   
+    std::vector<sf::RectangleShape> squares;   
 
     // Bitboards.
 
@@ -55,26 +55,31 @@ public:
         *sz = win_h / GRID_SZ;
     }
 
-    void init_draw_board_squares(std::vector<std::unique_ptr<sf::RectangleShape>> squ) {
-        // for (auto& square : squ) {
-        //     square->setFillColor(sf::Color::White);
-        //     square->setPosition(sf::Vector2f(0.f, 0.f));
-        // }        
+    void init_draw_board_squares(std::vector<sf::RectangleShape> squ) {
+
+        window.clear();
+        float x, y;
+        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+
+            squ.emplace_back(sf::Vector2f(board_square_size, board_square_size));
+            
+            
+            x = (i % GRID_SZ) * board_square_size;
+            y = (i / GRID_SZ) * board_square_size;
+
+            squ[i].setFillColor(sf::Color::White);
+            squ[i].setPosition(sf::Vector2f(x, y));
+            window.draw(squ[i]);
+        }        
     }
 
     void run() {
-        sf::RectangleShape square(sf::Vector2f(300.f, 300.f)); // width, height
-        square.setPosition(0.f, 0.f);                        // x, y
-        square.setFillColor(sf::Color::Red);
-
 
         sf::Event event;
         while (window.isOpen()) {
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) window.close();
             }
-            window.clear();
-            window.draw(square);
             window.display();
         }
     };
