@@ -3,18 +3,20 @@
 #include "SFML/Graphics.hpp"
 
 #define WINDOW_HEIGHT 1280
-#define WINDOW_WIDTH 1280
+#define WINDOW_WIDTH 1279
 
 #define WINDOW_NAME "Chess"
 
 class Board {
 
 private:
+    /* WINDOW CONSTS */
     const unsigned int win_h;
     const unsigned int win_w;
     const std::string win_name;
     sf::RenderWindow window;
     
+    /* GRID */
     unsigned int board_square_size;
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
@@ -44,9 +46,11 @@ public:
     }
 
     const unsigned int *init_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
+        if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares for chess.");
         if (!(win_w == win_h)) die("Window must be square!");
+        
         *sz = win_h / GRID_SZ;
-        if ((win_h % GRID_SZ) != 0) die("Window size must support eight squares.");
+
         return sz;
     }
 
