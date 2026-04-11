@@ -60,6 +60,8 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
 
+        // init_board_coords();
+
         // init_board_startpos();
 
     }
@@ -76,9 +78,6 @@ public:
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
 
             sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
-
-            // because we put at the back, top left square is black not white.
-            // something along these lines.
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
 
             squares[i].setPosition(pos);
@@ -88,7 +87,9 @@ public:
 
     void render() {
         window.clear();
-        for (auto& squ : squares) {window.draw(squ);}
+        
+        for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
+        // render_board_coords();
         window.display();
     }
 
