@@ -12,6 +12,7 @@
 class Board {
 
 private:
+
     /* WINDOW */
     const unsigned int win_h;
     const unsigned int win_w;
@@ -43,7 +44,10 @@ public:
     void init() {
         
         init_get_board_square_size(&board_square_size, win_h, win_w);
-        init_draw_board_squares(squares);
+        init_board_squares(squares);
+        // init_board_squares(squares);
+        // draw_board_squares();
+
         // init_board_startpos();
 
     }
@@ -55,23 +59,21 @@ public:
         *sz = win_h / GRID_SZ;
     }
 
-    // split this into two. render with the window stuff, will eventually have all render stuff with pieces etc..
-    void init_draw_board_squares(std::vector<sf::RectangleShape> squ) {
+    void init_board_squares(std::vector<sf::RectangleShape> squ) {
 
-        window.clear();
-        float x, y;
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+            float x = (i % GRID_SZ) * board_square_size;
+            float y = (i / GRID_SZ) * board_square_size;
 
-            squ.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-            
-            
-            x = (i % GRID_SZ) * board_square_size;
-            y = (i / GRID_SZ) * board_square_size;
+            squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
+            squares[i].setPosition(sf::Vector2f(x, y));
+            squares[i].setFillColor(sf::Color::White);
+        }   
+    }
 
-            squ[i].setFillColor(sf::Color::White);
-            squ[i].setPosition(sf::Vector2f(x, y));
-            window.draw(squ[i]);
-        }
+    void render() {
+        window.clear();
+        for (auto& squ : squares) {window.draw(squ);}
         window.display();
     }
 
