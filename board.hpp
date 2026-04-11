@@ -48,9 +48,9 @@ public:
         return sf::Vector2f(i % GRID_SZ, i / GRID_SZ);
     }
     
-    bool is_square_white(int i) {
-        sf::Vector2f xy = index_to_2d(i);
-        return ((int)xy.x + (int)xy.y) % 2;
+    bool is_square_black(int i) {
+        sf::Vector2f vec = index_to_2d(i);
+        return ((int)vec.x + (int)vec.y) % 2;
     }
 
     /* INIT */
@@ -58,7 +58,7 @@ public:
     void init() {
         
         init_get_board_square_size(&board_square_size, win_h, win_w);
-        init_board_squares(squares);
+        init_board_squares();
 
         // init_board_startpos();
 
@@ -71,7 +71,7 @@ public:
         *sz = win_h / GRID_SZ;
     }
 
-    void init_board_squares(std::vector<sf::RectangleShape> squ) {
+    void init_board_squares() {
 
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
 
@@ -82,7 +82,7 @@ public:
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
 
             squares[i].setPosition(pos);
-            squares[i].setFillColor(is_square_white(i) ? sf::Color::White : sf::Color::Black);
+            squares[i].setFillColor(is_square_black(i) ? sf::Color::Black : sf::Color::White);
         }   
     }
 
