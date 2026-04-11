@@ -11,8 +11,6 @@
 const sf::Color WARM_CREAM(240, 217, 181);
 const sf::Color MEDIUM_BROWN(181, 136, 99);
 
-
-
 class Board {
 
 private:
