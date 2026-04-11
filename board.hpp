@@ -6,8 +6,12 @@
 
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
-
 #define WINDOW_NAME "Chess"
+
+const sf::Color WARM_CREAM(240, 217, 181);
+const sf::Color MEDIUM_BROWN(181, 136, 99);
+
+
 
 class Board {
 
@@ -25,7 +29,10 @@ private:
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
+
     std::vector<sf::RectangleShape> squares;   
+
+     
 
     // Bitboards.
 
@@ -60,6 +67,7 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
 
+        // coords in the squares perhaps, to keep init_get_board_square_size();
         // init_board_coords();
 
         // init_board_startpos();
@@ -81,13 +89,13 @@ public:
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
 
             squares[i].setPosition(pos);
-            squares[i].setFillColor(is_square_black(i) ? sf::Color::Black : sf::Color::White);
+            squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
     }
 
     void render() {
         window.clear();
-        
+
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
         // render_board_coords();
         window.display();
