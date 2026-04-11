@@ -1,10 +1,13 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "SFML/System/String.hpp"
 
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
+
+/* COLORS */
 
 const sf::Color WARM_CREAM(240, 217, 181);
 const sf::Color MEDIUM_BROWN(181, 136, 99);
@@ -26,7 +29,8 @@ private:
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
 
-    std::vector<sf::RectangleShape> squares;   
+    std::vector<sf::RectangleShape> squares;  
+    std::vector<sf::String> square_names; 
 
     /* BITBOARDS */
     // Maybe in each sub-class idk yet.
@@ -84,6 +88,10 @@ public:
             squares[i].setPosition(pos);
             squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
+    }
+
+    void init_board_coords() {
+        // only need to place numbers vert and letters hor.
     }
 
     /* RENDER */
