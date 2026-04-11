@@ -30,18 +30,15 @@ private:
 
     std::vector<sf::RectangleShape> squares;   
 
-     
-
-    // Bitboards.
-
-
+    /* BITBOARDS */
+    // Maybe in each sub-class idk yet.
 
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
     win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name){};
 
-    /* UTIL METHODS */
+    /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
     void die(std::string err) {
         window.close();
@@ -91,6 +88,8 @@ public:
         }   
     }
 
+    /* RENDER */
+
     void render() {
         window.clear();
 
@@ -98,6 +97,8 @@ public:
         // render_board_coords();
         window.display();
     }
+
+    /**/
 
     void run() {
 
