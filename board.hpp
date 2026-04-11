@@ -32,8 +32,11 @@ private:
 
 
 public:
+
     Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
     win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name){};
+
+    /* UTIL METHODS */
 
     void die(std::string err) {
         window.close();
@@ -41,12 +44,21 @@ public:
         exit(1);
     }
 
+    sf::Vector2f index_to_2d(int i) {
+        return sf::Vector2f(i % GRID_SZ, i / GRID_SZ);
+    }
+    
+    bool is_square_white(int i) {
+        sf::Vector2f xy = index_to_2d(i);
+        return ((int)xy.x + (int)xy.y) % 2;
+    }
+
+    /* INIT */
+
     void init() {
         
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares(squares);
-        // init_board_squares(squares);
-        // draw_board_squares();
 
         // init_board_startpos();
 
@@ -62,12 +74,15 @@ public:
     void init_board_squares(std::vector<sf::RectangleShape> squ) {
 
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-            float x = (i % GRID_SZ) * board_square_size;
-            float y = (i / GRID_SZ) * board_square_size;
 
+            sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
+
+            // because we put at the back, top left square is black not white.
+            // something along these lines.
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-            squares[i].setPosition(sf::Vector2f(x, y));
-            squares[i].setFillColor(sf::Color::White);
+
+            squares[i].setPosition(pos);
+            squares[i].setFillColor(is_square_white(i) ? sf::Color::White : sf::Color::Black);
         }   
     }
 
