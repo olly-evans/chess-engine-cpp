@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "SFML/Graphics.hpp"
 
 #define WINDOW_HEIGHT 1280
