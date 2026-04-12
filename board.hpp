@@ -11,8 +11,8 @@
 
 const sf::Color WARM_CREAM(240, 217, 181);
 const sf::Color MEDIUM_BROWN(181, 136, 99);
-const sf::Color BLACK(255, 255, 255);
-const sf::Color WHITE(0, 0, 0);
+const sf::Color BLACK(0, 0, 0);
+const sf::Color WHITE(255, 255, 255);
 
 class Board {
 
@@ -121,7 +121,7 @@ public:
 
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             int draw_idx = GRID_NUM_SQUARES - i - 1;
-            squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? BLACK : WHITE);
+            squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
         }
     }
 
