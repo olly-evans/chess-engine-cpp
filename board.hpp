@@ -11,6 +11,8 @@
 
 const sf::Color WARM_CREAM(240, 217, 181);
 const sf::Color MEDIUM_BROWN(181, 136, 99);
+const sf::Color BLACK(255, 255, 255);
+const sf::Color WHITE(0, 0, 0);
 
 class Board {
 
@@ -43,19 +45,19 @@ private:
 
     /* BITBOARDS */
 
-    uint64_t w_pawns;
-    uint64_t w_knights;
-    uint64_t w_bishops;
-    uint64_t w_rooks;
-    uint64_t w_queen;
-    uint64_t w_king;
+    uint64_t w_pawns = 0xFF00ULL;
+    uint64_t w_knights = 0x42ULL;
+    uint64_t w_bishops = 0x24ULL;
+    uint64_t w_rooks = 0x81ULL;
+    uint64_t w_queen = 0x10ULL;
+    uint64_t w_king = 0x08ULL;
 
-    uint64_t b_pawns;
-    uint64_t b_knights;
-    uint64_t b_bishops;
-    uint64_t b_rooks;
-    uint64_t b_queen;
-    uint64_t b_king;
+    uint64_t b_pawns = 0x00FF000000000000;
+    uint64_t b_knights = 0x4200000000000000;
+    uint64_t b_bishops = 0x2400000000000000;
+    uint64_t b_rooks = 0x8100000000000000ULL;
+    uint64_t b_queen = 0x1000000000000000ULL;
+    uint64_t b_king = 0x0800000000000000ULL;
 
 public:
 
@@ -85,8 +87,8 @@ public:
         
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
-        init_bitboards();
 
+        show_bitboard(b_king);
         // coords in the squares perhaps
         // init_board_coords();
 
@@ -113,13 +115,13 @@ public:
         }   
     }
 
-    void init_bitboards() {
-        w_pawns = 000000000000000000000000000000000000000000000001111111100000000;
-    }
+    /* BITBOARD CLASS PERHAPS */
 
-    void print_bitboard(uint64_t bitboard) {
+    void show_bitboard(uint64_t bitboard) {
+
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-
+            int draw_idx = GRID_NUM_SQUARES - i - 1;
+            squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? BLACK : WHITE);
         }
     }
 
