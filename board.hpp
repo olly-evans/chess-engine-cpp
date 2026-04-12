@@ -29,12 +29,33 @@ private:
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
     std::vector<sf::RectangleShape> squares;  
-    std::vector<sf::String> square_names; 
 
-    
+    std::string square_names[GRID_NUM_SQUARES] = {
+        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
+        "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
+        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
+        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5",
+        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4",
+        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
+        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
+        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"
+    };
 
     /* BITBOARDS */
-    // Maybe in each sub-class idk yet.
+
+    uint64_t w_pawns;
+    uint64_t w_knights;
+    uint64_t w_bishops;
+    uint64_t w_rooks;
+    uint64_t w_queen;
+    uint64_t w_king;
+
+    uint64_t b_pawns;
+    uint64_t b_knights;
+    uint64_t b_bishops;
+    uint64_t b_rooks;
+    uint64_t b_queen;
+    uint64_t b_king;
 
 public:
 
@@ -64,8 +85,9 @@ public:
         
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
+        init_bitboards();
 
-        // coords in the squares perhaps, to keep init_get_board_square_size();
+        // coords in the squares perhaps
         // init_board_coords();
 
         // init_board_start_pieces();
@@ -91,15 +113,25 @@ public:
         }   
     }
 
-    void init_board_coords() {
-        // only need to place numbers vert and letters hor.
+    void init_bitboards() {
+        w_pawns = 000000000000000000000000000000000000000000000001111111100000000;
+    }
 
-        // if % 8 == 0, then its a number.
-
+    void print_bitboard(uint64_t bitboard) {
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-            return;
+
         }
     }
+
+    // void init_board_coords() {
+    //     // only need to place numbers vert and letters hor.
+
+    //     // if % 8 == 0, then its a number.
+
+    //     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+    //         if ()
+    //     }
+    // }
 
     /* RENDER */
 
