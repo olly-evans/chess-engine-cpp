@@ -28,9 +28,10 @@ private:
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
-
     std::vector<sf::RectangleShape> squares;  
     std::vector<sf::String> square_names; 
+
+    
 
     /* BITBOARDS */
     // Maybe in each sub-class idk yet.
@@ -67,7 +68,7 @@ public:
         // coords in the squares perhaps, to keep init_get_board_square_size();
         // init_board_coords();
 
-        // init_board_startpos();
+        // init_board_start_pieces();
 
     }
 
@@ -92,6 +93,12 @@ public:
 
     void init_board_coords() {
         // only need to place numbers vert and letters hor.
+
+        // if % 8 == 0, then its a number.
+
+        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+            return;
+        }
     }
 
     /* RENDER */
