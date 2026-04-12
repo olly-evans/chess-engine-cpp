@@ -85,6 +85,8 @@ public:
 
     void init() {
         
+        // Is player black or white?
+        // If black, board must be inverted.
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
 
