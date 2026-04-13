@@ -37,8 +37,21 @@ public:
 
     virtual std::string get_texture_path() = 0;
 
-    //set x, y
+    //set x,y
     //get x,y
+};
+
+class Pawn:public Piece {
+
+public:
+
+    Pawn(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
+    Piece(col, w, squ_idx, board_square_size) {}
+
+    std::string get_texture_path() override {
+        return color == Color::WHITE ? "assets/wP.png" : "assets/bP.png";  
+    };
+
 };
 
 class Bishop:public Piece {

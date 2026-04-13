@@ -63,7 +63,7 @@ private:
 
     /* BITBOARDS */
 
-    // uint64_t w_pawns = 0ULL; // 0xFF00ULL;
+    uint64_t w_pawns = 0ULL; // 0xFF00ULL;
     // uint64_t w_knights = 0ULL; // 0x42ULL;
     uint64_t w_bishops = 0ULL; //= 0x24ULL;
     // uint64_t w_rooks = 0ULL; // 0x81ULL;
@@ -160,11 +160,33 @@ public:
     }
 
     void init_pieces() {
+
+        // not a fan of the magic numbers for the start positions.
         pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
         pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
-
         set_bit(w_bishops, bitboard_to_draw_index(58));
         set_bit(w_bishops, bitboard_to_draw_index(61));
+
+        pieces.push_back(new Pawn(Color::WHITE, window, 55, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 54, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 53, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 52, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 51, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 50, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 49, board_square_size));
+        pieces.push_back(new Pawn(Color::WHITE, window, 48, board_square_size));
+        set_bit(w_pawns, bitboard_to_draw_index(55));
+        set_bit(w_pawns, bitboard_to_draw_index(54));
+        set_bit(w_pawns, bitboard_to_draw_index(53));
+        set_bit(w_pawns, bitboard_to_draw_index(52));
+        set_bit(w_pawns, bitboard_to_draw_index(51));
+        set_bit(w_pawns, bitboard_to_draw_index(50));
+        set_bit(w_pawns, bitboard_to_draw_index(49));
+        set_bit(w_pawns, bitboard_to_draw_index(48));
+
+
+
+        
     }
     
     // void init_board_coords() {
