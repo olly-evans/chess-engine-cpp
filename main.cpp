@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "board.hpp"
-#include "pieces.hpp"
 
 int main() {
 
