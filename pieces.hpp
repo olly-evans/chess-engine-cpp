@@ -44,6 +44,8 @@ public:
             texture.loadFromFile("assets/bB.png");
 
         sf::Vector2f pos = index_to_2d(square_index);
+
+        // get xy() of piece.
         
         sprite.setTexture(texture);
         sprite.setPosition(pos * (float)board_square_size);

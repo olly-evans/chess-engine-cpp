@@ -168,8 +168,9 @@ public:
     void init_pieces() {
         pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
         pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
-        set_bit(w_bishops, 58);
-        set_bit(w_bishops, 61);
+        
+        set_bit(w_bishops, bitboard_to_draw_index(58));
+        set_bit(w_bishops, bitboard_to_draw_index(61));
 
 
     }
@@ -183,6 +184,12 @@ public:
     //         if ()
     //     }
     // }
+
+    /* BITBOARDS */
+
+    int bitboard_to_draw_index(int bit) {
+        return GRID_NUM_SQUARES - 1 - bit;
+    }
 
     /* RENDER */
 
