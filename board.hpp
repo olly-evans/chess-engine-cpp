@@ -63,19 +63,19 @@ private:
 
     /* BITBOARDS */
 
-    uint64_t w_pawns = 0xFF00ULL;
-    uint64_t w_knights = 0x42ULL;
-    uint64_t w_bishops = 0x24ULL;
-    uint64_t w_rooks = 0x81ULL;
-    uint64_t w_queen = 0x10ULL;
-    uint64_t w_king = 0x08ULL;
+    // uint64_t w_pawns = 0xFF00ULL;
+    // uint64_t w_knights = 0x42ULL;
+    uint64_t w_bishops = 0ULL; //= 0x24ULL;
+    // uint64_t w_rooks = 0x81ULL;
+    // uint64_t w_queen = 0x10ULL;
+    // uint64_t w_king = 0x08ULL;
 
-    uint64_t b_pawns = 0x00FF000000000000;
-    uint64_t b_knights = 0x4200000000000000;
-    uint64_t b_bishops = 0x2400000000000000;
-    uint64_t b_rooks = 0x8100000000000000ULL;
-    uint64_t b_queen = 0x1000000000000000ULL;
-    uint64_t b_king = 0x0800000000000000ULL;
+    // uint64_t b_pawns = 0x00FF000000000000;
+    // uint64_t b_knights = 0x4200000000000000;
+    // uint64_t b_bishops = 0x2400000000000000;
+    // uint64_t b_rooks = 0x8100000000000000ULL;
+    // uint64_t b_queen = 0x1000000000000000ULL;
+    // uint64_t b_king = 0x0800000000000000ULL;
 
     #define set_bit(b, i) ((b) |= (1ULL << i))
     #define get_bit(b, i) ((b) & (1ULL << i))
