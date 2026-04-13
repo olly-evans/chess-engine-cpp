@@ -162,25 +162,21 @@ public:
     /* RENDER */
 
     void render() {
-        
-
         render_main_window();
         if (debug_window.isOpen()) render_debug_window(); 
-
-        
     }
 
     void render_main_window() {
 
         window.clear();
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
+
         sf::Texture texture;
         texture.loadFromFile("assets/bK.png");
-
         sf::Sprite sprite(texture);
         sprite.setPosition(sf::Vector2f(2, 2));
-
         window.draw(sprite);
+
         // render_board_coords();
         window.display();
     }
