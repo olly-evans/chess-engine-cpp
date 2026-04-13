@@ -23,8 +23,19 @@ public:
     Piece(Color col, sf::RenderWindow& w, int squ_idx, int b_squ_sz) : 
     color(col), window(w), square_index(squ_idx), board_square_size(b_squ_sz){}
 
-    virtual void draw(sf::RenderWindow& window) = 0;
+    void draw(sf::RenderWindow& window) {
+        
+        texture.loadFromFile(get_texture_path());
+        sf::Vector2f pos = index_to_2d(square_index);
 
+        // get xy() of piece.
+        
+        sprite.setTexture(texture);
+        sprite.setPosition(pos * (float)board_square_size);
+        window.draw(sprite);
+    }
+
+    virtual std::string get_texture_path() = 0;
     //set x, y
     //get x,y
 };
@@ -36,19 +47,11 @@ public:
     Bishop(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
-    void draw(sf::RenderWindow& window) {
-
+    std::string get_texture_path() {
         if (color == Color::WHITE)
-            texture.loadFromFile("assets/wB.png");
+            return "assets/wB.png";
         else
-            texture.loadFromFile("assets/bB.png");
-
-        sf::Vector2f pos = index_to_2d(square_index);
-
-        // get xy() of piece.
-        
-        sprite.setTexture(texture);
-        sprite.setPosition(pos * (float)board_square_size);
-        window.draw(sprite);
+            return "assets/bB.png";
     };
+
 };

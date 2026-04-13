@@ -63,19 +63,19 @@ private:
 
     /* BITBOARDS */
 
-    // uint64_t w_pawns = 0xFF00ULL;
-    // uint64_t w_knights = 0x42ULL;
+    // uint64_t w_pawns = 0ULL; // 0xFF00ULL;
+    // uint64_t w_knights = 0ULL; // 0x42ULL;
     uint64_t w_bishops = 0ULL; //= 0x24ULL;
-    // uint64_t w_rooks = 0x81ULL;
-    // uint64_t w_queen = 0x10ULL;
-    // uint64_t w_king = 0x08ULL;
+    // uint64_t w_rooks = 0ULL; // 0x81ULL;
+    // uint64_t w_queen = 0ULL; 0x10ULL;
+    // uint64_t w_king = 0ULL; // 0x08ULL;
 
-    // uint64_t b_pawns = 0x00FF000000000000;
-    // uint64_t b_knights = 0x4200000000000000;
-    // uint64_t b_bishops = 0x2400000000000000;
-    // uint64_t b_rooks = 0x8100000000000000ULL;
-    // uint64_t b_queen = 0x1000000000000000ULL;
-    // uint64_t b_king = 0x0800000000000000ULL;
+    // uint64_t b_pawns = 0ULL; // 0x00FF000000000000;
+    // uint64_t b_knights = 0ULL; // 0x4200000000000000;
+    // uint64_t b_bishops = 0ULL; // 0x2400000000000000;
+    // uint64_t b_rooks = 0ULL; // 0x8100000000000000ULL;
+    // uint64_t b_queen = 0ULL; // 0x1000000000000000ULL;
+    // uint64_t b_king = 0ULL; // 0x0800000000000000ULL;
 
     #define set_bit(b, i) ((b) |= (1ULL << i))
     #define get_bit(b, i) ((b) & (1ULL << i))
@@ -118,7 +118,6 @@ public:
     void debug_bitboard(uint64_t bitboard) {
 
         // i want this to update in real time eventually.
-        // perhaps this makes a new window.
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             int draw_idx = GRID_NUM_SQUARES - i - 1;
             debug_squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
@@ -136,17 +135,12 @@ public:
         init_pieces();
         if (isDebug) debug();
 
-        // coords in the squares perhaps
         // init_board_coords();
-
-        // init_board_start_pieces();
-
     }
 
     void init_get_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
         if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
         if (!(win_w == win_h)) die("Window must be square!");
-
         *sz = win_h / GRID_SZ;
     }
 
@@ -168,11 +162,9 @@ public:
     void init_pieces() {
         pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
         pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
-        
+
         set_bit(w_bishops, bitboard_to_draw_index(58));
         set_bit(w_bishops, bitboard_to_draw_index(61));
-
-
     }
     
     // void init_board_coords() {
@@ -184,12 +176,6 @@ public:
     //         if ()
     //     }
     // }
-
-    /* BITBOARDS */
-
-    int bitboard_to_draw_index(int bit) {
-        return GRID_NUM_SQUARES - 1 - bit;
-    }
 
     /* RENDER */
 
