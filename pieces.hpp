@@ -51,7 +51,6 @@ public:
 
 class Bishop:public Piece {
 public:
-
     Bishop(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
@@ -61,7 +60,6 @@ public:
 };
 
 class Knight:public Piece {
-
 public:
     Knight(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
@@ -73,7 +71,6 @@ public:
 
 class Rook:public Piece {
 public:
-
     Rook(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
@@ -85,7 +82,6 @@ public:
 class Queen:public Piece {
 
 public:
-
     Queen(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
@@ -95,9 +91,7 @@ public:
 };
 
 class King:public Piece {
-
 public:
-
     King(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 

@@ -70,12 +70,12 @@ private:
     uint64_t w_queen = 0ULL; // 0x10ULL;
     uint64_t w_king = 0ULL; // 0x08ULL;
 
-    // uint64_t b_pawns = 0ULL; // 0x00FF000000000000;
-    // uint64_t b_knights = 0ULL; // 0x4200000000000000;
-    // uint64_t b_bishops = 0ULL; // 0x2400000000000000;
-    // uint64_t b_rooks = 0ULL; // 0x8100000000000000ULL;
-    // uint64_t b_queen = 0ULL; // 0x1000000000000000ULL;
-    // uint64_t b_king = 0ULL; // 0x0800000000000000ULL;
+    uint64_t b_pawns = 0ULL; // 0x00FF000000000000;
+    uint64_t b_knights = 0ULL; // 0x4200000000000000;
+    uint64_t b_bishops = 0ULL; // 0x2400000000000000;
+    uint64_t b_rooks = 0ULL; // 0x8100000000000000ULL;
+    uint64_t b_queen = 0ULL; // 0x1000000000000000ULL;
+    uint64_t b_king = 0ULL; // 0x0800000000000000ULL;
 
     #define set_bit(b, i) ((b) |= (1ULL << i))
     #define get_bit(b, i) ((b) & (1ULL << i))
@@ -131,7 +131,7 @@ public:
         // Is player black or white?
         // If black, board must be inverted.
         // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
-        
+
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
