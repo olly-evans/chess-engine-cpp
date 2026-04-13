@@ -6,6 +6,7 @@
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
+#define BB_WINDOW_NAME "Bitboard Representation"
 
 /* COLORS */
 
@@ -24,12 +25,13 @@ private:
     const std::string win_name;
 
     sf::RenderWindow window;
+    sf::RenderWindow debug_window;
+
     
     /* GRID */
     unsigned int board_square_size;
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
-
     std::vector<sf::RectangleShape> squares;  
 
     std::string square_names[GRID_NUM_SQUARES] = {
@@ -62,7 +64,8 @@ private:
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
-    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name){};
+    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), 
+    bb_window(sf::VideoMode(win_h, win_w), BB_WINDOW_NAME){};
 
     /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
@@ -79,6 +82,16 @@ public:
     bool is_square_black(int i) {
         sf::Vector2f vec = index_to_2d(i);
         return ((int)vec.x + (int)vec.y) % 2;
+    }
+
+    void show_bitboard(uint64_t bitboard) {
+
+
+        // perhaps this makes a new window.
+        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+            int draw_idx = GRID_NUM_SQUARES - i - 1;
+            squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
+        }
     }
 
     /* INIT */
@@ -116,17 +129,7 @@ public:
             squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
     }
-
-    /* BITBOARD CLASS PERHAPS */
-
-    void show_bitboard(uint64_t bitboard) {
-
-        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-            int draw_idx = GRID_NUM_SQUARES - i - 1;
-            squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
-        }
-    }
-
+    
     // void init_board_coords() {
     //     // only need to place numbers vert and letters hor.
 
@@ -147,7 +150,7 @@ public:
         window.display();
     }
 
-    /**/
+    /* RUN */
 
     void run() {
 
