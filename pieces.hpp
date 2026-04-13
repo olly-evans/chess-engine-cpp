@@ -9,6 +9,7 @@ class Piece {
 
 protected:
     int square_index;
+    int board_square_size;
     int x,y;
 
     Color color;
@@ -19,16 +20,21 @@ protected:
     sf::RenderWindow& window;
 
 public:
-    Piece(Color col, sf::RenderWindow& w, int squ_idx) : color(col), window(w), square_index(squ_idx) {}
+    Piece(Color col, sf::RenderWindow& w, int squ_idx, int b_squ_sz) : 
+    color(col), window(w), square_index(squ_idx), board_square_size(b_squ_sz){}
 
     virtual void draw(sf::RenderWindow& window) = 0;
+
+    //set x, y
+    //get x,y
 };
 
 class Bishop:public Piece {
 
 public:
 
-    Bishop(Color col, sf::RenderWindow& w, int squ_idx) : Piece(col, w, squ_idx) {}
+    Bishop(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
+    Piece(col, w, squ_idx, board_square_size) {}
 
     void draw(sf::RenderWindow& window) {
 
@@ -40,7 +46,7 @@ public:
         sf::Vector2f pos = index_to_2d(square_index);
         
         sprite.setTexture(texture);
-        sprite.setPosition(pos);
+        sprite.setPosition(pos * (float)board_square_size);
         window.draw(sprite);
     };
 };

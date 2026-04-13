@@ -166,8 +166,8 @@ public:
     }
 
     void init_pieces() {
-        pieces.push_back(new Bishop(Color::WHITE, window, 58));
-        pieces.push_back(new Bishop(Color::WHITE, window, 61));
+        pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
+        pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
         set_bit(w_bishops, 58);
         set_bit(w_bishops, 61);
 
