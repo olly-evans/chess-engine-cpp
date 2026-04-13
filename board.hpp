@@ -77,6 +77,15 @@ private:
     uint64_t b_queen = 0x1000000000000000ULL;
     uint64_t b_king = 0x0800000000000000ULL;
 
+    #define set_bit(b, i) ((b) |= (1ULL << i))
+    #define get_bit(b, i) ((b) & (1ULL << i))
+    #define clear_bit(b, i) ((b) &= ~(1ULL << i))
+    #define get_LSB(b) (__builtin_ctzll(b))
+
+    /* PIECES */
+    
+    std::vector<Piece*> pieces;
+
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
@@ -103,7 +112,7 @@ public:
     
     void debug() { 
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(w_rooks);
+        debug_bitboard(w_bishops);
     }
 
     void debug_bitboard(uint64_t bitboard) {
@@ -124,6 +133,7 @@ public:
         // If black, board must be inverted.
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
+        init_pieces();
         if (isDebug) debug();
 
         // coords in the squares perhaps
@@ -154,6 +164,15 @@ public:
             squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
     }
+
+    void init_pieces() {
+        pieces.push_back(new Bishop(Color::WHITE, window, 58));
+        pieces.push_back(new Bishop(Color::WHITE, window, 61));
+        set_bit(w_bishops, 58);
+        set_bit(w_bishops, 61);
+
+
+    }
     
     // void init_board_coords() {
     //     // only need to place numbers vert and letters hor.
@@ -169,25 +188,18 @@ public:
 
     void render() {
         render_main_window();
-
-        // this conditional is always ignored because we make the window in the constructor.
         if (debug_window.isOpen()) render_debug_window(); 
     }
 
     void render_main_window() {
 
         window.clear();
-        for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
+        for (auto& squ : squares) {window.draw(squ);}
 
 
-        Bishop bitch = Bishop(Color::BLACK, window);
-        bitch.draw(window);
-
+        for (auto& piece : pieces) piece->draw(window);
+        
         // go through associated bitboard and fill out squares with piece.
-
-
-
-
         // render_board_coords();
         window.display();
     }
@@ -213,11 +225,7 @@ public:
                     if (event.type == sf::Event::Closed) debug_window.close();
                 }
             }
-            render();   
-            // render_main_window();
-
-            // // this conditional is always ignored because we make the window in the constructor.
-            // if (debug_window.isOpen()) render_debug_window();       
+            render();     
         }
     }
 };

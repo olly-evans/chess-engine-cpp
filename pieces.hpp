@@ -4,7 +4,7 @@
 
 enum class Color {BLACK, WHITE};
 
-class Piece{
+class Piece {
 
 protected:
     int square_index;
@@ -17,31 +17,31 @@ protected:
 
     sf::RenderWindow& window;
 
-
-
 public:
-    Piece(Color col, sf::RenderWindow& w) : color(col), window(w) {}
+    Piece(Color col, sf::RenderWindow& w, int squ_idx) : color(col), window(w), square_index(squ_idx) {}
 
     virtual void draw(sf::RenderWindow& window) = 0;
-
 };
 
 class Bishop:public Piece {
 
 public:
 
-    Bishop(Color col, sf::RenderWindow& w) : Piece(col, w) {}
+    Bishop(Color col, sf::RenderWindow& w, int squ_idx) : Piece(col, w, squ_idx) {}
 
     void draw(sf::RenderWindow& window) {
 
-        
-        sf::Texture texture;
         if (color == Color::WHITE)
             texture.loadFromFile("assets/wB.png");
         else
             texture.loadFromFile("assets/bB.png");
 
-        sf::Sprite sprite(texture);
+        int x,y;
+        // get x and y in vector2f from square index
+
+        // give to setPosition
+        
+        sprite.setTexture(texture);
         sprite.setPosition(sf::Vector2f(0, 0));
         window.draw(sprite);
     };
