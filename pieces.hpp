@@ -17,13 +17,17 @@ protected:
 public:
     Piece(sf::RenderWindow& w) : window(w) {}
 
-    virtual void draw(sf::RenderWindow window);
+    virtual void draw(sf::RenderWindow& window) = 0;
 
 };
 
 class Bishop:public Piece {
 
-    void draw(sf::RenderWindow window) {
+public:
+
+    Bishop(sf::RenderWindow& w) : Piece(w) {}
+
+    void draw(sf::RenderWindow& window) {
         sf::Texture texture;
         texture.loadFromFile("assets/bK.png");
         sf::Sprite sprite(texture);

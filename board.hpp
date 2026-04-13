@@ -4,6 +4,8 @@
 #include "SFML/System/String.hpp"
 #include "SFML/Graphics/Image.hpp"
 
+#include "pieces.hpp"
+
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
@@ -119,6 +121,7 @@ public:
         init_board_squares();
 
         debug_bitboard(b_rooks);
+        Bishop bitch = Bishop(window);
 
         // coords in the squares perhaps
         // init_board_coords();
