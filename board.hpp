@@ -164,7 +164,11 @@ public:
 
     void init_pieces() {
 
+        // if player = black_pieces
+            // 
 
+        // else
+        
         // loop for pawns.
         // not a fan of the magic numbers for the start positions.
         pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
