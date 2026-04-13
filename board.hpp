@@ -25,14 +25,18 @@ private:
     const std::string win_name;
 
     sf::RenderWindow window;
-    sf::RenderWindow debug_window;
 
     
     /* GRID */
     unsigned int board_square_size;
     static constexpr unsigned int GRID_SZ = 8;
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
-    std::vector<sf::RectangleShape> squares;  
+    std::vector<sf::RectangleShape> squares;
+
+    /* DEBUG */
+
+    sf::RenderWindow debug_window;
+    std::vector<sf::RectangleShape> debug_squares;  
 
     std::string square_names[GRID_NUM_SQUARES] = {
         "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
@@ -84,13 +88,16 @@ public:
         return ((int)vec.x + (int)vec.y) % 2;
     }
 
-    void show_bitboard(uint64_t bitboard) {
+    /* DEBUG */
 
+    void debug_bitboard(uint64_t bitboard) {
+
+        // i want this to update in real time eventually.
 
         // perhaps this makes a new window.
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             int draw_idx = GRID_NUM_SQUARES - i - 1;
-            squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
+            debug_squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
         }
     }
 
@@ -103,7 +110,8 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
 
-        show_bitboard(b_king);
+        debug_bitboard(b_king);
+
         // coords in the squares perhaps
         // init_board_coords();
 
@@ -124,8 +132,11 @@ public:
 
             sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
+            debug_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
 
             squares[i].setPosition(pos);
+            debug_squares[i].setPosition(pos);
+
             squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
     }
@@ -143,11 +154,12 @@ public:
     /* RENDER */
 
     void render() {
-        render_window();
+        render_main_window();
         render_debug_window(); 
     }
 
-    void render_window() {
+    void render_main_window() {
+
         window.clear();
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
         // render_board_coords();
@@ -155,9 +167,10 @@ public:
     }
 
     void render_debug_window() {
+        
         if (debug_window.isOpen()) {
             debug_window.clear();
-            for (auto& squ : squares) {debug_window.draw(squ);}
+            for (auto& squ : debug_squares) {debug_window.draw(squ);}
             debug_window.display();
         }
     }
