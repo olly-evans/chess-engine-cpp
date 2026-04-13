@@ -121,7 +121,6 @@ public:
         init_board_squares();
 
         debug_bitboard(b_rooks);
-        Bishop bitch = Bishop(Color::WHITE, window);
 
         // coords in the squares perhaps
         // init_board_coords();
@@ -174,12 +173,21 @@ public:
         window.clear();
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
 
-        sf::Texture texture;
-        texture.loadFromFile("assets/bK.png");
-        sf::Sprite sprite(texture);
-        sprite.setPosition(sf::Vector2f(2, 2));
-        window.draw(sprite);
+        // sf::Texture texture;
+        // texture.loadFromFile("assets/bK.png");
+        // sf::Sprite sprite(texture);
+        // sprite.setPosition(sf::Vector2f(2, 2));
+        // window.draw(sprite);
 
+
+        Bishop bitch = Bishop(Color::WHITE, window);
+        bitch.draw(window);
+
+
+
+
+
+        
         // render_board_coords();
         window.display();
     }

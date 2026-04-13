@@ -34,9 +34,9 @@ public:
 
     void draw(sf::RenderWindow& window) {
         sf::Texture texture;
-        texture.loadFromFile("assets/bK.png");
+        texture.loadFromFile("assets/bB.png");
         sf::Sprite sprite(texture);
-        sprite.setPosition(sf::Vector2f(2, 2));
+        sprite.setPosition(sf::Vector2f(0, 0));
         window.draw(sprite);
     };
 };
