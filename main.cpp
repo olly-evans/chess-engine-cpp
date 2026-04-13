@@ -4,7 +4,7 @@
 #include "pieces.hpp"
 
 int main() {
-    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
+    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, true);
     board.init();
     board.run();
     return 0;

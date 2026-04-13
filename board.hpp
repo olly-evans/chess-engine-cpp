@@ -57,6 +57,7 @@ private:
 
     /* DEBUG */
 
+    bool isDebug;
     sf::RenderWindow debug_window;
     std::vector<sf::RectangleShape> debug_squares;  
 
@@ -78,9 +79,8 @@ private:
 
 public:
 
-    Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
-    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), 
-    debug_window(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME){};
+    Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
+    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), isDebug(db){};
 
     /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
@@ -101,6 +101,11 @@ public:
 
     /* DEBUG */
     
+    void debug() { 
+        sf::RenderWindow debug_window(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+        debug_bitboard(w_rooks);
+    }
+
     void debug_bitboard(uint64_t bitboard) {
 
         // i want this to update in real time eventually.
@@ -120,7 +125,7 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
 
-        debug_bitboard(b_rooks);
+        if (isDebug) debug();
 
         // coords in the squares perhaps
         // init_board_coords();
@@ -165,6 +170,8 @@ public:
 
     void render() {
         render_main_window();
+
+        // this conditional is always ignored because we make the window in the constructor.
         if (debug_window.isOpen()) render_debug_window(); 
     }
 
@@ -173,21 +180,15 @@ public:
         window.clear();
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
 
-        // sf::Texture texture;
-        // texture.loadFromFile("assets/bK.png");
-        // sf::Sprite sprite(texture);
-        // sprite.setPosition(sf::Vector2f(2, 2));
-        // window.draw(sprite);
 
-
-        Bishop bitch = Bishop(Color::WHITE, window);
+        Bishop bitch = Bishop(Color::BLACK, window);
         bitch.draw(window);
 
 
 
 
 
-        
+
         // render_board_coords();
         window.display();
     }

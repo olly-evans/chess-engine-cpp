@@ -33,8 +33,14 @@ public:
     Bishop(Color col, sf::RenderWindow& w) : Piece(col, w) {}
 
     void draw(sf::RenderWindow& window) {
+
+        
         sf::Texture texture;
-        texture.loadFromFile("assets/bB.png");
+        if (color == Color::WHITE)
+            texture.loadFromFile("assets/wB.png");
+        else
+            texture.loadFromFile("assets/bB.png");
+
         sf::Sprite sprite(texture);
         sprite.setPosition(sf::Vector2f(0, 0));
         window.draw(sprite);
