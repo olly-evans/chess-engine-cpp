@@ -5,7 +5,6 @@
 int main() {
     Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
     board.init();
-    board.render();
     board.run();
     return 0;
 }

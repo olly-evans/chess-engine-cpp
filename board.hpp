@@ -6,7 +6,7 @@
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
-#define BB_WINDOW_NAME "Bitboard Representation"
+#define DEBUG_WINDOW_NAME "Debug Window"
 
 /* COLORS */
 
@@ -65,7 +65,7 @@ public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
     win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), 
-    bb_window(sf::VideoMode(win_h, win_w), BB_WINDOW_NAME){};
+    debug_window(sf::VideoMode(win_h, win_w), DEBUG_WINDOW_NAME){};
 
     /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
@@ -143,11 +143,23 @@ public:
     /* RENDER */
 
     void render() {
-        window.clear();
+        render_window();
+        render_debug_window(); 
+    }
 
+    void render_window() {
+        window.clear();
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
         // render_board_coords();
         window.display();
+    }
+
+    void render_debug_window() {
+        if (debug_window.isOpen()) {
+            debug_window.clear();
+            for (auto& squ : squares) {debug_window.draw(squ);}
+            debug_window.display();
+        }
     }
 
     /* RUN */
@@ -159,6 +171,13 @@ public:
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) window.close();
             }
+
+            if (debug_window.isOpen()) {
+                while (debug_window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed) debug_window.close();
+                }
+            }
+            render();         
         }
-    };
+    }
 };
