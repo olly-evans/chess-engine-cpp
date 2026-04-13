@@ -24,7 +24,7 @@ public:
     color(col), window(w), square_index(squ_idx), board_square_size(b_squ_sz){}
 
     void draw(sf::RenderWindow& window) {
-        
+
         texture.loadFromFile(get_texture_path());
         sf::Vector2f pos = index_to_2d(square_index);
 
@@ -36,6 +36,7 @@ public:
     }
 
     virtual std::string get_texture_path() = 0;
+
     //set x, y
     //get x,y
 };
@@ -47,11 +48,21 @@ public:
     Bishop(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
-    std::string get_texture_path() {
-        if (color == Color::WHITE)
-            return "assets/wB.png";
-        else
-            return "assets/bB.png";
+    std::string get_texture_path() override {
+        return color == Color::WHITE ? "assets/wB.png" : "assets/bB.png";  
+    };
+
+};
+
+class Rook:public Piece {
+
+public:
+
+    Rook(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
+    Piece(col, w, squ_idx, board_square_size) {}
+
+    std::string get_texture_path() override {
+        return color == Color::WHITE ? "assets/wR.png" : "assets/bR.png";  
     };
 
 };
