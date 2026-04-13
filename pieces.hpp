@@ -34,28 +34,22 @@ public:
         sprite.setPosition(pos * (float)board_square_size);
         window.draw(sprite);
     }
-
     virtual std::string get_texture_path() = 0;
-
     //set x,y
     //get x,y
 };
 
 class Pawn:public Piece {
-
 public:
-
     Pawn(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wP.png" : "assets/bP.png";  
     };
-
 };
 
 class Bishop:public Piece {
-
 public:
 
     Bishop(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
@@ -64,24 +58,20 @@ public:
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wB.png" : "assets/bB.png";  
     };
-
 };
 
 class Knight:public Piece {
 
 public:
-
     Knight(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
     Piece(col, w, squ_idx, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wN.png" : "assets/bN.png";  
     };
-
 };
 
 class Rook:public Piece {
-
 public:
 
     Rook(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
@@ -90,7 +80,6 @@ public:
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wR.png" : "assets/bR.png";  
     };
-
 };
 
 class Queen:public Piece {
@@ -103,7 +92,6 @@ public:
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wQ.png" : "assets/bQ.png";  
     };
-
 };
 
 class King:public Piece {
@@ -116,5 +104,4 @@ public:
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wK.png" : "assets/bK.png";  
     };
-
 };

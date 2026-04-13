@@ -130,6 +130,8 @@ public:
 
         // Is player black or white?
         // If black, board must be inverted.
+        // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
+        
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
