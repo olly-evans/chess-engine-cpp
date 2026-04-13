@@ -5,11 +5,13 @@
 #include "SFML/Graphics/Image.hpp"
 
 #include "pieces.hpp"
+#include "util.hpp"
 
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
 #define DEBUG_WINDOW_NAME "Debug Window"
+
 
 /* COLORS */
 
@@ -40,8 +42,6 @@ private:
     
     /* GRID */
     unsigned int board_square_size;
-    static constexpr unsigned int GRID_SZ = 8;
-    static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
     std::vector<sf::RectangleShape> squares;
 
     std::string square_names[GRID_NUM_SQUARES] = {
@@ -99,7 +99,7 @@ public:
         exit(1);
     }
 
-    sf::Vector2f index_to_2d(int i) {
+    static sf::Vector2f index_to_2d(int i) {
         return sf::Vector2f(i % GRID_SZ, i / GRID_SZ);
     }
     
