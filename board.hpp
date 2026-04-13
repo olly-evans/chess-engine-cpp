@@ -155,7 +155,7 @@ public:
 
     void render() {
         render_main_window();
-        render_debug_window(); 
+        if (debug_window.isOpen()) render_debug_window(); 
     }
 
     void render_main_window() {
@@ -168,11 +168,10 @@ public:
 
     void render_debug_window() {
         
-        if (debug_window.isOpen()) {
-            debug_window.clear();
-            for (auto& squ : debug_squares) {debug_window.draw(squ);}
-            debug_window.display();
-        }
+        debug_window.clear();
+        for (auto& squ : debug_squares) {debug_window.draw(squ);}
+        debug_window.display();
+        
     }
 
     /* RUN */
