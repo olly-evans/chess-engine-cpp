@@ -5,19 +5,10 @@
 
 int main() {
 
-    bool isDebug = true;
+    bool enable_debug = true;
     
-    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, isDebug);
+    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, enable_debug);
     board.init();
     board.run();
     return 0;
 }
-
-/*
-
-    - Board class.
-        - Piece class.
-        - Print functions will be polymorphic I believe. Print differing char dependant on piece.
-    - Each piece color has a bitboard.
-    - Create a starting board.
-*/

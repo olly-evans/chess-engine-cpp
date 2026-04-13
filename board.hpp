@@ -57,18 +57,18 @@ private:
 
     /* DEBUG */
 
-    bool isDebug;
+    bool is_debug;
     sf::RenderWindow debug_window;
     std::vector<sf::RectangleShape> debug_squares;  
 
     /* BITBOARDS */
 
     uint64_t w_pawns = 0ULL; // 0xFF00ULL;
-    // uint64_t w_knights = 0ULL; // 0x42ULL;
+    uint64_t w_knights = 0ULL; // 0x42ULL;
     uint64_t w_bishops = 0ULL; //= 0x24ULL;
-    // uint64_t w_rooks = 0ULL; // 0x81ULL;
-    // uint64_t w_queen = 0ULL; 0x10ULL;
-    // uint64_t w_king = 0ULL; // 0x08ULL;
+    uint64_t w_rooks = 0ULL; // 0x81ULL;
+    uint64_t w_queen = 0ULL; // 0x10ULL;
+    uint64_t w_king = 0ULL; // 0x08ULL;
 
     // uint64_t b_pawns = 0ULL; // 0x00FF000000000000;
     // uint64_t b_knights = 0ULL; // 0x4200000000000000;
@@ -89,7 +89,7 @@ private:
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
-    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), isDebug(db){};
+    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), is_debug(db){};
 
     /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
@@ -112,7 +112,7 @@ public:
     
     void debug() { 
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(w_bishops);
+        debug_bitboard(w_king);
     }
 
     void debug_bitboard(uint64_t bitboard) {
@@ -133,7 +133,8 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
-        if (isDebug) debug();
+
+        if (is_debug) debug();
 
         // init_board_coords();
     }
@@ -166,6 +167,22 @@ public:
         pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
         set_bit(w_bishops, bitboard_to_draw_index(58));
         set_bit(w_bishops, bitboard_to_draw_index(61));
+
+        pieces.push_back(new Rook(Color::WHITE, window, 63, board_square_size));
+        pieces.push_back(new Rook(Color::WHITE, window, 56, board_square_size));
+        set_bit(w_rooks, bitboard_to_draw_index(63));
+        set_bit(w_rooks, bitboard_to_draw_index(56));
+
+        pieces.push_back(new Knight(Color::WHITE, window, 62, board_square_size));
+        pieces.push_back(new Knight(Color::WHITE, window, 57, board_square_size));
+        set_bit(w_knights, bitboard_to_draw_index(62));
+        set_bit(w_knights, bitboard_to_draw_index(57));
+
+        pieces.push_back(new Queen(Color::WHITE, window, 59, board_square_size));
+        set_bit(w_queen, bitboard_to_draw_index(59));
+
+        pieces.push_back(new King(Color::WHITE, window, 60, board_square_size));
+        set_bit(w_king, bitboard_to_draw_index(60));
 
         pieces.push_back(new Pawn(Color::WHITE, window, 55, board_square_size));
         pieces.push_back(new Pawn(Color::WHITE, window, 54, board_square_size));

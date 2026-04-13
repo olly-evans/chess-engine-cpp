@@ -67,6 +67,19 @@ public:
 
 };
 
+class Knight:public Piece {
+
+public:
+
+    Knight(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
+    Piece(col, w, squ_idx, board_square_size) {}
+
+    std::string get_texture_path() override {
+        return color == Color::WHITE ? "assets/wN.png" : "assets/bN.png";  
+    };
+
+};
+
 class Rook:public Piece {
 
 public:
@@ -76,6 +89,32 @@ public:
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wR.png" : "assets/bR.png";  
+    };
+
+};
+
+class Queen:public Piece {
+
+public:
+
+    Queen(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
+    Piece(col, w, squ_idx, board_square_size) {}
+
+    std::string get_texture_path() override {
+        return color == Color::WHITE ? "assets/wQ.png" : "assets/bQ.png";  
+    };
+
+};
+
+class King:public Piece {
+
+public:
+
+    King(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
+    Piece(col, w, squ_idx, board_square_size) {}
+
+    std::string get_texture_path() override {
+        return color == Color::WHITE ? "assets/wK.png" : "assets/bK.png";  
     };
 
 };
