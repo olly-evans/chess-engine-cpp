@@ -102,7 +102,7 @@ public:
     /* DEBUG */
     
     void debug() { 
-        sf::RenderWindow debug_window(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+        debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
         debug_bitboard(w_rooks);
     }
 
@@ -119,12 +119,11 @@ public:
     /* INIT */
 
     void init() {
-        
+
         // Is player black or white?
         // If black, board must be inverted.
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
-
         if (isDebug) debug();
 
         // coords in the squares perhaps
@@ -184,7 +183,7 @@ public:
         Bishop bitch = Bishop(Color::BLACK, window);
         bitch.draw(window);
 
-
+        // go through associated bitboard and fill out squares with piece.
 
 
 
@@ -214,7 +213,11 @@ public:
                     if (event.type == sf::Event::Closed) debug_window.close();
                 }
             }
-            render();         
+            render();   
+            // render_main_window();
+
+            // // this conditional is always ignored because we make the window in the constructor.
+            // if (debug_window.isOpen()) render_debug_window();       
         }
     }
 };
