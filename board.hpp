@@ -2,6 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "SFML/System/String.hpp"
+#include "SFML/Graphics/Image.hpp"
 
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
@@ -14,6 +15,14 @@ const sf::Color WARM_CREAM(240, 217, 181);
 const sf::Color MEDIUM_BROWN(181, 136, 99);
 const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
+
+// class AbstractBoard {
+//     virtual void die(std::string) = 0;
+//     virtual void index_to_2d(int i) = 0;
+//     .
+//     .
+//     .
+// };
 
 class Board {
 
@@ -33,11 +42,6 @@ private:
     static constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
     std::vector<sf::RectangleShape> squares;
 
-    /* DEBUG */
-
-    sf::RenderWindow debug_window;
-    std::vector<sf::RectangleShape> debug_squares;  
-
     std::string square_names[GRID_NUM_SQUARES] = {
         "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
         "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
@@ -48,6 +52,11 @@ private:
         "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
         "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"
     };
+
+    /* DEBUG */
+
+    sf::RenderWindow debug_window;
+    std::vector<sf::RectangleShape> debug_squares;  
 
     /* BITBOARDS */
 
@@ -69,7 +78,7 @@ public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
     win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), 
-    debug_window(sf::VideoMode(win_h, win_w), DEBUG_WINDOW_NAME){};
+    debug_window(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME){};
 
     /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
@@ -89,11 +98,10 @@ public:
     }
 
     /* DEBUG */
-
+    
     void debug_bitboard(uint64_t bitboard) {
 
         // i want this to update in real time eventually.
-
         // perhaps this makes a new window.
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             int draw_idx = GRID_NUM_SQUARES - i - 1;
@@ -110,7 +118,7 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
 
-        debug_bitboard(b_king);
+        debug_bitboard(b_rooks);
 
         // coords in the squares perhaps
         // init_board_coords();
@@ -132,9 +140,9 @@ public:
 
             sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-            debug_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-
             squares[i].setPosition(pos);
+
+            debug_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
             debug_squares[i].setPosition(pos);
 
             squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
@@ -154,24 +162,33 @@ public:
     /* RENDER */
 
     void render() {
+        
+
         render_main_window();
         if (debug_window.isOpen()) render_debug_window(); 
+
+        
     }
 
     void render_main_window() {
 
         window.clear();
         for (auto& squ : squares) {window.draw(squ);} // render_board_squares();
+        sf::Texture texture;
+        texture.loadFromFile("assets/bK.png");
+
+        sf::Sprite sprite(texture);
+        sprite.setPosition(sf::Vector2f(2, 2));
+
+        window.draw(sprite);
         // render_board_coords();
         window.display();
     }
 
     void render_debug_window() {
-        
         debug_window.clear();
         for (auto& squ : debug_squares) {debug_window.draw(squ);}
         debug_window.display();
-        
     }
 
     /* RUN */
