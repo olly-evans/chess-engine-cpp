@@ -121,7 +121,7 @@ public:
         init_board_squares();
 
         debug_bitboard(b_rooks);
-        Bishop bitch = Bishop(window);
+        Bishop bitch = Bishop(Color::WHITE, window);
 
         // coords in the squares perhaps
         // init_board_coords();
