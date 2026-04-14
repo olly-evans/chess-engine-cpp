@@ -34,7 +34,12 @@ public:
         sprite.setPosition(pos * (float)board_square_size);
         window.draw(sprite);
     }
+
     virtual std::string get_texture_path() = 0;
+
+    void set_square_idx(int new_idx) {
+        square_index = new_idx;
+    }
     //set x,y
     //get x,y
 };
