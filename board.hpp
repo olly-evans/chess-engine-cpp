@@ -170,7 +170,7 @@ public:
 
         // else
 
-        // loop for pawns.
+        /* WHITE */
         // not a fan of the magic numbers for the start positions.
         pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
         pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
@@ -193,26 +193,40 @@ public:
         pieces.push_back(new King(Color::WHITE, window, 60, board_square_size));
         set_bit(w_king, bitboard_to_draw_index(60));
 
-        pieces.push_back(new Pawn(Color::WHITE, window, 55, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 54, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 53, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 52, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 51, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 50, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 49, board_square_size));
-        pieces.push_back(new Pawn(Color::WHITE, window, 48, board_square_size));
-        set_bit(w_pawns, bitboard_to_draw_index(55));
-        set_bit(w_pawns, bitboard_to_draw_index(54));
-        set_bit(w_pawns, bitboard_to_draw_index(53));
-        set_bit(w_pawns, bitboard_to_draw_index(52));
-        set_bit(w_pawns, bitboard_to_draw_index(51));
-        set_bit(w_pawns, bitboard_to_draw_index(50));
-        set_bit(w_pawns, bitboard_to_draw_index(49));
-        set_bit(w_pawns, bitboard_to_draw_index(48));
 
-
-
+        for (int i = 48; i <= 55; i++) {
+            pieces.push_back(new Pawn(Color::WHITE, window, i, board_square_size));
+            set_bit(w_pawns, bitboard_to_draw_index(i));
+        }  
         
+        /* BLACK */
+
+        pieces.push_back(new Bishop(Color::BLACK, window, 2, board_square_size));
+        pieces.push_back(new Bishop(Color::BLACK, window, 5, board_square_size));
+        set_bit(w_bishops, bitboard_to_draw_index(2));
+        set_bit(w_bishops, bitboard_to_draw_index(5));
+
+        pieces.push_back(new Rook(Color::BLACK, window, 0, board_square_size));
+        pieces.push_back(new Rook(Color::BLACK, window, 7, board_square_size));
+        set_bit(w_rooks, bitboard_to_draw_index(0));
+        set_bit(w_rooks, bitboard_to_draw_index(7));
+
+        pieces.push_back(new Knight(Color::BLACK, window, 1, board_square_size));
+        pieces.push_back(new Knight(Color::BLACK, window, 6, board_square_size));
+        set_bit(w_knights, bitboard_to_draw_index(1));
+        set_bit(w_knights, bitboard_to_draw_index(6));
+
+        pieces.push_back(new Queen(Color::BLACK, window, 3, board_square_size));
+        set_bit(w_queen, bitboard_to_draw_index(3));
+
+        pieces.push_back(new King(Color::BLACK, window, 4, board_square_size));
+        set_bit(w_king, bitboard_to_draw_index(4));
+
+
+        for (int i = 8; i <= 15; i++) {
+            pieces.push_back(new Pawn(Color::BLACK, window, i, board_square_size));
+            set_bit(w_pawns, bitboard_to_draw_index(i));
+        }  
     }
     
     // void init_board_coords() {
