@@ -112,7 +112,7 @@ public:
     
     void debug() { 
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(w_king);
+        debug_bitboard(b_queen);
     }
 
     void debug_bitboard(uint64_t bitboard) {
@@ -203,29 +203,29 @@ public:
 
         pieces.push_back(new Bishop(Color::BLACK, window, 2, board_square_size));
         pieces.push_back(new Bishop(Color::BLACK, window, 5, board_square_size));
-        set_bit(w_bishops, bitboard_to_draw_index(2));
-        set_bit(w_bishops, bitboard_to_draw_index(5));
+        set_bit(b_bishops, bitboard_to_draw_index(2));
+        set_bit(b_bishops, bitboard_to_draw_index(5));
 
         pieces.push_back(new Rook(Color::BLACK, window, 0, board_square_size));
         pieces.push_back(new Rook(Color::BLACK, window, 7, board_square_size));
-        set_bit(w_rooks, bitboard_to_draw_index(0));
-        set_bit(w_rooks, bitboard_to_draw_index(7));
+        set_bit(b_rooks, bitboard_to_draw_index(0));
+        set_bit(b_rooks, bitboard_to_draw_index(7));
 
         pieces.push_back(new Knight(Color::BLACK, window, 1, board_square_size));
         pieces.push_back(new Knight(Color::BLACK, window, 6, board_square_size));
-        set_bit(w_knights, bitboard_to_draw_index(1));
-        set_bit(w_knights, bitboard_to_draw_index(6));
+        set_bit(b_knights, bitboard_to_draw_index(1));
+        set_bit(b_knights, bitboard_to_draw_index(6));
 
         pieces.push_back(new Queen(Color::BLACK, window, 3, board_square_size));
-        set_bit(w_queen, bitboard_to_draw_index(3));
+        set_bit(b_queen, bitboard_to_draw_index(3));
 
         pieces.push_back(new King(Color::BLACK, window, 4, board_square_size));
-        set_bit(w_king, bitboard_to_draw_index(4));
+        set_bit(b_king, bitboard_to_draw_index(4));
 
 
         for (int i = 8; i <= 15; i++) {
             pieces.push_back(new Pawn(Color::BLACK, window, i, board_square_size));
-            set_bit(w_pawns, bitboard_to_draw_index(i));
+            set_bit(b_pawns, bitboard_to_draw_index(i));
         }  
     }
     

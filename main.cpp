@@ -4,7 +4,7 @@
 
 int main() {
 
-    bool enable_debug = false;
+    bool enable_debug = true;
     
     Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, enable_debug);
     board.init();
