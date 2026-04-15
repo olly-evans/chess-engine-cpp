@@ -66,7 +66,7 @@ private:
 
     /*
 
-    w_pawns bitboard initial positions example.
+    uint64_t w_pawns bitboard initial positions example.
 
         a    b    c    d    e    f    g    h
     +----+----+----+----+----+----+----+----+
@@ -110,7 +110,7 @@ private:
 
     /* PIECES */
     
-    // Only two instances of each piece for black or white now.
+    // Only two instances of each piece for black or white.
     std::vector<Piece*> active_pieces;
 
 public:
@@ -195,13 +195,25 @@ public:
             // different starting pos.
             // prob a bitwise operation for that.
 
-        // else
-
-        // not a fan of the magic numbers for the start positions.
-        
+        // else        
 
         /* WHITE */
+        
+        active_pieces.push_back(new King(Color::WHITE, window, w_king, board_square_size));
+        active_pieces.push_back(new Queen(Color::WHITE, window, w_queen, board_square_size));
+        active_pieces.push_back(new Rook(Color::WHITE, window, w_rooks, board_square_size));
         active_pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
+        active_pieces.push_back(new Knight(Color::WHITE, window, w_knights, board_square_size));
+        active_pieces.push_back(new Pawn(Color::WHITE, window, w_pawns, board_square_size));
+
+        /* BLACK */
+
+        active_pieces.push_back(new King(Color::BLACK, window, b_king, board_square_size));
+        active_pieces.push_back(new Queen(Color::BLACK, window, b_queen, board_square_size));
+        active_pieces.push_back(new Rook(Color::BLACK, window, b_rooks, board_square_size));
+        active_pieces.push_back(new Bishop(Color::BLACK, window, b_bishops, board_square_size));
+        active_pieces.push_back(new Knight(Color::BLACK, window, b_knights, board_square_size));
+        active_pieces.push_back(new Pawn(Color::BLACK, window, b_pawns, board_square_size));
     }
     
     // void init_board_coords() {

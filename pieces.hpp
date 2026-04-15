@@ -39,7 +39,6 @@ public:
             sprite.setPosition(piece_positions[i]);
             window.draw(sprite);
         }
-        
     }
 
     virtual std::string get_texture_path() = 0;
@@ -49,7 +48,6 @@ public:
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             if (bitboard & (1ULL << i)) {
                 int draw_idx = GRID_NUM_SQUARES - i - 1;
-            // i here is being used as pos, but i is decrementing. hence 2 and 5 not 58 and 61
                 piece_pos.push_back(index_to_2d(draw_idx) * (float)board_square_size);
             }
         }
@@ -59,8 +57,8 @@ public:
 
 class Pawn:public Piece {
 public:
-    Pawn(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
-    Piece(col, w, squ_idx, board_square_size) {}
+    Pawn(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
+    Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wP.png" : "assets/bP.png";  
@@ -79,8 +77,8 @@ public:
 
 class Knight:public Piece {
 public:
-    Knight(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
-    Piece(col, w, squ_idx, board_square_size) {}
+    Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
+    Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wN.png" : "assets/bN.png";  
@@ -89,8 +87,8 @@ public:
 
 class Rook:public Piece {
 public:
-    Rook(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
-    Piece(col, w, squ_idx, board_square_size) {}
+    Rook(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
+    Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wR.png" : "assets/bR.png";  
@@ -100,8 +98,8 @@ public:
 class Queen:public Piece {
 
 public:
-    Queen(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
-    Piece(col, w, squ_idx, board_square_size) {}
+    Queen(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
+    Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wQ.png" : "assets/bQ.png";  
@@ -110,8 +108,8 @@ public:
 
 class King:public Piece {
 public:
-    King(Color col, sf::RenderWindow& w, int squ_idx, int board_square_size) : 
-    Piece(col, w, squ_idx, board_square_size) {}
+    King(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
+    Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wK.png" : "assets/bK.png";  
