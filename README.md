@@ -9,3 +9,5 @@
 - tab to cycle through bitboards with one button, change window name.
 
 - toggle mouse pos in console too.
+
+- don't make it a stupid fucking lambda function just make it a normal fucking class with methods.

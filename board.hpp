@@ -98,6 +98,9 @@ private:
 
     */
 
+    std::vector<uint64_t> bitboards;
+    std::vector<std::string> bitboard_names;
+
     uint64_t w_pawns = 0xFF00ULL;
     uint64_t w_knights = 0x42ULL;
     uint64_t w_bishops = 0x24ULL;
@@ -147,13 +150,25 @@ public:
         // Is player black or white?
         // If black, board must be inverted.
         // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
-
+        init_bitboards();
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
         // init_board_coords();
     }
 
+    void init_bitboards() {
+        bitboards = {
+            w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
+            b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
+        };
+
+        bitboard_names = {
+            NAME_OF(w_pawns), NAME_OF(w_knights), NAME_OF(w_bishops), NAME_OF(w_rooks), NAME_OF(w_queen), NAME_OF(w_king),
+            NAME_OF(b_pawns), NAME_OF(b_knights), NAME_OF(b_bishops), NAME_OF(b_rooks), NAME_OF(b_queen), NAME_OF(b_king)
+        };
+
+    }
     void init_get_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
         if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
         if (!(win_w == win_h)) die("Window must be square!");
@@ -238,33 +253,47 @@ public:
     /* RUN */
 
     void run() {
+    sf::Event event;
+    int current_idx = 0; 
 
-        sf::Event event;
-        while (window.isOpen()) {
+    while (window.isOpen()) {
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) 
+                window.close();
 
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) window.close();
-            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Tab) {
+                    current_idx = (current_idx + 1) % bitboards.size();
 
-            mouse_x = sf::Mouse::getPosition(window).x;
-            mouse_y = sf::Mouse::getPosition(window).y;
-
-            // Works a lot better, but debug_window should really be in Debug not in Board.
-
-            // something like this with a bitboard vector.
-            Debug::run ([&] {
-                if (!debug_window.isOpen()) debug_window.create(sf::VideoMode(win_w, win_h), NAME_OF(w_bishops));
-                Debug::draw_bitboard(w_bishops, debug_squares);
-            });
-
-            Debug::run([&] {Debug::mouse_pos(mouse_x, mouse_y); });
-            
-            if (debug_window.isOpen()) {
-                while (debug_window.pollEvent(event)) {
-                    if (event.type == sf::Event::Closed) debug_window.close();
+                    if (!debug_window.isOpen()) {
+                        debug_window.create(sf::VideoMode(win_w, win_h), bitboard_names[current_idx]);
+                    } else {
+                        debug_window.setTitle(bitboard_names[current_idx]);
+                    }
+                }
+                
+                if (event.key.code == sf::Keyboard::Escape) {
+                    debug_window.close();
                 }
             }
-            render();     
         }
+
+        mouse_x = sf::Mouse::getPosition(window).x;
+        mouse_y = sf::Mouse::getPosition(window).y;
+
+        if (debug_window.isOpen()) {
+            Debug::draw_bitboard(bitboards[current_idx], debug_squares);
+            
+            // Standard pollEvent for the second window to keep it responsive
+            sf::Event debugEvent;
+            while (debug_window.pollEvent(debugEvent)) {
+                if (debugEvent.type == sf::Event::Closed) {
+                    debug_window.close();
+                }
+            }
+        }
+
+        render();     
     }
+}
 };

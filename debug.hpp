@@ -12,9 +12,8 @@ public:
     
     template<typename T>
     static void run(T task) {
-        if (enabled && sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
-            task();
-        }
+        if (enabled)
+            task(); 
     }
 
     /* DEBUG METHODS */
