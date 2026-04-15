@@ -32,7 +32,6 @@ public:
     void draw(sf::RenderWindow& window) {
 
         texture.loadFromFile(get_texture_path());
-        // sf::Vector2f pos = index_to_2d(square_index);
         sprite.setTexture(texture);
 
         for (int i = 0; i < piece_positions.size(); i++) {

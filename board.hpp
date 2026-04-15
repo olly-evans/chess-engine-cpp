@@ -7,6 +7,8 @@
 #include "pieces.hpp"
 #include "util.hpp"
 
+#include <sstream>
+
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
@@ -39,6 +41,10 @@ private:
 
     sf::RenderWindow window;
 
+    /* MOUSE */
+
+    int mouse_x;
+    int mouse_y;
     
     /* GRID */
     unsigned int board_square_size;
@@ -62,7 +68,6 @@ private:
     std::vector<sf::RectangleShape> debug_squares;  
 
     /* BITBOARDS */
-
 
     /*
 
@@ -125,10 +130,6 @@ public:
         std::cerr << err << std::endl;
         exit(1);
     }
-
-    static sf::Vector2f index_to_2d(int i) {
-        return sf::Vector2f(i % GRID_SZ, i / GRID_SZ);
-    }
     
     bool is_square_black(int i) {
         sf::Vector2f vec = index_to_2d(i);
@@ -139,7 +140,7 @@ public:
     
     void debug() { 
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(w_bishops);
+        debug_bitboard(b_king);
     }
 
     void debug_bitboard(uint64_t bitboard) {
@@ -149,6 +150,13 @@ public:
             int draw_idx = GRID_NUM_SQUARES - i - 1;
             debug_squares[draw_idx].setFillColor(bitboard & (1ULL << i) ? WHITE : BLACK);
         }
+    }
+
+    void debug_mouse_pos() {
+        std::stringstream ss;
+        ss << "(" << mouse_x << ", " << mouse_y << ")";
+        std::string formatted_str = ss.str();
+        std::cout << formatted_str << std::endl;
     }
 
     /* INIT */
@@ -162,7 +170,6 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
-
         if (debug_enabled) debug();
 
         // init_board_coords();
@@ -198,7 +205,7 @@ public:
         // else        
 
         /* WHITE */
-        
+
         active_pieces.push_back(new King(Color::WHITE, window, w_king, board_square_size));
         active_pieces.push_back(new Queen(Color::WHITE, window, w_queen, board_square_size));
         active_pieces.push_back(new Rook(Color::WHITE, window, w_rooks, board_square_size));
@@ -255,10 +262,15 @@ public:
 
         sf::Event event;
         while (window.isOpen()) {
+
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) window.close();
             }
 
+            mouse_x = sf::Mouse::getPosition(window).x;
+            mouse_y = sf::Mouse::getPosition(window).y;
+
+            if (debug_enabled) debug_mouse_pos();
             if (debug_window.isOpen()) {
                 while (debug_window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) debug_window.close();
