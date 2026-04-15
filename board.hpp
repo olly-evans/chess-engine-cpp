@@ -112,7 +112,7 @@ public:
     
     void debug() { 
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(b_queen);
+        debug_bitboard(b_pawns);
     }
 
     void debug_bitboard(uint64_t bitboard) {
@@ -172,61 +172,62 @@ public:
 
         /* WHITE */
         // not a fan of the magic numbers for the start positions.
-        pieces.push_back(new Bishop(Color::WHITE, window, 58, board_square_size));
-        pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
-        set_bit(w_bishops, bitboard_to_draw_index(58));
-        set_bit(w_bishops, bitboard_to_draw_index(61));
 
-        pieces.push_back(new Rook(Color::WHITE, window, 63, board_square_size));
-        pieces.push_back(new Rook(Color::WHITE, window, 56, board_square_size));
-        set_bit(w_rooks, bitboard_to_draw_index(63));
-        set_bit(w_rooks, bitboard_to_draw_index(56));
-
-        pieces.push_back(new Knight(Color::WHITE, window, 62, board_square_size));
-        pieces.push_back(new Knight(Color::WHITE, window, 57, board_square_size));
-        set_bit(w_knights, bitboard_to_draw_index(62));
-        set_bit(w_knights, bitboard_to_draw_index(57));
-
-        pieces.push_back(new Queen(Color::WHITE, window, 59, board_square_size));
-        set_bit(w_queen, bitboard_to_draw_index(59));
-
-        pieces.push_back(new King(Color::WHITE, window, 60, board_square_size));
-        set_bit(w_king, bitboard_to_draw_index(60));
-
-
-        for (int i = 48; i <= 55; i++) {
-            pieces.push_back(new Pawn(Color::WHITE, window, i, board_square_size));
-            set_bit(w_pawns, bitboard_to_draw_index(i));
-        }  
+        set_bit(w_bishops, bitboard_to_draw_index(2));
+        set_bit(w_bishops, bitboard_to_draw_index(5));
+        pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
+        // pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
         
-        /* BLACK */
 
-        pieces.push_back(new Bishop(Color::BLACK, window, 2, board_square_size));
-        pieces.push_back(new Bishop(Color::BLACK, window, 5, board_square_size));
-        set_bit(b_bishops, bitboard_to_draw_index(2));
-        set_bit(b_bishops, bitboard_to_draw_index(5));
+        // pieces.push_back(new Rook(Color::WHITE, window, 63, board_square_size));
+        // pieces.push_back(new Rook(Color::WHITE, window, 56, board_square_size));
+        // set_bit(w_rooks, bitboard_to_draw_index(63));
+        // set_bit(w_rooks, bitboard_to_draw_index(56));
 
-        pieces.push_back(new Rook(Color::BLACK, window, 0, board_square_size));
-        pieces.push_back(new Rook(Color::BLACK, window, 7, board_square_size));
-        set_bit(b_rooks, bitboard_to_draw_index(0));
-        set_bit(b_rooks, bitboard_to_draw_index(7));
+        // pieces.push_back(new Knight(Color::WHITE, window, 62, board_square_size));
+        // pieces.push_back(new Knight(Color::WHITE, window, 57, board_square_size));
+        // set_bit(w_knights, bitboard_to_draw_index(62));
+        // set_bit(w_knights, bitboard_to_draw_index(57));
 
-        pieces.push_back(new Knight(Color::BLACK, window, 1, board_square_size));
-        pieces.push_back(new Knight(Color::BLACK, window, 6, board_square_size));
-        set_bit(b_knights, bitboard_to_draw_index(1));
-        set_bit(b_knights, bitboard_to_draw_index(6));
+        // pieces.push_back(new Queen(Color::WHITE, window, 59, board_square_size));
+        // set_bit(w_queen, bitboard_to_draw_index(59));
 
-        pieces.push_back(new Queen(Color::BLACK, window, 3, board_square_size));
-        set_bit(b_queen, bitboard_to_draw_index(3));
-
-        pieces.push_back(new King(Color::BLACK, window, 4, board_square_size));
-        set_bit(b_king, bitboard_to_draw_index(4));
+        // pieces.push_back(new King(Color::WHITE, window, 60, board_square_size));
+        // set_bit(w_king, bitboard_to_draw_index(60));
 
 
-        for (int i = 8; i <= 15; i++) {
-            pieces.push_back(new Pawn(Color::BLACK, window, i, board_square_size));
-            set_bit(b_pawns, bitboard_to_draw_index(i));
-        }  
+        // for (int i = 48; i <= 55; i++) {
+        //     pieces.push_back(new Pawn(Color::WHITE, window, i, board_square_size));
+        //     set_bit(w_pawns, bitboard_to_draw_index(i));
+        // }  
+        
+        // /* BLACK */
+
+        // pieces.push_back(new Bishop(Color::BLACK, window, 2, board_square_size));
+        // pieces.push_back(new Bishop(Color::BLACK, window, 5, board_square_size));
+        // set_bit(b_bishops, bitboard_to_draw_index(2));
+        // set_bit(b_bishops, bitboard_to_draw_index(5));
+
+        // pieces.push_back(new Rook(Color::BLACK, window, 0, board_square_size));
+        // pieces.push_back(new Rook(Color::BLACK, window, 7, board_square_size));
+        // set_bit(b_rooks, bitboard_to_draw_index(0));
+        // set_bit(b_rooks, bitboard_to_draw_index(7));
+
+        // pieces.push_back(new Knight(Color::BLACK, window, 1, board_square_size));
+        // pieces.push_back(new Knight(Color::BLACK, window, 6, board_square_size));
+        // set_bit(b_knights, bitboard_to_draw_index(1));
+        // set_bit(b_knights, bitboard_to_draw_index(6));
+
+        // pieces.push_back(new Queen(Color::BLACK, window, 3, board_square_size));
+        // set_bit(b_queen, bitboard_to_draw_index(3));
+
+        // pieces.push_back(new King(Color::BLACK, window, 4, board_square_size));
+        // set_bit(b_king, bitboard_to_draw_index(4));
+
+        // for (int i = 8; i <= 15; i++) {
+        //     pieces.push_back(new Pawn(Color::BLACK, window, i, board_square_size));
+        //     set_bit(b_pawns, bitboard_to_draw_index(i));
+        // }  
     }
     
     // void init_board_coords() {
@@ -250,12 +251,9 @@ public:
 
         window.clear();
         for (auto& squ : squares) {window.draw(squ);}
-
-
+        // render_board_coords();
         for (auto& piece : pieces) piece->draw(window);
         
-        // go through associated bitboard and fill out squares with piece.
-        // render_board_coords();
         window.display();
     }
 
