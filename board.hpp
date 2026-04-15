@@ -57,7 +57,7 @@ private:
 
     /* DEBUG */
 
-    bool is_debug;
+    bool debug_enabled;
     sf::RenderWindow debug_window;
     std::vector<sf::RectangleShape> debug_squares;  
 
@@ -65,7 +65,7 @@ private:
 
 
     /*
-    
+
     w_pawns bitboard initial positions example.
 
         a    b    c    d    e    f    g    h
@@ -110,12 +110,13 @@ private:
 
     /* PIECES */
     
-    std::vector<Piece*> pieces;
+    // Only two instances of each piece for black or white now.
+    std::vector<Piece*> active_pieces;
 
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
-    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), is_debug(db){};
+    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), debug_enabled(db){};
 
     /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
 
@@ -162,7 +163,7 @@ public:
         init_board_squares();
         init_pieces();
 
-        if (is_debug) debug();
+        if (debug_enabled) debug();
 
         // init_board_coords();
     }
@@ -200,7 +201,7 @@ public:
         
 
         /* WHITE */
-        pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
+        active_pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
     }
     
     // void init_board_coords() {
@@ -217,7 +218,7 @@ public:
 
     void render() {
         render_main_window();
-        if (debug_window.isOpen()) render_debug_window(); 
+        if (debug_enabled) render_debug_window(); 
     }
 
     void render_main_window() {
@@ -226,9 +227,7 @@ public:
         for (auto& squ : squares) {window.draw(squ);}
         // render_board_coords();
 
-        // piece_sets
-        // set.
-        for (auto& piece : pieces) piece->draw(window);
+        for (auto& piece_type : active_pieces) piece_type->draw(window);
         window.display();
     }
 
