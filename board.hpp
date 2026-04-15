@@ -65,7 +65,7 @@ private:
 
     uint64_t w_pawns = 0ULL; // 0xFF00ULL;
     uint64_t w_knights = 0ULL; // 0x42ULL;
-    uint64_t w_bishops = 0ULL; //= 0x24ULL;
+    uint64_t w_bishops = 0x24ULL;
     uint64_t w_rooks = 0ULL; // 0x81ULL;
     uint64_t w_queen = 0ULL; // 0x10ULL;
     uint64_t w_king = 0ULL; // 0x08ULL;
@@ -112,7 +112,7 @@ public:
     
     void debug() { 
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(b_pawns);
+        debug_bitboard(w_bishops);
     }
 
     void debug_bitboard(uint64_t bitboard) {
@@ -173,8 +173,6 @@ public:
         /* WHITE */
         // not a fan of the magic numbers for the start positions.
 
-        set_bit(w_bishops, 2);
-        set_bit(w_bishops, 5);
         pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
         // pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
         
