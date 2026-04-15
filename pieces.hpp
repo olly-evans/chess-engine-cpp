@@ -48,7 +48,7 @@ public:
 
         for (int i = GRID_NUM_SQUARES - 1; i >= 0; i--) {
             if (bitboard & (1ULL << i))
-                piece_pos.push_back(index_to_2d(i));
+                piece_pos.push_back(index_to_2d(i) * (float)board_square_size);
         }
     }
 

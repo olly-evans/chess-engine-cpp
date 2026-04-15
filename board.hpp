@@ -173,8 +173,8 @@ public:
         /* WHITE */
         // not a fan of the magic numbers for the start positions.
 
-        set_bit(w_bishops, bitboard_to_draw_index(2));
-        set_bit(w_bishops, bitboard_to_draw_index(5));
+        set_bit(w_bishops, 2);
+        set_bit(w_bishops, 5);
         pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
         // pieces.push_back(new Bishop(Color::WHITE, window, 61, board_square_size));
         
@@ -252,8 +252,10 @@ public:
         window.clear();
         for (auto& squ : squares) {window.draw(squ);}
         // render_board_coords();
+
+        // piece_sets
+        // set.
         for (auto& piece : pieces) piece->draw(window);
-        
         window.display();
     }
 
