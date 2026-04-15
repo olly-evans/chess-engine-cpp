@@ -10,6 +10,8 @@ public:
     // Toggle this to false to silence the entire debugger
     inline static bool enabled = true;
 
+
+
     template<typename T>
     static void run(T task) {
         if (enabled && sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
@@ -20,7 +22,7 @@ public:
     /* DEBUG METHODS */
     
     // Updates the visual grid based on a 64-bit integer
-    static void draw_bitboard(uint64_t bitboard, sf::RectangleShape* squares);
+    static void draw_bitboard(uint64_t bitboard, std::vector<sf::RectangleShape> &squares);
 
     // Prints mouse coordinates to console
     static void mouse_pos(int x, int y);

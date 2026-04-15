@@ -171,17 +171,9 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
-
-        // if (debug_enabled) 
-            debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        //     debug_bitboard(b_king);
-
-        Debug::run ([&] {
-            if (!debug_window.isOpen()) debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-            Debug::draw_bitboard(w_bishops, debug_squares.data());
-        });
-
         
+        debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+        // debug_bitboard(w_bishops);        
         // init_board_coords();
     }
 
@@ -247,7 +239,7 @@ public:
 
     void render() {
         render_main_window();
-        if (debug_enabled) render_debug_window(); 
+        render_debug_window(); 
     }
 
     void render_main_window() {
@@ -279,10 +271,10 @@ public:
 
             mouse_x = sf::Mouse::getPosition(window).x;
             mouse_y = sf::Mouse::getPosition(window).y;
-
-            // if (debug_enabled) debug_mouse_pos(debug_mouse_pos_str_stream);
-
-            Debug::run([&] { Debug::mouse_pos(mouse_x, mouse_y); });
+            
+            // Eh.
+            Debug::run ([&] {Debug::draw_bitboard(w_bishops, debug_squares);});
+            Debug::run([&] {Debug::mouse_pos(mouse_x, mouse_y); });
             
             if (debug_window.isOpen()) {
                 while (debug_window.pollEvent(event)) {
