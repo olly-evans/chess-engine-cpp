@@ -171,8 +171,14 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
+    
         
         debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+        Debug::run ([&] {
+            Debug::draw_bitboard(w_bishops, debug_squares);
+
+        });
+
         // debug_bitboard(w_bishops);        
         // init_board_coords();
     }
@@ -273,7 +279,6 @@ public:
             mouse_y = sf::Mouse::getPosition(window).y;
             
             // Eh.
-            Debug::run ([&] {Debug::draw_bitboard(w_bishops, debug_squares);});
             Debug::run([&] {Debug::mouse_pos(mouse_x, mouse_y); });
             
             if (debug_window.isOpen()) {
