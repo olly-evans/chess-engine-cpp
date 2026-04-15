@@ -6,8 +6,10 @@
 
 #include "pieces.hpp"
 #include "util.hpp"
+#include "debug.hpp"
 
 #include <sstream>
+#include <iostream>
 
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
@@ -65,7 +67,10 @@ private:
 
     bool debug_enabled;
     sf::RenderWindow debug_window;
-    std::vector<sf::RectangleShape> debug_squares;  
+    std::vector<sf::RectangleShape> debug_squares;
+
+    std::stringstream debug_mouse_pos_str_stream;
+
 
     /* BITBOARDS */
 
@@ -147,8 +152,9 @@ public:
         }
     }
 
-    void debug_mouse_pos() {
-        std::stringstream ss;
+    void debug_mouse_pos(std::stringstream &ss) {
+        ss.str("");
+        ss.clear();
         ss << "(" << mouse_x << ", " << mouse_y << ")";
         std::string formatted_str = ss.str();
         std::cout << formatted_str << std::endl;
@@ -165,11 +171,17 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
-        
-        if (debug_enabled) 
-            debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-            debug_bitboard(b_king);
 
+        // if (debug_enabled) 
+            debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+        //     debug_bitboard(b_king);
+
+        Debug::run ([&] {
+            if (!debug_window.isOpen()) debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+            Debug::draw_bitboard(w_bishops, debug_squares.data());
+        });
+
+        
         // init_board_coords();
     }
 
@@ -268,8 +280,10 @@ public:
             mouse_x = sf::Mouse::getPosition(window).x;
             mouse_y = sf::Mouse::getPosition(window).y;
 
-            if (debug_enabled) debug_mouse_pos();
+            // if (debug_enabled) debug_mouse_pos(debug_mouse_pos_str_stream);
 
+            Debug::run([&] { Debug::mouse_pos(mouse_x, mouse_y); });
+            
             if (debug_window.isOpen()) {
                 while (debug_window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) debug_window.close();
