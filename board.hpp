@@ -137,11 +137,6 @@ public:
     }
 
     /* DEBUG */
-    
-    void debug() { 
-        debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
-        debug_bitboard(b_king);
-    }
 
     void debug_bitboard(uint64_t bitboard) {
 
@@ -170,7 +165,10 @@ public:
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_board_squares();
         init_pieces();
-        if (debug_enabled) debug();
+        
+        if (debug_enabled) 
+            debug_window.create(sf::VideoMode(win_w, win_h), DEBUG_WINDOW_NAME);
+            debug_bitboard(b_king);
 
         // init_board_coords();
     }
@@ -271,6 +269,7 @@ public:
             mouse_y = sf::Mouse::getPosition(window).y;
 
             if (debug_enabled) debug_mouse_pos();
+
             if (debug_window.isOpen()) {
                 while (debug_window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed) debug_window.close();
