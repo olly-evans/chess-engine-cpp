@@ -9,9 +9,7 @@ class Debug {
 public:
     // Toggle this to false to silence the entire debugger
     inline static bool enabled = true;
-
-
-
+    
     template<typename T>
     static void run(T task) {
         if (enabled && sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {

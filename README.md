@@ -6,6 +6,6 @@
 
 - debug functions need to be managed to not overlap in console etc..
 
-- cycle through bitboards with one button, change window name.
+- tab to cycle through bitboards with one button, change window name.
 
 - toggle mouse pos in console too.
