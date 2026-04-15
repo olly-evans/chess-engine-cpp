@@ -46,11 +46,12 @@ public:
 
     void bitboard_to_piece_pos(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos) {
 
-        for (int i = GRID_NUM_SQUARES - 1; i >= 0; i--) {
-            if (bitboard & (1ULL << i))
-
+        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+            if (bitboard & (1ULL << i)) {
+                int draw_idx = GRID_NUM_SQUARES - i - 1;
             // i here is being used as pos, but i is decrementing. hence 2 and 5 not 58 and 61
-                piece_pos.push_back(index_to_2d(i) * (float)board_square_size);
+                piece_pos.push_back(index_to_2d(draw_idx) * (float)board_square_size);
+            }
         }
     }
 
