@@ -1,5 +1,4 @@
-#ifndef DEBUG_HPP
-#define DEBUG_HPP
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <functional>
@@ -30,5 +29,3 @@ public:
     
     static void log(const std::string& message);
 };
-
-#endif

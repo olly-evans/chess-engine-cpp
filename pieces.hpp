@@ -2,6 +2,11 @@
 
 #include "util.hpp"
 
+// board.hpp needs to include piece.hpp to instantiate pieces.
+// This needed to let pieces.hpp know that Board exists.
+
+class Board;
+
 enum class Color {BLACK, WHITE};
 
 class Piece {
@@ -67,9 +72,9 @@ public:
         // choose a size based on the win_h and win_w, which are equal.
         // we choose the size that is closest to board.get_win_w_h() / GRID_SZ;
 
-        // if (board.board_square_size > board.TEXTURE_SIZE_320) {
+        if (board.board_square_size > board.TEXTURE_SIZE_320) {
 
-        // }
+        }
 
         // format string to be appropriate size.
         return color == Color::WHITE ? "assets/wP_320px.png" : "assets/bP_320px.png";  
