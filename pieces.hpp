@@ -1,6 +1,5 @@
 #pragma once
 
-#include "board.hpp"
 #include "util.hpp"
 
 enum class Color {BLACK, WHITE};
@@ -67,7 +66,10 @@ public:
         
         // choose a size based on the win_h and win_w, which are equal.
         // we choose the size that is closest to board.get_win_w_h() / GRID_SZ;
-        if (board.get_win_w_h() == board.TEXTURE_SIZE_80) return "";
+
+        // if (board.board_square_size > board.TEXTURE_SIZE_320) {
+
+        // }
 
         // format string to be appropriate size.
         return color == Color::WHITE ? "assets/wP_320px.png" : "assets/bP_320px.png";  
@@ -88,7 +90,7 @@ class Knight:public Piece {
 public:
     Knight(Board &board, Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
     Piece(board, col, w, bitboard, board_square_size) {}
-
+    
     std::string get_texture_path() override {
         return color == Color::WHITE ? "assets/wN_320px.png" : "assets/bN_320px.png";  
     };

@@ -51,7 +51,6 @@ private:
     int mouse_y;
     
     /* GRID */
-    unsigned int board_square_size;
     std::vector<sf::RectangleShape> squares;
 
     /* DEBUG */
@@ -123,6 +122,9 @@ public:
     const unsigned int TEXTURE_SIZE_80 = 80;
     const unsigned int TEXTURE_SIZE_160 = 160;
     const unsigned int TEXTURE_SIZE_320 = 320;
+
+    unsigned int board_square_size;
+
     
     /* UTIL METHODS */
 
