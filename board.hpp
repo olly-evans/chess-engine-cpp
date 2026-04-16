@@ -236,7 +236,9 @@ public:
 
     void render_debug_window() {
         debug_window.clear();
+
         for (auto& squ : debug_squares) {debug_window.draw(squ);}
+        Debug::draw_bitboard(debug_window, bitboards, bitboard_names, bitboard_vec_index, debug_squares);
         debug_window.display();
     }
 
@@ -249,37 +251,37 @@ public:
 
         while (window.isOpen()) {
 
-            // handle_events();
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) 
-                    window.close();
+            run_handle_events();
+            // while (window.pollEvent(event)) {
+            //     if (event.type == sf::Event::Closed) 
+            //         window.close();
 
-                if (event.type == sf::Event::KeyPressed) {
-                    if (event.key.code == sf::Keyboard::Tab) {
-                        bitboards_current_idx = (bitboards_current_idx + 1) % bitboards.size();
+            //     if (event.type == sf::Event::KeyPressed) {
+            //         if (event.key.code == sf::Keyboard::Tab) {
+            //             bitboards_current_idx = (bitboards_current_idx + 1) % bitboards.size();
 
-                        if (!debug_window.isOpen()) {
-                            debug_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboards_current_idx]);
-                        } else {
-                            debug_window.setTitle(bitboard_names[bitboards_current_idx]);
-                        }
-                    }
-                }
-            }
+            //             if (!debug_window.isOpen()) {
+            //                 debug_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboards_current_idx]);
+            //             } else {
+            //                 debug_window.setTitle(bitboard_names[bitboards_current_idx]);
+            //             }
+            //         }
+            //     }
+            // }
 
-            mouse_x = sf::Mouse::getPosition(window).x;
-            mouse_y = sf::Mouse::getPosition(window).y;
+            // mouse_x = sf::Mouse::getPosition(window).x;
+            // mouse_y = sf::Mouse::getPosition(window).y;
 
-            if (debug_window.isOpen()) {
-                Debug::draw_bitboard(bitboards[bitboards_current_idx], debug_squares);
+            // if (debug_window.isOpen()) {
+            //     // Debug::draw_bitboard(bitboards[bitboards_current_idx], debug_squares);
                 
-                sf::Event debugEvent;
-                while (debug_window.pollEvent(debugEvent)) {
-                    if (debugEvent.type == sf::Event::Closed) {
-                        debug_window.close();
-                    }
-                }
-            }
+            //     sf::Event debugEvent;
+            //     while (debug_window.pollEvent(debugEvent)) {
+            //         if (debugEvent.type == sf::Event::Closed) {
+            //             debug_window.close();
+            //         }
+            //     }
+            // }
             render();     
         }
     }
@@ -313,8 +315,8 @@ public:
 
     void on_key_pressed(sf::Event &event) {
         if (event.key.code == sf::Keyboard::Tab) {
-            
-            Debug::draw_bitboard(debug_window, bitboards, bitboard_names, bitboard_vec_index, debug_squares);
+            bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
+            debug_window.setTitle(bitboard_names[bitboard_vec_index]);            
         }
     }
 };
