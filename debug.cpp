@@ -10,8 +10,6 @@ void Debug::draw_bitboard(sf::RenderWindow &window, std::vector<uint64_t> bitboa
         squares[draw_idx].setFillColor(bitboards[bitboard_vec_index] & (1ULL << i) ? sf::Color::White : sf::Color::Black);
     }
 
-    bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-
     if (!window.isOpen()) {
         window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), bitboard_names[bitboard_vec_index]);
     } else {
