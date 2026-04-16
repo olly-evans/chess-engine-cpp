@@ -2,6 +2,8 @@
 
 #include "util.hpp"
 
+#include <iostream>
+
 
 enum class Color {BLACK, WHITE};
 
@@ -31,16 +33,16 @@ protected:
     // ... other variables ...
 
     std::string resolve_texture_path() {
-        int diff_80  = abs(board_square_size - (int)TEXTURE_SIZE_80);
-        int diff_160 = abs(board_square_size - (int)TEXTURE_SIZE_160);
-        int diff_320 = abs(board_square_size - (int)TEXTURE_SIZE_320);
-
-        int min_diff = std::min({diff_80, diff_160, diff_320});
+   
 
         std::string size_suffix;
-        if (min_diff == diff_80) size_suffix = "80px";
-        else if (min_diff == diff_160) size_suffix = "160px";
-        else size_suffix = "320px";
+        if (board_square_size >= TEXTURE_SIZE_320) {
+            size_suffix = "320px";
+        } else if (board_square_size >= TEXTURE_SIZE_160) {
+            size_suffix = "160px";
+        } else {
+            size_suffix = "80px";
+        }
 
         std::string color_prefix = (color == Color::WHITE ? "w" : "b");
         
@@ -50,7 +52,10 @@ protected:
 public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         piece_id(id), color(col), window(w), board_square_size(b_squ_sz) {
+
         bitboard_to_piece_pos(bitboard, piece_positions);
+        if (texture.loadFromFile(get_texture_path())) sprite.setTexture(texture);
+
     }
 
     virtual std::string get_texture_path() {
@@ -58,12 +63,14 @@ public:
     }
 
     void draw(sf::RenderWindow& window) {
+        // Calculate the gap between the square size and the actual image size
+        sf::FloatRect spriteSize = sprite.getGlobalBounds();
+        float offsetX = (board_square_size - spriteSize.width) / 2.0f;
+        float offsetY = (board_square_size - spriteSize.height) / 2.0f;
 
-        texture.loadFromFile(get_texture_path());
-        sprite.setTexture(texture);
-
-        for (int i = 0; i < piece_positions.size(); i++) {
-            sprite.setPosition(piece_positions[i]);
+        for (const auto& pos : piece_positions) {
+            // Apply the offset to the top-left square coordinate
+            sprite.setPosition(pos.x + offsetX, pos.y + offsetY);
             window.draw(sprite);
         }
     }
