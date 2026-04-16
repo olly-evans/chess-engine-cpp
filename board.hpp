@@ -54,17 +54,6 @@ private:
     unsigned int board_square_size;
     std::vector<sf::RectangleShape> squares;
 
-    std::string square_names[GRID_NUM_SQUARES] = {
-        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
-        "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
-        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
-        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5",
-        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4",
-        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
-        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
-        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"
-    };
-
     /* DEBUG */
 
     bool debug_enabled;
@@ -100,6 +89,7 @@ private:
 
     std::vector<uint64_t> bitboards;
     std::vector<std::string> bitboard_names;
+    int bitboard_vec_index = 0;
 
     uint64_t w_pawns = 0xFF00ULL;
     uint64_t w_knights = 0x42ULL;
@@ -252,48 +242,79 @@ public:
 
     /* RUN */
 
+    
     void run() {
-    sf::Event event;
-    int current_idx = 0; 
+        sf::Event event;
+        int bitboards_current_idx = 0; 
 
-    while (window.isOpen()) {
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
-                window.close();
+        while (window.isOpen()) {
 
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Tab) {
-                    current_idx = (current_idx + 1) % bitboards.size();
+            // handle_events();
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) 
+                    window.close();
 
-                    if (!debug_window.isOpen()) {
-                        debug_window.create(sf::VideoMode(win_w, win_h), bitboard_names[current_idx]);
-                    } else {
-                        debug_window.setTitle(bitboard_names[current_idx]);
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Tab) {
+                        bitboards_current_idx = (bitboards_current_idx + 1) % bitboards.size();
+
+                        if (!debug_window.isOpen()) {
+                            debug_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboards_current_idx]);
+                        } else {
+                            debug_window.setTitle(bitboard_names[bitboards_current_idx]);
+                        }
                     }
                 }
+            }
+
+            mouse_x = sf::Mouse::getPosition(window).x;
+            mouse_y = sf::Mouse::getPosition(window).y;
+
+            if (debug_window.isOpen()) {
+                Debug::draw_bitboard(bitboards[bitboards_current_idx], debug_squares);
                 
-                if (event.key.code == sf::Keyboard::Escape) {
-                    debug_window.close();
+                sf::Event debugEvent;
+                while (debug_window.pollEvent(debugEvent)) {
+                    if (debugEvent.type == sf::Event::Closed) {
+                        debug_window.close();
+                    }
                 }
             }
+            render();     
         }
+    }
 
-        mouse_x = sf::Mouse::getPosition(window).x;
-        mouse_y = sf::Mouse::getPosition(window).y;
+    /* RUN -> EVENT HANDLING */
+
+    void run_handle_events() {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            on_main_window_event(event);
+        }
 
         if (debug_window.isOpen()) {
-            Debug::draw_bitboard(bitboards[current_idx], debug_squares);
-            
-            // Standard pollEvent for the second window to keep it responsive
-            sf::Event debugEvent;
-            while (debug_window.pollEvent(debugEvent)) {
-                if (debugEvent.type == sf::Event::Closed) {
-                    debug_window.close();
-                }
+            sf::Event debug_event;
+            while (debug_window.pollEvent(debug_event)) {
+                on_bitboard_window_event(debug_event);
             }
         }
-
-        render();     
     }
-}
+
+    void on_main_window_event(sf::Event &event) {
+        if (event.type == sf::Event::Closed) window.close();
+        if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
+
+    }
+
+    void on_bitboard_window_event(sf::Event &event) {
+        if (event.type == sf::Event::Closed) debug_window.close();
+            
+    }
+
+    void on_key_pressed(sf::Event &event) {
+        if (event.key.code == sf::Keyboard::Tab) {
+            
+            Debug::draw_bitboard(debug_window, bitboards, bitboard_names, bitboard_vec_index, debug_squares);
+        }
+    }
 };

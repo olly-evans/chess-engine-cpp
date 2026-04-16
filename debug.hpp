@@ -19,7 +19,7 @@ public:
     /* DEBUG METHODS */
     
     // Updates the visual grid based on a 64-bit integer
-    static void draw_bitboard(uint64_t bitboard, std::vector<sf::RectangleShape> &squares);
+    static void draw_bitboard(std::vector<uint64_t> bitboards, std::vector<sf::RectangleShape> &squares);
 
     // Prints mouse coordinates to console
     static void mouse_pos(int x, int y);

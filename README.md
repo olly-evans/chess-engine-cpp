@@ -10,4 +10,4 @@
 
 - toggle mouse pos in console too.
 
-- don't make it a stupid fucking lambda function just make it a normal fucking class with methods.
+- really don't know if i like this. it works but will have a think. also sounds like my cpu will explode.
