@@ -27,10 +27,34 @@ protected:
     std::vector<sf::Vector2f> piece_positions;
     // assert king/queen piece_pos.size() == 1.
 
+    std::string piece_id; // Store "P", "K", "R", etc.
+    // ... other variables ...
+
+    std::string resolve_texture_path() {
+        int diff_80  = abs(board_square_size - (int)TEXTURE_SIZE_80);
+        int diff_160 = abs(board_square_size - (int)TEXTURE_SIZE_160);
+        int diff_320 = abs(board_square_size - (int)TEXTURE_SIZE_320);
+
+        int min_diff = std::min({diff_80, diff_160, diff_320});
+
+        std::string size_suffix;
+        if (min_diff == diff_80) size_suffix = "80px";
+        else if (min_diff == diff_160) size_suffix = "160px";
+        else size_suffix = "320px";
+
+        std::string color_prefix = (color == Color::WHITE ? "w" : "b");
+        
+        return "assets/" + color_prefix + piece_id + "_" + size_suffix + ".png";
+    }
+
 public:
-    Piece(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
-    color(col), window(w), board_square_size(b_squ_sz){
+    Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        piece_id(id), color(col), window(w), board_square_size(b_squ_sz) {
         bitboard_to_piece_pos(bitboard, piece_positions);
+    }
+
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
     }
 
     void draw(sf::RenderWindow& window) {
@@ -44,8 +68,6 @@ public:
         }
     }
 
-    virtual std::string get_texture_path() = 0;
-
     void bitboard_to_piece_pos(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos) {
 
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
@@ -55,81 +77,65 @@ public:
             }
         }
     }
-
 };
 
-class Pawn:public Piece {
+class Pawn : public Piece {
 public:
-    Pawn(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
-    Piece(col, w, bitboard, board_square_size) {}
+    Pawn(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        Piece("P", col, w, bitboard, b_squ_sz) {}
 
-    std::string get_texture_path() override {
-
-        int diff_from_80px= abs(board_square_size- TEXTURE_SIZE_80);
-        int diff_from_160px = abs(board_square_size - TEXTURE_SIZE_160);
-        int diff_from_320px = abs(board_square_size - TEXTURE_SIZE_320);
-
-        int min_diff = std::min({diff_from_80px, diff_from_160px, diff_from_320px});
-
-        if (min_diff == diff_from_80px) return color == Color::WHITE ? "assets/wP_80px.png" : "assets/bP_80px.png";
-        if (min_diff == diff_from_160px) return color == Color::WHITE ? "assets/wP_160px.png" : "assets/bP_160px.png";
-        if (min_diff == diff_from_320px) return color == Color::WHITE ? "assets/wP_320px.png" : "assets/bP_320px.png";
-
-
-
-
-        // format string to be appropriate size.
-        // return color == Color::WHITE ? "assets/wP_320px.png" : "assets/bP_320px.png";  
-    };
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
+    }
 };
 
-class Bishop:public Piece {
+class Knight : public Piece {
 public:
-    Bishop(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
-    Piece(col, w, bitboard, board_square_size) {}
+    Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        Piece("N", col, w, bitboard, b_squ_sz) {}
 
-    std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wB_320px.png" : "assets/bB_320px.png";  
-    };
-};
-
-class Knight:public Piece {
-public:
-    Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
-    Piece(col, w, bitboard, board_square_size) {}
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
+    }
     
-    std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wN_320px.png" : "assets/bN_320px.png";  
-    };
 };
 
-class Rook:public Piece {
+class Bishop : public Piece {
 public:
-    Rook(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
-    Piece(col, w, bitboard, board_square_size) {}
+    Bishop(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        Piece("B", col, w, bitboard, b_squ_sz) {}
 
-    std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wR_320px.png" : "assets/bR_320px.png";  
-    };
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
+    }
 };
 
-class Queen:public Piece {
-
+class   Rook : public Piece {
 public:
-    Queen(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
-    Piece(col, w, bitboard, board_square_size) {}
+    Rook(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        Piece("R", col, w, bitboard, b_squ_sz) {}
 
-    std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wQ_320px.png" : "assets/bQ_320px.png";  
-    };
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
+    }
 };
 
-class King:public Piece {
+class   Queen : public Piece {
 public:
-    King(Color col, sf::RenderWindow& w, uint64_t bitboard, int board_square_size) : 
-    Piece(col, w, bitboard, board_square_size) {}
+    Queen(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        Piece("Q", col, w, bitboard, b_squ_sz) {}
 
-    std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wK_320px.png" : "assets/bK_320px.png";  
-    };
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
+    }
+};
+
+class King : public Piece {
+public:
+    King(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+        Piece("K", col, w, bitboard, b_squ_sz) {}
+
+    virtual std::string get_texture_path() {
+        return resolve_texture_path();
+    }
 };

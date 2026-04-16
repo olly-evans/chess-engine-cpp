@@ -11,8 +11,8 @@
 #include <sstream>
 #include <iostream>
 
-#define WINDOW_HEIGHT 1280
-#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 1600
+#define WINDOW_WIDTH 1600
 #define WINDOW_NAME "Chess"
 
 #define NAME_OF(x) #x
@@ -235,7 +235,7 @@ public:
         main_window.clear();
         for (auto& squ : squares) {main_window.draw(squ);}
         // render_board_coords();
-        for (auto& piece_type : piece_types) piece_type->draw(main_window);
+        for (auto& piece_type : piece_types) {piece_type->draw(main_window);}
         main_window.display();
     }
 
