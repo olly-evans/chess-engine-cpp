@@ -19,7 +19,9 @@ public:
     /* DEBUG METHODS */
     
     // Updates the visual grid based on a 64-bit integer
-    static void draw_bitboard(sf::RenderWindow &window, 
+    static void draw_cycle_bitboard(sf::RenderWindow &window, 
+                                    int win_w, 
+                                    int win_h,
                                     std::vector<uint64_t> bitboards, 
                                     std::vector<std::string> board_names, 
                                     int bitboard_vec_index, 

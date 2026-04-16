@@ -14,7 +14,6 @@
 #define WINDOW_HEIGHT 1280
 #define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
-#define DEBUG_WINDOW_NAME "Debug Window"
 
 #define NAME_OF(x) #x
 
@@ -43,7 +42,7 @@ private:
     const unsigned int win_w;
     const std::string win_name;
 
-    sf::RenderWindow window;
+    sf::RenderWindow main_window;
 
     /* MOUSE */
 
@@ -58,7 +57,7 @@ private:
 
     bool debug_enabled;
     sf::RenderWindow bitboard_window;
-    std::vector<sf::RectangleShape> debug_squares;
+    std::vector<sf::RectangleShape> bitboard_window_squares;
 
     /* BITBOARDS */
 
@@ -113,17 +112,17 @@ private:
     /* PIECES */
     
     // Only two instances of each piece for black or white.
-    std::vector<Piece*> active_pieces;
+    std::vector<Piece*> piece_types;
 
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
-    win_w(ww), win_h(wh), win_name(wn), window(sf::VideoMode(win_w, win_h), win_name), debug_enabled(db){};
+    win_w(ww), win_h(wh), win_name(wn), main_window(sf::VideoMode(win_w, win_h), win_name), debug_enabled(db){};
 
-    /* UTIL METHODS PERHAPS IN OTHER FILE TBH */
+    /* UTIL METHODS */
 
     void die(std::string err) {
-        window.close();
+        main_window.close();
         std::cerr << err << std::endl;
         exit(1);
     }
@@ -159,6 +158,7 @@ public:
         };
 
     }
+
     void init_get_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
         if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
         if (!(win_w == win_h)) die("Window must be square!");
@@ -173,8 +173,8 @@ public:
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
             squares[i].setPosition(pos);
 
-            debug_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-            debug_squares[i].setPosition(pos);
+            bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
+            bitboard_window_squares[i].setPosition(pos);
 
             squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
@@ -190,21 +190,21 @@ public:
 
         /* WHITE */
 
-        active_pieces.push_back(new King(Color::WHITE, window, w_king, board_square_size));
-        active_pieces.push_back(new Queen(Color::WHITE, window, w_queen, board_square_size));
-        active_pieces.push_back(new Rook(Color::WHITE, window, w_rooks, board_square_size));
-        active_pieces.push_back(new Bishop(Color::WHITE, window, w_bishops, board_square_size));
-        active_pieces.push_back(new Knight(Color::WHITE, window, w_knights, board_square_size));
-        active_pieces.push_back(new Pawn(Color::WHITE, window, w_pawns, board_square_size));
+        piece_types.push_back(new King(Color::WHITE, main_window, w_king, board_square_size));
+        piece_types.push_back(new Queen(Color::WHITE, main_window, w_queen, board_square_size));
+        piece_types.push_back(new Rook(Color::WHITE, main_window, w_rooks, board_square_size));
+        piece_types.push_back(new Bishop(Color::WHITE, main_window, w_bishops, board_square_size));
+        piece_types.push_back(new Knight(Color::WHITE, main_window, w_knights, board_square_size));
+        piece_types.push_back(new Pawn(Color::WHITE, main_window, w_pawns, board_square_size));
 
         /* BLACK */
 
-        active_pieces.push_back(new King(Color::BLACK, window, b_king, board_square_size));
-        active_pieces.push_back(new Queen(Color::BLACK, window, b_queen, board_square_size));
-        active_pieces.push_back(new Rook(Color::BLACK, window, b_rooks, board_square_size));
-        active_pieces.push_back(new Bishop(Color::BLACK, window, b_bishops, board_square_size));
-        active_pieces.push_back(new Knight(Color::BLACK, window, b_knights, board_square_size));
-        active_pieces.push_back(new Pawn(Color::BLACK, window, b_pawns, board_square_size));
+        piece_types.push_back(new King(Color::BLACK, main_window, b_king, board_square_size));
+        piece_types.push_back(new Queen(Color::BLACK, main_window, b_queen, board_square_size));
+        piece_types.push_back(new Rook(Color::BLACK, main_window, b_rooks, board_square_size));
+        piece_types.push_back(new Bishop(Color::BLACK, main_window, b_bishops, board_square_size));
+        piece_types.push_back(new Knight(Color::BLACK, main_window, b_knights, board_square_size));
+        piece_types.push_back(new Pawn(Color::BLACK, main_window, b_pawns, board_square_size));
     }
     
     // void init_board_coords() {
@@ -225,20 +225,17 @@ public:
     }
 
     void render_main_window() {
-
-        window.clear();
-        for (auto& squ : squares) {window.draw(squ);}
+        main_window.clear();
+        for (auto& squ : squares) {main_window.draw(squ);}
         // render_board_coords();
-
-        for (auto& piece_type : active_pieces) piece_type->draw(window);
-        window.display();
+        for (auto& piece_type : piece_types) piece_type->draw(main_window);
+        main_window.display();
     }
 
     void render_bitboard_window() {
         bitboard_window.clear();
-
-        for (auto& squ : debug_squares) {bitboard_window.draw(squ);}
-        Debug::draw_bitboard(bitboard_window, bitboards, bitboard_names, bitboard_vec_index, debug_squares);
+        for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
+        Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
         bitboard_window.display();
     }
 
@@ -246,8 +243,7 @@ public:
 
     void run() {
         sf::Event event;
-        while (window.isOpen()) {
-
+        while (main_window.isOpen()) {
             run_handle_events();
             render();     
         }
@@ -257,7 +253,7 @@ public:
 
     void run_handle_events() {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (main_window.pollEvent(event)) {
             on_main_window_event(event);
         }
 
@@ -270,7 +266,7 @@ public:
     }
 
     void on_main_window_event(sf::Event &event) {
-        if (event.type == sf::Event::Closed) window.close();
+        if (event.type == sf::Event::Closed) main_window.close();
         if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
 
     }
