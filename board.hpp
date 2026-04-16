@@ -119,10 +119,6 @@ public:
     Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
     win_w(ww), win_h(wh), win_name(wn), main_window(sf::VideoMode(win_w, win_h), win_name), debug_enabled(db){};
 
-    const unsigned int TEXTURE_SIZE_80 = 80;
-    const unsigned int TEXTURE_SIZE_160 = 160;
-    const unsigned int TEXTURE_SIZE_320 = 320;
-
     unsigned int board_square_size;
 
     
@@ -201,21 +197,21 @@ public:
 
         /* WHITE */
 
-        piece_types.push_back(new King(*this, Color::WHITE, main_window, w_king, board_square_size));
-        piece_types.push_back(new Queen(*this, Color::WHITE, main_window, w_queen, board_square_size));
-        piece_types.push_back(new Rook(*this, Color::WHITE, main_window, w_rooks, board_square_size));
-        piece_types.push_back(new Bishop(*this, Color::WHITE, main_window, w_bishops, board_square_size));
-        piece_types.push_back(new Knight(*this, Color::WHITE, main_window, w_knights, board_square_size));
-        piece_types.push_back(new Pawn(*this, Color::WHITE, main_window, w_pawns, board_square_size));
+        piece_types.push_back(new King(Color::WHITE, main_window, w_king, board_square_size));
+        piece_types.push_back(new Queen(Color::WHITE, main_window, w_queen, board_square_size));
+        piece_types.push_back(new Rook(Color::WHITE, main_window, w_rooks, board_square_size));
+        piece_types.push_back(new Bishop(Color::WHITE, main_window, w_bishops, board_square_size));
+        piece_types.push_back(new Knight(Color::WHITE, main_window, w_knights, board_square_size));
+        piece_types.push_back(new Pawn(Color::WHITE, main_window, w_pawns, board_square_size));
 
         /* BLACK */
 
-        piece_types.push_back(new King(*this, Color::BLACK, main_window, b_king, board_square_size));
-        piece_types.push_back(new Queen(*this, Color::BLACK, main_window, b_queen, board_square_size));
-        piece_types.push_back(new Rook(*this, Color::BLACK, main_window, b_rooks, board_square_size));
-        piece_types.push_back(new Bishop(*this, Color::BLACK, main_window, b_bishops, board_square_size));
-        piece_types.push_back(new Knight(*this, Color::BLACK, main_window, b_knights, board_square_size));
-        piece_types.push_back(new Pawn(*this, Color::BLACK, main_window, b_pawns, board_square_size));
+        piece_types.push_back(new King(Color::BLACK, main_window, b_king, board_square_size));
+        piece_types.push_back(new Queen(Color::BLACK, main_window, b_queen, board_square_size));
+        piece_types.push_back(new Rook(Color::BLACK, main_window, b_rooks, board_square_size));
+        piece_types.push_back(new Bishop(Color::BLACK, main_window, b_bishops, board_square_size));
+        piece_types.push_back(new Knight(Color::BLACK, main_window, b_knights, board_square_size));
+        piece_types.push_back(new Pawn(Color::BLACK, main_window, b_pawns, board_square_size));
     }
     
     // void init_board_coords() {
