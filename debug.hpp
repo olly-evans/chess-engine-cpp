@@ -7,7 +7,7 @@
 
 class Debug {
 public:
-    // Toggle this to false to silence the entire debugger
+    // Toggle this to false to stop debug toggles.
     inline static bool enabled = true;
     
     template<typename T>
@@ -18,7 +18,6 @@ public:
 
     /* DEBUG METHODS */
     
-    // Updates the visual grid based on a 64-bit integer
     static void draw_cycle_bitboard(sf::RenderWindow &window, 
                                     int win_w, 
                                     int win_h,
@@ -27,10 +26,8 @@ public:
                                     int bitboard_vec_index, 
                                     std::vector<sf::RectangleShape> &squares);
 
-    // Prints mouse coordinates to console
-    static void mouse_pos(int x, int y);
+    static void show_mouse_pos(int x, int y);
     
-    // Quick helper for simple messages
     static void log(const std::string& message);
 };
 

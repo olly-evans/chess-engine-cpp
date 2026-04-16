@@ -60,7 +60,7 @@ public:
     Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wP.png" : "assets/bP.png";  
+        return color == Color::WHITE ? "assets/wP_160px.png" : "assets/bP_160px.png";  
     };
 };
 
@@ -70,7 +70,7 @@ public:
     Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wB.png" : "assets/bB.png";  
+        return color == Color::WHITE ? "assets/wB_160px.png" : "assets/bB_160px.png";  
     };
 };
 
@@ -80,7 +80,7 @@ public:
     Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wN.png" : "assets/bN.png";  
+        return color == Color::WHITE ? "assets/wN_160px.png" : "assets/bN_160px.png";  
     };
 };
 
@@ -90,7 +90,7 @@ public:
     Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wR.png" : "assets/bR.png";  
+        return color == Color::WHITE ? "assets/wR_160px.png" : "assets/bR_160px.png";  
     };
 };
 
@@ -101,7 +101,7 @@ public:
     Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wQ.png" : "assets/bQ.png";  
+        return color == Color::WHITE ? "assets/wQ_160px.png" : "assets/bQ_160px.png";  
     };
 };
 
@@ -111,6 +111,6 @@ public:
     Piece(col, w, bitboard, board_square_size) {}
 
     std::string get_texture_path() override {
-        return color == Color::WHITE ? "assets/wK.png" : "assets/bK.png";  
+        return color == Color::WHITE ? "assets/wK_160px.png" : "assets/bK_160px.png";  
     };
 };

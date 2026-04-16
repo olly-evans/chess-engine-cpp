@@ -2,7 +2,6 @@
 #include "board.hpp"
 #include <iostream>
 
-// Pass in the bitboard AND the array of squares it needs to color
 void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, std::vector<uint64_t> bitboards, std::vector<std::string> bitboard_names, int bitboard_vec_index, std::vector<sf::RectangleShape> &squares) {
     
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
@@ -17,8 +16,6 @@ void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, 
     }
 }
 
-// Pass in the raw coordinates
-void Debug::mouse_pos(int x, int y) {
-    // We don't even need stringstream here anymore if we just want to print!
+void Debug::show_mouse_pos(int x, int y) {
     std::cout << "(" << x << ", " << y << ")" << std::endl;
 }

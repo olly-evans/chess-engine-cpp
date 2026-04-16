@@ -268,7 +268,6 @@ public:
     void on_main_window_event(sf::Event &event) {
         if (event.type == sf::Event::Closed) main_window.close();
         if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
-
     }
 
     void on_bitboard_window_event(sf::Event &event) {

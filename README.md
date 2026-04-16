@@ -10,5 +10,6 @@
 
 - toggle mouse pos in console too.
 
-- closing bitboard window bugs out.
-- wrong bitboards/names.
+- everything scales well except piece images right now.
+    solution would be to have a few copies and choose one depending on chosen size.
+    maybe 80x80, 160x160 and 320x320 shoud cover everything.
