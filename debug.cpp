@@ -9,11 +9,11 @@ void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, 
         squares[draw_idx].setFillColor(bitboards[bitboard_vec_index] & (1ULL << i) ? sf::Color::White : sf::Color::Black);
     }
 
-    if (!window.isOpen()) {
-        window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-    } else {
-        window.setTitle(bitboard_names[bitboard_vec_index]);
-    }
+    // if (!window.isOpen()) {
+    //     window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
+    // } else {
+    //     window.setTitle(bitboard_names[bitboard_vec_index]);
+    // }
 }
 
 void Debug::show_mouse_pos(int x, int y) {

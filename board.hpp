@@ -272,8 +272,7 @@ public:
             on_main_window_event(event);
         }
 
-        if (!bitboard_window.isOpen()) {
-            bitboard_window.create(sf::VideoMode(win_w, win_h), "Bitboard Window");
+        if (bitboard_window.isOpen()) {
             sf::Event debug_event;
             while (bitboard_window.pollEvent(debug_event)) {
                 on_bitboard_window_event(debug_event);
@@ -293,6 +292,8 @@ public:
 
     void on_key_pressed(sf::Event &event) {
         if (event.key.code == sf::Keyboard::Tab) {
+            if (!bitboard_window.isOpen()) 
+                bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
         }
