@@ -5,12 +5,10 @@
 class Debug {
 public:
     // Toggle this to false to stop debug toggles.
-    inline static bool enabled = true;
     
     template<typename T>
     static void run(T task) {
-        if (enabled)
-            task(); 
+        task(); 
     }
 
     /* DEBUG METHODS */

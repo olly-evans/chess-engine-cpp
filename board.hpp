@@ -11,8 +11,9 @@
 #include <sstream>
 #include <iostream>
 
-#define WINDOW_HEIGHT 1280
-#define WINDOW_WIDTH 1280
+// Have 80px minimum recommended would 640px.
+#define WINDOW_HEIGHT 640
+#define WINDOW_WIDTH 640
 #define WINDOW_NAME "Chess"
 
 #define NAME_OF(x) #x
@@ -156,7 +157,8 @@ public:
         // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
         init_bitboards();
         init_get_board_square_size(&board_square_size, win_h, win_w);
-        init_board_squares();
+        init_main_window_squares();
+        init_bitboard_window_squares();
         init_pieces();
         // init_board_coords();
     }
@@ -180,18 +182,22 @@ public:
         *sz = win_h / GRID_SZ;
     }
 
-    void init_board_squares() {
+    void init_main_window_squares() {
 
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-
             sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
             squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
             squares[i].setPosition(pos);
+            squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+        }   
+    }
 
+    void init_bitboard_window_squares() {
+    
+        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+            sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
             bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
             bitboard_window_squares[i].setPosition(pos);
-
-            squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         }   
     }
 
@@ -250,6 +256,8 @@ public:
     void render_bitboard_window() {
         bitboard_window.clear();
         for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
+
+        // this is always called because its enabled in Debug class. So main dies without it.
         Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
         bitboard_window.display();
     }
@@ -286,14 +294,15 @@ public:
     }
 
     void on_bitboard_window_event(sf::Event &event) {
-        if (event.type == sf::Event::Closed) bitboard_window.close();
-            
+        if (event.type == sf::Event::Closed) bitboard_window.close();   
     }
 
     void on_key_pressed(sf::Event &event) {
         if (event.key.code == sf::Keyboard::Tab) {
-            if (!bitboard_window.isOpen()) 
+            if (!bitboard_window.isOpen()) {
                 bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
+            }
+
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
         }

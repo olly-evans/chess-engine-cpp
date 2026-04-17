@@ -47,7 +47,7 @@ protected:
         std::string color_prefix = (color == Color::WHITE ? "w" : "b");
         
         // Be careful with this using CMake.
-        return "assets/" + color_prefix + piece_id + "_" + size_suffix + ".png";
+        return "../assets/" + color_prefix + piece_id + "_" + size_suffix + ".png";
     }
 
 public:
