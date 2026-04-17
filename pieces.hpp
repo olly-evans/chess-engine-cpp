@@ -46,16 +46,19 @@ protected:
 
         std::string color_prefix = (color == Color::WHITE ? "w" : "b");
         
+        // Be careful with this using CMake.
         return "assets/" + color_prefix + piece_id + "_" + size_suffix + ".png";
     }
 
 public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
-        piece_id(id), color(col), window(w), board_square_size(b_squ_sz) {
+        piece_id(id), 
+        color(col), 
+        window(w), 
+        board_square_size(b_squ_sz) {
 
         bitboard_to_piece_pos(bitboard, piece_positions);
         if (texture.loadFromFile(get_texture_path())) sprite.setTexture(texture);
-
     }
 
     virtual std::string get_texture_path() {

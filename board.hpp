@@ -113,13 +113,18 @@ private:
 
     /* PIECES */
     
-    // Only two instances of each piece for black or white.
+    // Only two instances of each piece for black or white, black and white Pawn instance for example.
     std::vector<Piece*> piece_types;
 
 public:
 
     Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
-    win_w(ww), win_h(wh), win_name(wn), main_window(sf::VideoMode(win_w, win_h), win_name), debug_enabled(db){};
+    win_w(ww), 
+    win_h(wh), 
+    win_name(wn), 
+    main_window(sf::VideoMode(win_w, win_h), 
+    win_name), 
+    debug_enabled(db){};
 
     unsigned int board_square_size;
 
@@ -267,7 +272,8 @@ public:
             on_main_window_event(event);
         }
 
-        if (bitboard_window.isOpen()) {
+        if (!bitboard_window.isOpen()) {
+            bitboard_window.create(sf::VideoMode(win_w, win_h), "Bitboard Window");
             sf::Event debug_event;
             while (bitboard_window.pollEvent(debug_event)) {
                 on_bitboard_window_event(debug_event);
