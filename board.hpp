@@ -245,7 +245,15 @@ public:
     /* RENDER */
 
     void render() {
-        render_main_window();
+        
+        
+        // it no mouse click you may re-render
+              render_main_window();
+
+        // else 
+        //     return;
+        
+        
         if (Debug::enabled) render_bitboard_window(); 
     }
 
@@ -303,12 +311,7 @@ public:
 
         //while event is left mouse click, re-render()
         if (event.type == sf::Event::Closed) main_window.close();
-        if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
-
-        // Sort of thing we need to check for re-renders.
-        // if (!event.type == sf::Event::MouseLeft);
-
-        
+        if (event.type == sf::Event::KeyPressed) on_key_pressed(event);    
     }
 
     void on_bitboard_window_event(sf::Event &event) {
