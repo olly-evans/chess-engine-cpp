@@ -11,8 +11,8 @@
 #include <sstream>
 #include <iostream>
 
-#define WINDOW_HEIGHT 3840
-#define WINDOW_WIDTH 3840
+#define WINDOW_HEIGHT 1280
+#define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
 
 #define NAME_OF(x) #x

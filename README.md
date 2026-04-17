@@ -1,4 +1,4 @@
-## Programming a Chess Engine
+## Chess and Engine Programming
 
 ### Intro
 
@@ -6,13 +6,14 @@ So turns out to write a chess engine you first have to write the game of chess, 
 
 If you're asking why I didn't use a prebuilt chess GUI its because of my limited Object-Oriented programming experience. And Chess is for sure a great way to practise this with its board and piece hierarchies. But also because Dear Imgui and others in Visual Studio scares me to my core, so here I am.
 
+For anyone cloning, I would recommend playing on the default 1280x1280 window width found in board.hpp. But it is up to you and the program will adapt dynamically.
+
 ### Goals
 
 The goal for this project is to document my progress and learn more about C++, CMake and SFML. And also to become more familiar with common software design patterns.
 
-I'll put the rest of my goals in a more formal list for readability below:
+I'll put the rest of my goals in a more formal list below, for readability:
 
-- Document progress
 - Discuss methods and techniques and why I used them
 - Develop a functioning chess game with mouse movement and clicks
 - Develop a competent AI to play against
