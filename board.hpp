@@ -251,6 +251,9 @@ public:
 
     void render_main_window() {
         main_window.clear();
+        
+        std::cout << "render_main_window()" << std::endl;
+
         for (auto& squ : squares) {main_window.draw(squ);}
 
         // render_board_coords();
@@ -269,8 +272,11 @@ public:
     /* RUN */
 
     void run() {
+
         while (main_window.isOpen()) {
             run_handle_events();
+
+            // if no mouse click, continue.
             render();     
         }
     }
@@ -289,11 +295,20 @@ public:
                 on_bitboard_window_event(debug_event);
             }
         }
+
+
     }
 
     void on_main_window_event(sf::Event &event) {
+
+        //while event is left mouse click, re-render()
         if (event.type == sf::Event::Closed) main_window.close();
         if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
+
+        // Sort of thing we need to check for re-renders.
+        // if (!event.type == sf::Event::MouseLeft);
+
+        
     }
 
     void on_bitboard_window_event(sf::Event &event) {
@@ -303,7 +318,8 @@ public:
     void on_key_pressed(sf::Event &event) {
 
         auto key = event.key.code;
-        
+
+        // One condition? Perhaps cleaner with two.
         if (key == sf::Keyboard::Tab) {
             if (!bitboard_window.isOpen() && Debug::enabled)
                 bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
