@@ -11,9 +11,9 @@
 #include <sstream>
 #include <iostream>
 
-// Have 80px minimum recommended would 640px.
-#define WINDOW_HEIGHT 640
-#define WINDOW_WIDTH 640
+// Have 80px piece pngs, smallest recommended size would be 640px.
+#define WINDOW_HEIGHT 1280
+#define WINDOW_WIDTH 1280
 #define WINDOW_NAME "Chess"
 
 #define NAME_OF(x) #x
@@ -305,10 +305,8 @@ public:
         if (event.key.code == sf::Keyboard::Tab) {
             if (!bitboard_window.isOpen() && Debug::enabled)
                 bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-            
-
-            bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
+                bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
+                bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
         }
     }
 };
