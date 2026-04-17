@@ -1,8 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <functional>
-#include <cstdint>
 
 class Debug {
 public:

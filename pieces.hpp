@@ -17,7 +17,7 @@ protected:
     const unsigned int TEXTURE_SIZE_160 = 160;
     const unsigned int TEXTURE_SIZE_320 = 320;
 
-    int x,y;
+    sf::Vector2f pos;
 
     Color color;
 
@@ -117,7 +117,7 @@ public:
     }
 };
 
-class   Rook : public Piece {
+class Rook : public Piece {
 public:
     Rook(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("R", col, w, bitboard, b_squ_sz) {}
@@ -127,7 +127,7 @@ public:
     }
 };
 
-class   Queen : public Piece {
+class Queen : public Piece {
 public:
     Queen(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("Q", col, w, bitboard, b_squ_sz) {}

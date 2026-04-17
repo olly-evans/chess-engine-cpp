@@ -22,7 +22,7 @@ I'll put the rest of my goals in a more formal list below, for readability:
 
 ## Blog
 
-If you'd like the full story I'd highly suggest checking out the blog for this project on my website where I have practically documented almost every step, and will continue to do so until completion.
+If you'd like the full story I'd highly suggest checking out the blog for this project on my website where I have practically documented almost every step. And will continue to do so until completion.
 
 The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
