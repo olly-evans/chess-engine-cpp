@@ -269,7 +269,6 @@ public:
     /* RUN */
 
     void run() {
-        sf::Event event;
         while (main_window.isOpen()) {
             run_handle_events();
             render();     
