@@ -197,7 +197,7 @@ public:
     }
 
     void init_bitboard_window_squares() {
-    
+
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
             bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
@@ -252,7 +252,9 @@ public:
     void render_main_window() {
         main_window.clear();
         for (auto& squ : squares) {main_window.draw(squ);}
+
         // render_board_coords();
+
         for (auto& piece_type : piece_types) {piece_type->draw(main_window);}
         main_window.display();
     }
@@ -260,8 +262,6 @@ public:
     void render_bitboard_window() {
         bitboard_window.clear();
         for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
-
-        // this is always called because its enabled in Debug class. So main dies without it.
         Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
         bitboard_window.display();
     }
@@ -301,7 +301,10 @@ public:
     }
 
     void on_key_pressed(sf::Event &event) {
-        if (event.key.code == sf::Keyboard::Tab) {
+
+        auto key = event.key.code;
+        
+        if (key == sf::Keyboard::Tab) {
             if (!bitboard_window.isOpen() && Debug::enabled)
                 bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
                 bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
