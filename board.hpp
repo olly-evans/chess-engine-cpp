@@ -11,12 +11,11 @@
 #include <sstream>
 #include <iostream>
 
-#define WINDOW_HEIGHT 2560
-#define WINDOW_WIDTH 2560
+#define WINDOW_HEIGHT 3840
+#define WINDOW_WIDTH 3840
 #define WINDOW_NAME "Chess"
 
 #define NAME_OF(x) #x
-
 
 /* COLORS */
 
@@ -86,10 +85,12 @@ private:
 
     */
 
+    // Vector of all bitboards.
     std::vector<uint64_t> bitboards;
     std::vector<std::string> bitboard_names;
     int bitboard_vec_index = 0;
 
+    // All bitboards.
     uint64_t w_pawns = 0xFF00ULL;
     uint64_t w_knights = 0x42ULL;
     uint64_t w_bishops = 0x24ULL;
@@ -104,6 +105,7 @@ private:
     uint64_t b_queen = 0x1000000000000000ULL;
     uint64_t b_king = 0x0800000000000000ULL;
 
+    // Bitboard macros.
     #define set_bit(b, i) ((b) |= (1ULL << i))
     #define get_bit(b, i) ((b) & (1ULL << i))
     #define clear_bit(b, i) ((b) &= ~(1ULL << i))
@@ -135,6 +137,7 @@ public:
         return ((int)vec.x + (int)vec.y) % 2;
     }
 
+    // only here in case we pass board to pieces.
     const unsigned int get_win_w_h() {
         return win_h | win_w; // Equal.
     }

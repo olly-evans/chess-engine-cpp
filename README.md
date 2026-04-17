@@ -1,15 +1,32 @@
-#TODO
+## Programming a Chess Engine
 
-- images need to be scaled with board_square_size.
+### Intro
+
+So turns out to write a chess engine you first have to write the game of chess, I know right who would of thought. Writing chess the game so far has been much harder than I thought it would be, but has  also been very rewarding.
+
+If you're asking why I didn't use a prebuilt chess GUI its because of my limited Object-Oriented programming experience. And Chess is for sure a great way to practise this with its board and piece hierarchies. But also because Dear Imgui and others in Visual Studio scares me to my core, so here I am.
+
+### Goals
+
+The goal for this project is to document my progress and learn more about C++, CMake and SFML. And also to become more familiar with common software design patterns.
+
+I'll put the rest of my goals in a more formal list for readability below:
+
+- Document progress
+- Discuss methods and techniques and why I used them
+- Develop a functioning chess game with mouse movement and clicks
+- Develop a competent AI to play against
+- Develop a welcome screen to select black/white for the player and perhaps a welcome message
+- Have fun and be creative
+
+## Blog
+
+If you'd like the full story I'd highly suggest checking out the blog for this project on my website where I have practically documented almost every step, and will continue to do so until completion.
+
+The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
+
+## TODO List (I'm forgetful)
 
 - ONLY RENDER IF WE ARE REGISTERING MOUSE CLICKS.
-
-- debug functions need to be managed to not overlap in console etc..
-
-- tab to cycle through bitboards with one button, change window name.
-
 - toggle mouse pos in console too.
-
-- everything scales well except piece images right now.
-    solution would be to have a few copies and choose one depending on chosen size.
-    maybe 80x80, 160x160 and 320x320 shoud cover everything.
+- open window with tab not auto-spawn bullshit

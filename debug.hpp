@@ -21,7 +21,7 @@ public:
                                     int win_w, 
                                     int win_h,
                                     std::vector<uint64_t> bitboards, 
-                                    std::vector<std::string> board_names, 
+                                    std::vector<std::string> bitboard_names, 
                                     int bitboard_vec_index, 
                                     std::vector<sf::RectangleShape> &squares);
 
