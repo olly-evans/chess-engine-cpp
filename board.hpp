@@ -158,6 +158,8 @@ public:
         init_bitboards();
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_main_window_squares();
+        init_bitboard_window_squares(); // always runs as of right now.
+
         init_pieces();
         // init_board_coords();
     }
@@ -298,10 +300,9 @@ public:
 
     void on_key_pressed(sf::Event &event) {
         if (event.key.code == sf::Keyboard::Tab) {
-            if (!bitboard_window.isOpen()) {
+            if (!bitboard_window.isOpen())
                 bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-                init_bitboard_window_squares();
-            }
+            
 
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
