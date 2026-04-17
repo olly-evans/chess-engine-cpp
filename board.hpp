@@ -158,7 +158,9 @@ public:
         init_bitboards();
         init_get_board_square_size(&board_square_size, win_h, win_w);
         init_main_window_squares();
-        init_bitboard_window_squares(); // always runs as of right now.
+        
+        if (Debug::enabled)
+            init_bitboard_window_squares(); // always runs as of right now.
 
         init_pieces();
         // init_board_coords();
