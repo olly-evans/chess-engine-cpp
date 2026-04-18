@@ -3,7 +3,7 @@
 #include "util.hpp"
 
 #include <iostream>
-
+#include <filesystem>
 
 enum class Color {BLACK, WHITE};
 
@@ -40,20 +40,19 @@ protected:
             size_suffix = "80px";
         }
 
+        std::filesystem::path path = std::filesystem::current_path();
         std::string color_prefix = (color == Color::WHITE ? "w" : "b");
-        
-        // Be careful with this using CMake.
-        return "assets/" + color_prefix + piece_id + "_" + size_suffix + ".png";
+        return path.string() + "/assets/" + color_prefix + piece_id + "_" + size_suffix + ".png";
     }
 
 public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitb, int b_squ_sz) : 
-        piece_id(id), 
+        piece_id(std::move(id)), 
         color(col), 
         window(w), 
         bitboard(bitb),
         board_square_size(b_squ_sz) {
-
+            
         init_piece_positions_vector_from_bitboard(bitboard, piece_positions);
         if (texture.loadFromFile(get_texture_path())) sprite.setTexture(texture);
     }
@@ -92,7 +91,7 @@ public:
     Pawn(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("P", col, w, bitboard, b_squ_sz) {}
 
-    virtual std::string get_texture_path() {
+    virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
 };
@@ -102,7 +101,7 @@ public:
     Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("N", col, w, bitboard, b_squ_sz) {}
 
-    virtual std::string get_texture_path() {
+    virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
     
@@ -113,7 +112,7 @@ public:
     Bishop(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("B", col, w, bitboard, b_squ_sz) {}
 
-    virtual std::string get_texture_path() {
+    virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
 };
@@ -123,7 +122,7 @@ public:
     Rook(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("R", col, w, bitboard, b_squ_sz) {}
 
-    virtual std::string get_texture_path() {
+    virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
 };
@@ -133,7 +132,7 @@ public:
     Queen(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("Q", col, w, bitboard, b_squ_sz) {}
 
-    virtual std::string get_texture_path() {
+    virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
 };
@@ -143,7 +142,7 @@ public:
     King(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("K", col, w, bitboard, b_squ_sz) {}
 
-    virtual std::string get_texture_path() {
+    virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
 };

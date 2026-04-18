@@ -13,9 +13,10 @@
 #include <cmath>
 
 // Have 80px piece pngs, smallest recommended size would be 640px.
-#define WINDOW_HEIGHT 1280
-#define WINDOW_WIDTH 1280
-#define WINDOW_NAME "Chess"
+constexpr auto WINDOW_HEIGHT = 1280;
+constexpr auto WINDOW_WIDTH = 1280;
+constexpr auto WINDOW_NAME = "Chess";
+static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
 
 #define NAME_OF(x) #x
 
@@ -45,12 +46,6 @@ private:
     const unsigned int win_w;
 
     sf::RenderWindow main_window;
-    bool main_win_is_dirty = true;
-
-    /* MOUSE */
-
-    int mouse_x;
-    int mouse_y;
     
     /* GRID */
     std::vector<sf::RectangleShape> squares;
@@ -126,16 +121,15 @@ public:
     Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
     win_w(ww), 
     win_h(wh), 
-    win_name(wn), 
+    win_name(std::move(wn)), 
     main_window(sf::VideoMode(win_w, win_h), 
     win_name) {};
 
     unsigned int board_square_size;
 
-    
     /* UTIL METHODS */
 
-    void die(std::string err) {
+    void die(const std::string& err) {
         main_window.close();
         std::cerr << err << std::endl;
         exit(1);
@@ -189,7 +183,7 @@ public:
         // If black, board must be inverted.
         // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
         init_bitboards();
-        init_get_board_square_size(&board_square_size, win_h, win_w);
+        init_get_board_square_size(board_square_size, win_h, win_w);
         init_main_window_squares();
 
         // I like this for now. Keeps it in init and only runs if debug enabled.
@@ -213,10 +207,9 @@ public:
 
     }
 
-    void init_get_board_square_size(unsigned int *sz, const unsigned win_h, const unsigned win_w) {
+    void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
         if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
-        if (!(win_w == win_h)) die("Window must be square!");
-        *sz = win_h / GRID_SZ;
+        sz = win_h / GRID_SZ;
     }
 
     void init_main_window_squares() {
@@ -279,14 +272,14 @@ public:
 
     void render() {
         
-        if (main_win_is_dirty) render_main_window();
+        render_main_window();
         if (Debug::enabled) render_bitboard_window(); 
     }
 
     void render_main_window() {
         main_window.clear();
         
-        std::cout << "render_main_window()" << std::endl;
+        // std::cout << "render_main_window()" << std::endl;
 
         for (auto& squ : squares) {main_window.draw(squ);}
 
@@ -306,7 +299,6 @@ public:
     /* RUN */
 
     void run() {
-
         while (main_window.isOpen()) {
             run_handle_events();
             render();     
@@ -319,10 +311,8 @@ public:
 
         sf::Event event;
         // changed this to if from while and it didn't seem to do anything.
-        if (main_window.pollEvent(event)) {
+        while (main_window.pollEvent(event)) {
             on_main_window_event(event);
-        } else {
-            main_win_is_dirty = false;
         }
 
         if (bitboard_window.isOpen()) {
@@ -368,9 +358,6 @@ public:
 
             // find the piece thats there.
             // something bitwise with this index. ^
-            
-            
-
         }
     }
 };

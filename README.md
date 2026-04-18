@@ -31,3 +31,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - toggle mouse pos in console too.
 - open window with tab not auto-spawn bullshit
 - pieces need to have bitboards because i theres only one instance of each!!!! <-----
+
+- Linux unsigned long is 64 bit.
+- Should replace all int with uint_t.
