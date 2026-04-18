@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <cmath>
 
 // Have 80px piece pngs, smallest recommended size would be 640px.
 #define WINDOW_HEIGHT 1280
@@ -282,15 +283,14 @@ public:
     /* RUN -> EVENT HANDLING */
 
     void run_handle_events() {
-        sf::Event event;
 
+        sf::Event event;
         // changed this to if from while and it didn't seem to do anything.
         if (main_window.pollEvent(event)) {
             on_main_window_event(event);
         } else {
             main_win_is_dirty = false;
         }
-
 
         if (bitboard_window.isOpen()) {
             sf::Event debug_event;
@@ -302,12 +302,9 @@ public:
 
     void on_main_window_event(sf::Event &event) {
 
-        // Keys.
         if (event.type == sf::Event::Closed) main_window.close();
         if (event.type == sf::Event::KeyPressed) on_key_pressed(event); 
-
-        // Mouse.
-        // if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);   
+        if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);   
     }
 
     void on_bitboard_window_event(sf::Event &event) {
@@ -327,7 +324,14 @@ public:
         }
     }
 
-    // void on_mouse_press(sf::Event &event) {
-    //     auto mouse_press = event.mouseButton.button;
-    // }
+    void on_mouse_press(sf::Event &event) {
+        auto mouse_press = event.mouseButton.button;
+
+        if (mouse_press == sf::Mouse::Left) {
+            sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
+            sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), (mouse_window_pos.y / board_square_size));
+            std::cout << mouse_square_pos.x << ", " << mouse_square_pos.y << "\n";
+            
+        }
+    }
 };
