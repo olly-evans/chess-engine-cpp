@@ -143,9 +143,25 @@ public:
         return ((int)vec.x + (int)vec.y) % 2;
     }
 
-    // only here in case we pass board to pieces.
+    int mouse_win_pos_to_piece_vec_index() {
+        // May need to be broken up into smaller functions.
+        sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
+        sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), 
+                                      (mouse_window_pos.y / board_square_size));
+        return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
+    }
+
+    // Piece* piece_at_index(int index) {
+
+    //     for (int i = 0; i < bitboards.size(); i++) {
+    //             if (get_bit(bitboards[i], index) == 1) return             
+    //         }
+    //     }
+    // }
+
+    // only here in case we pass board to pieces, well maybe other reasons too eventually.
     const unsigned int get_win_w_h() {
-        return win_h | win_w; // Equal.
+        return win_w; 
     }
 
     /* INIT */
@@ -328,10 +344,15 @@ public:
         auto mouse_press = event.mouseButton.button;
 
         if (mouse_press == sf::Mouse::Left) {
-            sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
-            sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), (mouse_window_pos.y / board_square_size));
-            std::cout << mouse_square_pos.x << ", " << mouse_square_pos.y << "\n";
+
+            int index = mouse_win_pos_to_piece_vec_index();
+            std::cout << index << "\n";
+
+            // find the piece thats there.
+            // something bitwise with this index. ^
             
+            
+
         }
     }
 };
