@@ -44,7 +44,7 @@ private:
     const unsigned int win_w;
 
     sf::RenderWindow main_window;
-    bool is_main_win_dirty = true;
+    bool main_win_is_dirty = true;
 
     /* MOUSE */
 
@@ -245,7 +245,7 @@ public:
 
     void render() {
         
-        if (is_main_win_dirty) render_main_window();
+        if (main_win_is_dirty) render_main_window();
         if (Debug::enabled) render_bitboard_window(); 
     }
 
@@ -288,7 +288,7 @@ public:
         if (main_window.pollEvent(event)) {
             on_main_window_event(event);
         } else {
-            is_main_win_dirty = false;
+            main_win_is_dirty = false;
         }
 
 
@@ -318,9 +318,9 @@ public:
 
         auto key = event.key.code;
 
-        // One condition? Perhaps cleaner with two.
         if (key == sf::Keyboard::Tab) {
             if (!bitboard_window.isOpen() && Debug::enabled)
+                // Cycle through bitboard vector and change title of bitboard_window.
                 bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
                 bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
                 bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
