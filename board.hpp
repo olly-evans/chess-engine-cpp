@@ -89,6 +89,9 @@ private:
 
     // Vector of all bitboards.
     std::vector<uint64_t> bitboards;
+    enum PieceType { W_PAWNS, W_KNIGHTS, W_BISHOPS, W_ROOKS, W_QUEEN, W_KING,
+                 B_PAWNS, B_KNIGHTS, B_BISHOPS, B_ROOKS, B_QUEEN, B_KING };
+
     std::vector<std::string> bitboard_names;
     int bitboard_vec_index = 0;
 
@@ -151,16 +154,18 @@ public:
         return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
     }
 
-    // Piece* piece_at_index(int index) {
+    Piece* piece_at_index(int index) {
 
-    //     for (int i = 0; i < bitboards.size(); i++) {
-    //             if (get_bit(bitboards[i], index) == 1) return             
-    //         }
-    //     }
-    // }
+        for (int i = 0; i < bitboards.size(); i++) {
+                if (get_bit(bitboards[i], index) == 1) return            
+            }
+        }
+    }
+
+    
 
     // only here in case we pass board to pieces, well maybe other reasons too eventually.
-    const unsigned int get_win_w_h() {
+    const unsigned int get_win_width() {
         return win_w; 
     }
 
@@ -341,6 +346,7 @@ public:
     }
 
     void on_mouse_press(sf::Event &event) {
+
         auto mouse_press = event.mouseButton.button;
 
         if (mouse_press == sf::Mouse::Left) {
