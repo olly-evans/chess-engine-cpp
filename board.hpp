@@ -154,13 +154,25 @@ public:
         return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
     }
 
-    Piece* piece_at_index(int index) {
+    // Piece* piece_at_index(int index) {
 
-        for (int i = 0; i < bitboards.size(); i++) {
-                if (get_bit(bitboards[i], index) == 1) return            
-            }
-        }
-    }
+    // README.MD
+
+
+
+    //     for (int i = 0; i < bitboards.size(); i++) {
+    //             if (get_bit(bitboards[i], index) == 1) return            
+    //         }
+    //     }
+    // }
+
+    // for (auto& piece : piece_types) {
+    //     for (auto& position : piece.piece_positions) {
+
+    //     }
+
+    // }
+
 
     
 
