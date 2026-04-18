@@ -28,6 +28,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 ## TODO List (I'm forgetful)
 
-- ONLY RENDER IF WE ARE REGISTERING MOUSE CLICKS. Problem is render() needs the event from run_event_handle()
 - toggle mouse pos in console too.
 - open window with tab not auto-spawn bullshit

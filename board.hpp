@@ -44,6 +44,7 @@ private:
     const unsigned int win_w;
 
     sf::RenderWindow main_window;
+    bool is_main_win_dirty = true;
 
     /* MOUSE */
 
@@ -55,7 +56,6 @@ private:
 
     /* DEBUG */
 
-    bool debug_enabled;
     sf::RenderWindow bitboard_window;
     std::vector<sf::RectangleShape> bitboard_window_squares;
 
@@ -124,8 +124,7 @@ public:
     win_h(wh), 
     win_name(wn), 
     main_window(sf::VideoMode(win_w, win_h), 
-    win_name), 
-    debug_enabled(db){};
+    win_name) {};
 
     unsigned int board_square_size;
 
@@ -246,14 +245,7 @@ public:
 
     void render() {
         
-        
-        // it no mouse click you may re-render
-              render_main_window();
-
-        // else 
-        //     return;
-        
-        
+        if (is_main_win_dirty) render_main_window();
         if (Debug::enabled) render_bitboard_window(); 
     }
 
@@ -283,8 +275,6 @@ public:
 
         while (main_window.isOpen()) {
             run_handle_events();
-
-            // if no mouse click, continue.
             render();     
         }
     }
@@ -293,9 +283,14 @@ public:
 
     void run_handle_events() {
         sf::Event event;
-        while (main_window.pollEvent(event)) {
+
+        // changed this to if from while and it didn't seem to do anything.
+        if (main_window.pollEvent(event)) {
             on_main_window_event(event);
+        } else {
+            is_main_win_dirty = false;
         }
+
 
         if (bitboard_window.isOpen()) {
             sf::Event debug_event;
@@ -303,15 +298,16 @@ public:
                 on_bitboard_window_event(debug_event);
             }
         }
-
-
     }
 
     void on_main_window_event(sf::Event &event) {
 
-        //while event is left mouse click, re-render()
+        // Keys.
         if (event.type == sf::Event::Closed) main_window.close();
-        if (event.type == sf::Event::KeyPressed) on_key_pressed(event);    
+        if (event.type == sf::Event::KeyPressed) on_key_pressed(event); 
+
+        // Mouse.
+        // if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);   
     }
 
     void on_bitboard_window_event(sf::Event &event) {
@@ -330,4 +326,8 @@ public:
                 bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
         }
     }
+
+    // void on_mouse_press(sf::Event &event) {
+    //     auto mouse_press = event.mouseButton.button;
+    // }
 };
