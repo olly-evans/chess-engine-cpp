@@ -14,6 +14,7 @@ protected:
 
     sf::Texture texture;
     sf::Sprite sprite;
+
     const unsigned int TEXTURE_SIZE_80 = 80;
     const unsigned int TEXTURE_SIZE_160 = 160;
     const unsigned int TEXTURE_SIZE_320 = 320;
@@ -26,8 +27,7 @@ protected:
     std::vector<sf::Vector2f> piece_positions;
     // assert king/queen piece_pos.size() == 1.
 
-    std::string piece_id; // Store "P", "K", "R", etc.
-    // ... other variables ...
+    std::string piece_id;
 
     std::string resolve_texture_path() {
 
