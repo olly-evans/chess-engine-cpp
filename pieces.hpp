@@ -10,22 +10,19 @@ enum class Color {BLACK, WHITE};
 class Piece {
 
 protected:
-    int square_index;
     int board_square_size;
 
+    sf::Texture texture;
+    sf::Sprite sprite;
     const unsigned int TEXTURE_SIZE_80 = 80;
     const unsigned int TEXTURE_SIZE_160 = 160;
     const unsigned int TEXTURE_SIZE_320 = 320;
 
-    sf::Vector2f pos;
-
     Color color;
-
-    sf::Texture texture;
-    sf::Sprite sprite;
 
     sf::RenderWindow& window;
 
+    uint64_t bitboard;
     std::vector<sf::Vector2f> piece_positions;
     // assert king/queen piece_pos.size() == 1.
 
@@ -33,7 +30,6 @@ protected:
     // ... other variables ...
 
     std::string resolve_texture_path() {
-   
 
         std::string size_suffix;
         if (board_square_size >= TEXTURE_SIZE_320) {
@@ -51,13 +47,14 @@ protected:
     }
 
 public:
-    Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitb, int b_squ_sz) : 
         piece_id(id), 
         color(col), 
         window(w), 
+        bitboard(bitb),
         board_square_size(b_squ_sz) {
 
-        bitboard_to_piece_pos(bitboard, piece_positions);
+        init_piece_positions_vector_from_bitboard(bitboard, piece_positions);
         if (texture.loadFromFile(get_texture_path())) sprite.setTexture(texture);
     }
 
@@ -67,19 +64,20 @@ public:
 
     void draw(sf::RenderWindow& window) {
         // Calculate the gap between the square size and the actual image size
-        sf::FloatRect spriteSize = sprite.getGlobalBounds();
-        float offsetX = (board_square_size - spriteSize.width) / 2.0f;
-        float offsetY = (board_square_size - spriteSize.height) / 2.0f;
+        sf::FloatRect sprite_size = sprite.getGlobalBounds();
+        float offset_x = (board_square_size - sprite_size.width) / 2.0f;
+        float offset_y = (board_square_size - sprite_size.height) / 2.0f;
 
         for (const auto& pos : piece_positions) {
             // Apply the offset to the top-left square coordinate
-            sprite.setPosition(pos.x + offsetX, pos.y + offsetY);
+            sprite.setPosition(pos.x + offset_x, pos.y + offset_y);
             window.draw(sprite);
         }
     }
 
-    void bitboard_to_piece_pos(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos) {
+    void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos) {
 
+        // init_positions_vector_from_bitboard();
         for (int i = 0; i < GRID_NUM_SQUARES; i++) {
             if (bitboard & (1ULL << i)) {
                 int draw_idx = GRID_NUM_SQUARES - i - 1;

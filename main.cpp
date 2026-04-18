@@ -3,9 +3,7 @@
 #include "board.hpp"
 
 int main() {
-
-    bool enable_debug = true;
-    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, enable_debug);
+    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
     board.init();
     board.run();
     return 0;

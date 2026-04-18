@@ -123,7 +123,7 @@ private:
 
 public:
 
-    Board(const unsigned int ww, const unsigned int wh, const std::string wn, bool db) : 
+    Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
     win_w(ww), 
     win_h(wh), 
     win_name(wn), 
