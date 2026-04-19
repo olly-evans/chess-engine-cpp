@@ -64,12 +64,15 @@ public:
     void draw(sf::RenderWindow& window) {
         // Calculate the gap between the square size and the actual image size
         sf::FloatRect sprite_size = sprite.getGlobalBounds();
-        float offset_x = (board_square_size - sprite_size.width) / 2.0f;
-        float offset_y = (board_square_size - sprite_size.height) / 2.0f;
+        // float offset_x = (board_square_size - sprite_size.width) / 2.0f;
+        // float offset_y = (board_square_size - sprite_size.height) / 2.0f;
+        
+        
+        sprite.setScale(board_square_size / sprite_size.width, board_square_size / sprite_size.height);
 
         for (const auto& pos : piece_positions) {
-            // Apply the offset to the top-left square coordinate
-            sprite.setPosition(pos.x + offset_x, pos.y + offset_y);
+            // Apply the offset to the top-left square coordinate.
+            sprite.setPosition(pos.x, pos.y);
             window.draw(sprite);
         }
     }

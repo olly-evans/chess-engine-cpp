@@ -6,10 +6,11 @@
             "description": "Default settings for chess engine project.",
             "hidden": false,
             "generator": "Unix Makefiles",
-            "binaryDir": "${workspaceFolder}/build",
+            "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+                "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}"
             }
         }
     ]
