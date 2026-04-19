@@ -368,6 +368,10 @@ public:
             
             // something like this.
             // piece_types[piece_index].highlight(index_to_2d(square_index));
+
+            // piece_selected();
+                // .highlight();
+                // .show_moves();
         }
     }
 };
