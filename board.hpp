@@ -12,7 +12,6 @@
 #include <iostream>
 #include <cmath>
 
-// Have 80px piece pngs, smallest recommended size would be 640px.
 constexpr auto WINDOW_HEIGHT = 1280;
 constexpr auto WINDOW_WIDTH = 1280;
 constexpr auto WINDOW_NAME = "Chess";
@@ -148,6 +147,14 @@ public:
         return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
     }
 
+    int piece_at(int index) {
+
+        /* return: int index for piece in piece_type vector. */
+
+        for (int i = 0; i < piece_types.size(); i++) {
+            if (get_bit(piece_types[i]->bitboard, index)) return i;
+        }
+    }
     // Piece* piece_at_index(int index) {
 
     // README.MD
@@ -353,11 +360,14 @@ public:
 
         if (mouse_press == sf::Mouse::Left) {
 
-            int index = mouse_win_pos_to_piece_vec_index();
-            std::cout << index << "\n";
-
+            int square_index = mouse_win_pos_to_piece_vec_index();
+            std::cout << square_index << "\n";
             // find the piece thats there.
             // something bitwise with this index. ^
+            int piece_index = piece_at(square_index);
+            
+            // something like this.
+            // piece_types[piece_index].highlight(index_to_2d(square_index));
         }
     }
 };

@@ -23,7 +23,6 @@ protected:
 
     sf::RenderWindow& window;
 
-    uint64_t bitboard;
     std::vector<sf::Vector2f> piece_positions;
     // assert king/queen piece_pos.size() == 1.
 
@@ -31,12 +30,15 @@ protected:
 
     std::string resolve_texture_path() {
 
+        // Change assets to 160px when bothered. In folder.
         std::filesystem::path path = std::filesystem::current_path();
         std::string color_prefix = (color == Color::WHITE ? "w" : "b");
         return path.string() + "/assets/" + color_prefix + piece_id + ".png";
     }
 
 public:
+    uint64_t bitboard;
+
     Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitb, int b_squ_sz) : 
         piece_id(std::move(id)), 
         color(col), 
