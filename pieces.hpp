@@ -84,7 +84,9 @@ public:
     }
 
     void highlight(sf::Vector2f piece_position) {
-        for (auto& pos : piece_positions) {
+        std::cout << "entered highlight" << "\n";
+        
+        for (auto pos : piece_positions) {
             if (pos.x == piece_position.x && pos.y == piece_position.y) std::cout << "highlight, " << pos.x << ", " << pos.y << "\n";
         }
     }

@@ -370,8 +370,10 @@ public:
             uint64_t piece_index = piece_at(square_index);
 
             if (piece_index == -1) return;
+            
             sf::Vector2f pos = index_to_2d(GRID_NUM_SQUARES - square_index);
-            // something like this.
+
+            std::cout << "above highlight call." << "\n";
             piece_types[piece_index]->highlight(pos);
 
             // piece_selected();
