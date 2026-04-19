@@ -5,7 +5,6 @@
 #include "SFML/Graphics/Image.hpp"
 
 #include "pieces.hpp"
-#include "util.hpp"
 #include "debug.hpp"
 
 #include <sstream>
@@ -83,8 +82,10 @@ private:
 
     // Vector of all bitboards.
     std::vector<uint64_t> bitboards;
-    enum PieceType { W_PAWNS, W_KNIGHTS, W_BISHOPS, W_ROOKS, W_QUEEN, W_KING,
-                 B_PAWNS, B_KNIGHTS, B_BISHOPS, B_ROOKS, B_QUEEN, B_KING };
+
+    // need to try and use this.
+    // enum PieceType { W_PAWNS, W_KNIGHTS, W_BISHOPS, W_ROOKS, W_QUEEN, W_KING,
+    //              B_PAWNS, B_KNIGHTS, B_BISHOPS, B_ROOKS, B_QUEEN, B_KING };
 
     std::vector<std::string> bitboard_names;
     int bitboard_vec_index = 0;
@@ -133,7 +134,7 @@ public:
         return ((int)vec.x + (int)vec.y) % 2;
     }
 
-    int mouse_win_pos_to_piece_vec_index() {
+    int mouse_win_pos_to_square_index() {
         // May need to be broken up into smaller functions.
         sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
         sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), 
@@ -141,41 +142,19 @@ public:
         return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
     }
 
-    bool is_bit_set(uint64_t bitboard, int index) {
-        return (bitboard & (1ULL << index)) != 0;
-    }
 
-    int piece_at(int square_index) {
+    int square_index_to_piece_type_index(int square_index) {
 
         // this function might as well return piece pointer.
-        /* return: int index for piece in piece_type vector. */
-        int bitboard_idx = GRID_NUM_SQUARES - square_index - 1;
 
+        int bitboard_idx = GRID_NUM_SQUARES - square_index - 1;
         for (int i = 0; i < piece_types.size(); i++) {
             // condition might be dodge.
-
             // input is zero here, which would be 0,0.
             if (is_bit_set(piece_types.at(i)->bitboard, bitboard_idx)) return i;
         }
-
         return -1;
     }
-
-    //     for (int i = 0; i < bitboards.size(); i++) {
-    //             if (get_bit(bitboards[i], index) == 1) return            
-    //         }
-    //     }
-    // }
-
-    // for (auto& piece : piece_types) {
-    //     for (auto& position : piece.piece_positions) {
-
-    //     }
-
-    // }
-
-
-    
 
     // only here in case we pass board to pieces, well maybe other reasons too eventually.
     const unsigned int get_win_width() {
@@ -359,12 +338,14 @@ public:
         auto mouse_press = event.mouseButton.button;
 
         if (mouse_press == sf::Mouse::Left) {
+            // ideally all rendering is done in render().
+            // but this is all rendering pretty much.
+            // but it is piece methods so i guess its eh.
 
-            int square_index = mouse_win_pos_to_piece_vec_index();
+
+            int square_index = mouse_win_pos_to_square_index();
             std::cout << square_index << "\n";
-            // find the piece thats there.
-            // something bitwise with this index. ^
-            uint64_t piece_index = piece_at(square_index);
+            uint64_t piece_index = square_index_to_piece_type_index(square_index);
 
             if (piece_index == -1) return;
             
@@ -374,8 +355,8 @@ public:
             piece_types[piece_index]->highlight_piece(pos);
 
             // piece_selected();
-                // .highlight();
-                // .show_moves();
+                // .render_highlight();
+                // .render_moves();
         }
     }
 };

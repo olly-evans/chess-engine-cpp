@@ -85,15 +85,13 @@ public:
 
     void highlight_piece(sf::Vector2f piece_position) {
         
-        std::cout << "clicked_pos: " << piece_position.x << ", " << piece_position.y <<  "\n";
+        std::cout << "highlight: " << piece_position.x << ", " << piece_position.y <<  "\n";
 
         for (auto pos : piece_positions) {
             pos.x = pos.x / board_square_size;
             pos.y = pos.y / board_square_size;
 
             std::cout << "piece_pos: " << pos.x << ", " << pos.y << "\n";
-
-            // click on black rook, shows white ones. not sure why.
             // if (pos.x == piece_position.x && pos.y == piece_position.y);
         }
     }
