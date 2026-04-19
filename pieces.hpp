@@ -83,7 +83,7 @@ public:
         }
     }
 
-    void highlight_piece(sf::Vector2f piece_position) {
+    void render_highlight(sf::Vector2f piece_position) {
         
         std::cout << "highlight: " << piece_position.x << ", " << piece_position.y <<  "\n";
 
