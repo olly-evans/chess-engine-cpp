@@ -147,15 +147,16 @@ public:
         return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
     }
 
-    int piece_at(int index) {
+    uint64_t piece_at(uint64_t index) {
 
+        // this function might as well return piece pointer.
         /* return: int index for piece in piece_type vector. */
 
-        for (int i = 0; i < piece_types.size(); i++) {
-            if (get_bit(piece_types[i]->bitboard, index)) return i;
+        for (uint64_t i = 0; i < piece_types.size(); i++) {
+            // condition might be dodge.
+            if (piece_types[i]->bitboard & 1ULL << index) return i;
         }
     }
-    // Piece* piece_at_index(int index) {
 
     // README.MD
 
@@ -360,14 +361,14 @@ public:
 
         if (mouse_press == sf::Mouse::Left) {
 
-            int square_index = mouse_win_pos_to_piece_vec_index();
+            uint64_t square_index = mouse_win_pos_to_piece_vec_index();
             std::cout << square_index << "\n";
             // find the piece thats there.
             // something bitwise with this index. ^
-            int piece_index = piece_at(square_index);
-            
+            uint64_t piece_index = piece_at(square_index);
+            sf::Vector2f pos = index_to_2d(square_index);
             // something like this.
-            // piece_types[piece_index].highlight(index_to_2d(square_index));
+            piece_types[piece_index]->highlight(pos);
 
             // piece_selected();
                 // .highlight();
