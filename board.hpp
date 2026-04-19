@@ -104,12 +104,6 @@ private:
     uint64_t b_queen = 0x1000000000000000ULL;
     uint64_t b_king = 0x0800000000000000ULL;
 
-    // Bitboard macros.
-    #define set_bit(b, i) ((b) |= (1ULL << i))
-    #define get_bit(b, i) ((b) & (1ULL << i))
-    #define clear_bit(b, i) ((b) &= ~(1ULL << i))
-    #define get_LSB(b) (__builtin_ctzll(b))
-
     /* PIECES */
     
     // Only two instances of each piece for black or white, black and white Pawn instance for example.
@@ -151,14 +145,17 @@ public:
         return (bitboard & (1ULL << index)) != 0;
     }
 
-    int piece_at(int index) {
+    int piece_at(int square_index) {
 
         // this function might as well return piece pointer.
         /* return: int index for piece in piece_type vector. */
+        int bitboard_idx = GRID_NUM_SQUARES - square_index - 1;
 
         for (int i = 0; i < piece_types.size(); i++) {
             // condition might be dodge.
-            if (is_bit_set(piece_types.at(i)->bitboard, index)) return i;
+
+            // input is zero here, which would be 0,0.
+            if (is_bit_set(piece_types.at(i)->bitboard, bitboard_idx)) return i;
         }
 
         return -1;
@@ -251,21 +248,21 @@ public:
 
         /* WHITE */
 
-        piece_types.push_back(new King(Color::WHITE, main_window, w_king, board_square_size));
-        piece_types.push_back(new Queen(Color::WHITE, main_window, w_queen, board_square_size));
-        piece_types.push_back(new Rook(Color::WHITE, main_window, w_rooks, board_square_size));
-        piece_types.push_back(new Bishop(Color::WHITE, main_window, w_bishops, board_square_size));
-        piece_types.push_back(new Knight(Color::WHITE, main_window, w_knights, board_square_size));
-        piece_types.push_back(new Pawn(Color::WHITE, main_window, w_pawns, board_square_size));
+        piece_types.emplace_back(new Pawn(Color::WHITE, main_window, w_pawns, board_square_size));
+        piece_types.emplace_back(new Knight(Color::WHITE, main_window, w_knights, board_square_size));
+        piece_types.emplace_back(new Bishop(Color::WHITE, main_window, w_bishops, board_square_size));
+        piece_types.emplace_back(new Rook(Color::WHITE, main_window, w_rooks, board_square_size));
+        piece_types.emplace_back(new Queen(Color::WHITE, main_window, w_queen, board_square_size));
+        piece_types.emplace_back(new King(Color::WHITE, main_window, w_king, board_square_size));
 
         /* BLACK */
 
-        piece_types.push_back(new King(Color::BLACK, main_window, b_king, board_square_size));
-        piece_types.push_back(new Queen(Color::BLACK, main_window, b_queen, board_square_size));
-        piece_types.push_back(new Rook(Color::BLACK, main_window, b_rooks, board_square_size));
-        piece_types.push_back(new Bishop(Color::BLACK, main_window, b_bishops, board_square_size));
-        piece_types.push_back(new Knight(Color::BLACK, main_window, b_knights, board_square_size));
-        piece_types.push_back(new Pawn(Color::BLACK, main_window, b_pawns, board_square_size));
+        piece_types.emplace_back(new Pawn(Color::BLACK, main_window, b_pawns, board_square_size));
+        piece_types.emplace_back(new Knight(Color::BLACK, main_window, b_knights, board_square_size));
+        piece_types.emplace_back(new Bishop(Color::BLACK, main_window, b_bishops, board_square_size));
+        piece_types.emplace_back(new Rook(Color::BLACK, main_window, b_rooks, board_square_size));
+        piece_types.emplace_back(new Queen(Color::BLACK, main_window, b_queen, board_square_size));
+        piece_types.emplace_back(new King(Color::BLACK, main_window, b_king, board_square_size));
     }
     
     // void init_board_coords() {
@@ -371,10 +368,10 @@ public:
 
             if (piece_index == -1) return;
             
-            sf::Vector2f pos = index_to_2d(GRID_NUM_SQUARES - square_index);
+            sf::Vector2f pos = index_to_2d(square_index);
 
-            std::cout << "above highlight call." << "\n";
-            piece_types[piece_index]->highlight(pos);
+            std::cout << "piece_index: " << piece_index << "\n";
+            piece_types[piece_index]->highlight_piece(pos);
 
             // piece_selected();
                 // .highlight();
