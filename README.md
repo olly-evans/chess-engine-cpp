@@ -35,4 +35,4 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - Linux unsigned long is 64 bit.
 - Should replace all int with uint_t.
 
-- Resize images. PNGs are heavy.
+- sort out files. get functional code out of headers ffs.

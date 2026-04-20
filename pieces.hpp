@@ -63,7 +63,7 @@ public:
     void draw(sf::RenderWindow& window) {
         /*
             For a piece type (i.e White Rook or Black Bishop), draw all active pieces
-            on the board scaled, and in their appropriate position.
+            on the board in their appropriate position.
         */
 
         for (const auto& pos : piece_positions) {
@@ -93,6 +93,9 @@ public:
 
             std::cout << "piece_pos: " << pos.x << ", " << pos.y << "\n";
             // if (pos.x == piece_position.x && pos.y == piece_position.y);
+
+
+            // render the highlight.
         }
     }
 };
