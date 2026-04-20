@@ -245,6 +245,11 @@ void Board::on_key_pressed(sf::Event &event) {
 
 void Board::on_mouse_press(sf::Event &event) {
 
+    // IF WE HAVE A HIGHLIGHTED PIECE
+    // GET ITS VECTOR FROM Pos STRUCT
+    // SET IT BACK TO FALSE.
+    // MAYBE
+
     auto mouse_press = event.mouseButton.button;
 
     if (mouse_press == sf::Mouse::Left) {
@@ -263,9 +268,9 @@ void Board::on_mouse_press(sf::Event &event) {
 
         // std::cout << "piece_index: " << piece_index << "\n";
         
-        if (piece_highlight_active == false) {
-            piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
-        }
+        piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
+        // pieces_types[piece_index]->render_legeal_moves();
+
 
         // piece_selected();
             // .render_highlight();
