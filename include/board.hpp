@@ -26,11 +26,6 @@ const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
 const sf::Color TURQOISE(50, 200, 150);
 
-struct Pos {
-    sf::Vector2f pos;
-    bool is_highlighted = false;
-};
-
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
 //     virtual void index_to_2d(int i) = 0;
@@ -115,8 +110,8 @@ private:
     
     // Only two instances of each piece for black or white, black and white Pawn instance for example.
     std::vector<Piece*> piece_types;
-    bool piece_highlight_active = false;
-    sf::Vector2f* highlighted_pos = nullptr;
+    // bool piece_highlight_active = false;
+    // sf::Vector2f* highlighted_pos = nullptr;
 
 public:
 

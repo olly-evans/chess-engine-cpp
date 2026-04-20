@@ -7,6 +7,11 @@
 constexpr unsigned int GRID_SZ = 8;
 constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
+struct Pos {
+    sf::Vector2f vec;
+    bool is_highlighted = false;
+};
+
 inline bool is_bit_set(uint64_t bitboard, int index) {
         return (bitboard & (1ULL << index));
 }

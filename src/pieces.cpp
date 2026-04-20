@@ -45,18 +45,21 @@ void Piece::draw(sf::RenderWindow& window) {
     */
 
     for (const auto& pos : piece_positions) {
-        sprite.setPosition(pos.x, pos.y);
+        sprite.setPosition(pos.vec.x, pos.vec.y);
         window.draw(sprite);
     }
 }
 
-void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos) {
+void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos) {
 
-    // init_positions_vector_from_bitboard();
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         if (bitboard & (1ULL << i)) {
             int draw_idx = GRID_NUM_SQUARES - i - 1;
-            piece_pos.push_back(index_to_2d(draw_idx) * (float)board_square_size);
+            sf::Vector2f pos = index_to_2d(draw_idx) * (float)board_square_size;
+            Pos piece_data = {pos, false};
+            // mouses pos coords not squares on grid coords.
+
+            piece_pos.push_back(piece_data);
         }
     }
 }
@@ -69,7 +72,7 @@ void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleSh
     
     for (int i = 0; i < piece_positions.size(); i++) {
 
-        sf::Vector2f pos = piece_positions[i];
+        sf::Vector2f pos = piece_positions[i].vec;
         pos.x = pos.x / board_square_size;
         pos.y = pos.y / board_square_size;
         

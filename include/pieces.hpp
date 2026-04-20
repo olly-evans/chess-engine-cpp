@@ -6,6 +6,7 @@
 #include <string>
 #include <filesystem>
 #include <cstdint>
+
 #include "util.hpp"
 
 enum class Color {BLACK, WHITE};
@@ -23,7 +24,7 @@ protected:
 
     sf::RenderWindow& window;
 
-    std::vector<sf::Vector2f> piece_positions;
+    std::vector<Pos> piece_positions;
     // assert king/queen piece_pos.size() == 1.
 
     std::string piece_id;
@@ -39,7 +40,7 @@ public:
 
     void draw(sf::RenderWindow& window);
 
-    void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos);
+    void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos);
     void make_highlighted();
     void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares);
 };

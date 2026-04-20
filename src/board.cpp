@@ -112,8 +112,6 @@ void Board::init_main_window_squares() {
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
-        // Pos piece_data = {pos, false};
-
         squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
         squares[i].setPosition(pos);
         squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
@@ -262,7 +260,7 @@ void Board::on_mouse_press(sf::Event &event) {
         if (piece_index == -1) return;
         
         sf::Vector2f pos = index_to_2d(square_index);
-
+        
         // std::cout << "piece_index: " << piece_index << "\n";
         piece_types[piece_index]->render_highlight(pos, squares);
 
