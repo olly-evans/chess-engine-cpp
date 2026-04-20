@@ -1,6 +1,7 @@
 
 #include "util.hpp"
 #include "pieces.hpp"
+#include "board.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -60,7 +61,7 @@ void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::ve
     }
 }
 
-void Piece::render_highlight(sf::Vector2f piece_position) {
+void Piece::render_highlight(sf::Vector2f piece_position, std::vector<sf::RectangleShape>& squares) {
     
     std::cout << "highlight: " << piece_position.x << ", " << piece_position.y <<  "\n";
 
@@ -70,8 +71,14 @@ void Piece::render_highlight(sf::Vector2f piece_position) {
 
         std::cout << "piece_pos: " << pos.x << ", " << pos.y << "\n";
         // if (pos.x == piece_position.x && pos.y == piece_position.y);
+        
+        if (pos.x == piece_position.x && pos.y == piece_position.y) {
+            int index = pos2d_to_index(piece_position);
+            squares[index].setFillColor(TURQOISE);
+        }
+            
 
-
-        // render the highlight.
+        
+        
     }
 }

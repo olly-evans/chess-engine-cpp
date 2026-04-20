@@ -40,7 +40,7 @@ public:
 
     void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos);
 
-    void render_highlight(sf::Vector2f piece_position);
+    void render_highlight(sf::Vector2f piece_position, std::vector<sf::RectangleShape>& squares);
 };
 
 class Pawn : public Piece {

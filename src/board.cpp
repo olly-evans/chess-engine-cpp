@@ -256,13 +256,13 @@ void Board::on_mouse_press(sf::Event &event) {
         int square_index = mouse_win_pos_to_square_index();
         std::cout << square_index << "\n";
         uint64_t piece_index = square_index_to_piece_type_index(square_index);
-
+        
         if (piece_index == -1) return;
         
         sf::Vector2f pos = index_to_2d(square_index);
 
-        std::cout << "piece_index: " << piece_index << "\n";
-        piece_types[piece_index]->render_highlight(pos);
+        // std::cout << "piece_index: " << piece_index << "\n";
+        piece_types[piece_index]->render_highlight(pos, squares);
 
         // piece_selected();
             // .render_highlight();

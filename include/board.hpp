@@ -24,6 +24,7 @@ const sf::Color WARM_CREAM(240, 217, 181);
 const sf::Color MEDIUM_BROWN(181, 136, 99);
 const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
+const sf::Color TURQOISE(50, 200, 150);
 
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
