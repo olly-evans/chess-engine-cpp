@@ -1,4 +1,3 @@
-
 #include "util.hpp"
 #include "pieces.hpp"
 #include "board.hpp"
@@ -6,8 +5,6 @@
 #include <iostream>
 #include <filesystem>
 #include <cstdint>
-
-
 
 std::string Piece::resolve_texture_path() {
 
@@ -64,10 +61,6 @@ void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::ve
     }
 }
 
-void Piece::make_highlighted() {
-    is_highlighted = !is_highlighted;
-}
-
 void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active) {
     
     for (int i = 0; i < piece_positions.size(); i++) {
@@ -86,4 +79,43 @@ void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleSh
             
     }
 }
+
+/* PAWN */
+void Pawn::get_legal_moves(Pos pos)   {};
+
+/* PAWN */
+
+/* KNIGHT */
+
+void Knight::get_legal_moves(Pos pos) {
+
+        // L-Shape DIR.
+        // Perhaps in derived.
+        static const int knight_offsets[][2] = {
+            {-2, -1}, {-2, 1}, // LEFT, UP/DOWN
+            {2, -1}, {2, 1}, // 
+            {-1, 2},  {1, 2},
+            {1, -2},  {-1, -2}
+        };
+
+        // is_knight_move_on_board();
+        // has_friendly_piece();
+        // then we can fill the square.
+        
+    }
+
+/* BISHOP */
+
+void Bishop::get_legal_moves(Pos pos) {};
+
+/* ROOK */
+
+void Rook::get_legal_moves(Pos pos)   {};
+
+/* QUEEN */
+void Queen::get_legal_moves(Pos pos)  {};
+
+/* KING */
+
+void King::get_legal_moves(Pos pos)   {};
 

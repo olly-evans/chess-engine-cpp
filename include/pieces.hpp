@@ -43,6 +43,7 @@ public:
     void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos);
     void make_highlighted();
     void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
+    virtual void get_legal_moves(Pos pos) = 0;
 };
 
 class Pawn : public Piece {
@@ -53,6 +54,8 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
+    void get_legal_moves(Pos pos) override;
+
 };
 
 class Knight : public Piece {
@@ -64,6 +67,7 @@ public:
         return resolve_texture_path();
     }
     
+    void get_legal_moves(Pos pos) override;
 };
 
 class Bishop : public Piece {
@@ -74,6 +78,9 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
+    
+    void get_legal_moves(Pos pos) override;
+
 };
 
 class Rook : public Piece {
@@ -84,6 +91,9 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
+
+    void get_legal_moves(Pos pos) override;
+
 };
 
 class Queen : public Piece {
@@ -94,6 +104,9 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
+
+    void get_legal_moves(Pos pos) override;
+
 };
 
 class King : public Piece {
@@ -104,4 +117,6 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
+    void get_legal_moves(Pos pos) override;
+
 };
