@@ -43,6 +43,9 @@ public:
     void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos);
     void make_highlighted();
     void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
+
+    bool move_has_friendly_piece(Pos piece_pos, sf::Vector2f move);
+
     virtual void get_legal_moves(Pos pos) = 0;
 };
 
@@ -60,13 +63,13 @@ public:
 
 class Knight : public Piece {
 private:
-    static const int knight_offsets[8][2];
+    static const int offsets[8][2];
 
 public:
     Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("N", col, w, bitboard, b_squ_sz) {
 
-            static const int knight_offsets[8][2] = {
+            static const int offsets[8][2] = {
                 {-2, -1}, {-2, 1}, 
                 {2, -1}, {2, 1},
                 {-1, 2},  {1, 2},
