@@ -119,12 +119,8 @@ public:
     /* UTIL METHODS */
 
     void die(const std::string& err);
-    
     bool is_square_black(int i);
-
     int mouse_win_pos_to_square_index();
-
-
     int square_index_to_piece_type_index(int square_index);
 
     // only here in case we pass board to pieces, well maybe other reasons too eventually.
@@ -133,23 +129,16 @@ public:
     /* INIT */
 
     void init();
-
     void init_bitboards();
-
     void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
-
     void init_main_window_squares();
-
     void init_bitboard_window_squares();
-
     void init_pieces();
 
     /* RENDER */
 
     void render();
-
     void render_main_window();
-
     void render_bitboard_window();
 
     /* RUN */

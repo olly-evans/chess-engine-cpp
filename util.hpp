@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <SFML/Window.hpp>
+
+
 constexpr unsigned int GRID_SZ = 8;
 constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 

@@ -5,7 +5,7 @@ project(ChessEngineCPP VERSION 0.1.0 LANGUAGES CXX)
 include(CTest)
 enable_testing()
 
-add_executable(ChessEngineCPP main.cpp board.cpp debug.cpp)
+add_executable(ChessEngineCPP main.cpp board.cpp pieces.cpp debug.cpp)
 
 set_property(TARGET ChessEngineCPP PROPERTY CXX_STANDARD 17)
 
