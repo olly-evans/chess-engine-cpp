@@ -42,7 +42,7 @@ public:
 
     void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos);
     void make_highlighted();
-    void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares);
+    void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
 };
 
 class Pawn : public Piece {

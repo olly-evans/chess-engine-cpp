@@ -260,9 +260,12 @@ void Board::on_mouse_press(sf::Event &event) {
         if (piece_index == -1) return;
         
         sf::Vector2f pos = index_to_2d(square_index);
-        
+
         // std::cout << "piece_index: " << piece_index << "\n";
-        piece_types[piece_index]->render_highlight(pos, squares);
+        
+        if (piece_highlight_active == false) {
+            piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
+        }
 
         // piece_selected();
             // .render_highlight();

@@ -68,22 +68,27 @@ void Piece::make_highlighted() {
     is_highlighted = !is_highlighted;
 }
 
-void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares) {
+void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active) {
     
     for (int i = 0; i < piece_positions.size(); i++) {
 
-        sf::Vector2f pos = piece_positions[i].vec;
-        pos.x = pos.x / board_square_size;
-        pos.y = pos.y / board_square_size;
+        sf::Vector2f pos_cpy = piece_positions[i].vec;
+
+        pos_cpy.x = pos_cpy.x / board_square_size;
+        pos_cpy.y = pos_cpy.y / board_square_size;
         
-        if (pos.x == piece_pos.x && pos.y == piece_pos.y) {
+        if (pos_cpy.x == piece_pos.x && pos_cpy.y == piece_pos.y) {
             // this->make_highlighted(); works if we have 32 instances.
             // active_piece_highlight;
+
+            piece_highlight_active = true;
             int index = pos2d_to_index(piece_pos);
             squares[index].setFillColor(TURQOISE);
-            
             // how do we know that a position is highlighted.
             // thinking 
+
+            
+            this->piece_positions[i].is_highlighted = true;
         }
             
     }
