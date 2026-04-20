@@ -17,6 +17,7 @@ protected:
 
     sf::Texture texture;
     sf::Sprite sprite;
+    bool is_highlighted = false;
 
     Color color;
 
@@ -39,8 +40,8 @@ public:
     void draw(sf::RenderWindow& window);
 
     void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<sf::Vector2f> &piece_pos);
-
-    void render_highlight(sf::Vector2f piece_position, std::vector<sf::RectangleShape>& squares);
+    void make_highlighted();
+    void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares);
 };
 
 class Pawn : public Piece {
