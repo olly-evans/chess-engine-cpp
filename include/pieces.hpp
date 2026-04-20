@@ -59,14 +59,28 @@ public:
 };
 
 class Knight : public Piece {
+private:
+    static const int knight_offsets[8][2];
+
 public:
     Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
-        Piece("N", col, w, bitboard, b_squ_sz) {}
+        Piece("N", col, w, bitboard, b_squ_sz) {
+
+            static const int knight_offsets[8][2] = {
+                {-2, -1}, {-2, 1}, 
+                {2, -1}, {2, 1},
+                {-1, 2},  {1, 2},
+                {1, -2},  {-1, -2}
+            };
+
+        }
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
     
+    bool is_knight_move_on_board(Pos piece_square, int dx, int dy);
+
     void get_legal_moves(Pos pos) override;
 };
 

@@ -81,27 +81,29 @@ void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleSh
 }
 
 /* PAWN */
-void Pawn::get_legal_moves(Pos pos)   {};
 
-/* PAWN */
+void Pawn::get_legal_moves(Pos pos) {};
 
 /* KNIGHT */
 
+bool Knight::is_knight_move_on_board(Pos piece_square, int move_dx, int move_dy) {
+    int new_x = piece_square.vec.x + move_dx;
+    int new_y = piece_square.vec.y + move_dy;
+    return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ); 
+}
+
 void Knight::get_legal_moves(Pos pos) {
 
-        // L-Shape DIR.
-        // Perhaps in derived.
-        static const int knight_offsets[][2] = {
-            {-2, -1}, {-2, 1}, // LEFT, UP/DOWN
-            {2, -1}, {2, 1}, // 
-            {-1, 2},  {1, 2},
-            {1, -2},  {-1, -2}
-        };
-
-        // is_knight_move_on_board();
+    int num_offsets = sizeof(Knight::knight_offsets) / sizeof(Knight::knight_offsets[0]);
+    
+    for (int i = 0; i < num_offsets; i++) {
+        if (is_knight_move_on_board(pos.vec, knight_offsets[i][0], knight_offsets[i][1])) {
+            return;
+        }
+               
         // has_friendly_piece();
         // then we can fill the square.
-        
+    }        
     }
 
 /* BISHOP */
@@ -110,12 +112,11 @@ void Bishop::get_legal_moves(Pos pos) {};
 
 /* ROOK */
 
-void Rook::get_legal_moves(Pos pos)   {};
+void Rook::get_legal_moves(Pos pos) {};
 
 /* QUEEN */
-void Queen::get_legal_moves(Pos pos)  {};
+void Queen::get_legal_moves(Pos pos) {};
 
 /* KING */
 
-void King::get_legal_moves(Pos pos)   {};
-
+void King::get_legal_moves(Pos pos) {};
