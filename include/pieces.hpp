@@ -18,7 +18,7 @@ protected:
 
     uint16_t start_square_index;
     sf::Vector2f pos;
-    
+
     sf::Texture texture;
     sf::Sprite sprite;
 
@@ -50,7 +50,7 @@ public:
 
 class Pawn : public Piece {
 public:
-    Pawn(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    Pawn(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("P", col, w, bitboard, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
@@ -67,7 +67,7 @@ public:
         {-1, -2}, {1, -2}, {-1, 2}, {1, 2}
     };
 
-    Knight(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    Knight(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("N", col, w, bitboard, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
@@ -81,7 +81,7 @@ public:
 
 class Bishop : public Piece {
 public:
-    Bishop(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    Bishop(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("B", col, w, bitboard, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
@@ -94,7 +94,7 @@ public:
 
 class Rook : public Piece {
 public:
-    Rook(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    Rook(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("R", col, w, bitboard, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
@@ -107,7 +107,7 @@ public:
 
 class Queen : public Piece {
 public:
-    Queen(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    Queen(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("Q", col, w, bitboard, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
@@ -120,7 +120,7 @@ public:
 
 class King : public Piece {
 public:
-    King(Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
+    King(std::string id, Color col, sf::RenderWindow& w, uint64_t bitboard, int b_squ_sz) : 
         Piece("K", col, w, bitboard, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {

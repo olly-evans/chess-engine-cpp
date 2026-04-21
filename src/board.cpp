@@ -146,40 +146,40 @@ void Board::init_pieces() {
     // if player == WHITE.
         // maybe WN_G1 - SQUARES.
     // would be good if i could give a normalised x,y and class deals with indexing etc..
-    for (uint16_t i = WP_A2; i < WP_H2; i++) {
-        pieces.emplace_back(new Pawn(Color::WHITE, main_window, i, board_square_size));
+    for (uint16_t i = WP_A2; i <= WP_H2; i++) {
+        pieces.emplace_back(new Pawn("P", Color::WHITE, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight(Color::WHITE, main_window, WN_G1, board_square_size));
-    pieces.emplace_back(new Knight(Color::WHITE, main_window, WN_B1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WN_G1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WN_B1, board_square_size));
     
-    pieces.emplace_back(new Bishop(Color::WHITE, main_window, WB_F1, board_square_size));
-    pieces.emplace_back(new Bishop(Color::WHITE, main_window, WB_C1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WB_F1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WB_C1, board_square_size));
 
-    pieces.emplace_back(new Rook(Color::WHITE, main_window, WR_A1, board_square_size));
-    pieces.emplace_back(new Rook(Color::WHITE, main_window, WR_H1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WR_A1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WR_H1, board_square_size));
 
         
-    pieces.emplace_back(new Queen(Color::WHITE, main_window, WQ_D1, board_square_size));
-    pieces.emplace_back(new King(Color::WHITE, main_window, WK_E1, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, WQ_D1, board_square_size));
+    pieces.emplace_back(new King("K", Color::WHITE, main_window, WK_E1, board_square_size));
 
     /* BLACK */
 
-    for (uint16_t i = BP_A7; i < BP_H7; i++) {
-        pieces.emplace_back(new Pawn(Color::WHITE, main_window, i, board_square_size));
+    for (uint16_t i = BP_A7; i <= BP_H7; i++) {
+        pieces.emplace_back(new Pawn("P", Color::BLACK, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight(Color::BLACK, main_window, BN_B8, board_square_size));
-    pieces.emplace_back(new Knight(Color::BLACK, main_window, BN_G8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, BN_B8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, BN_G8, board_square_size));
     
-    pieces.emplace_back(new Bishop(Color::BLACK, main_window, BB_C8, board_square_size));
-    pieces.emplace_back(new Bishop(Color::BLACK, main_window, BB_F8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, BB_C8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, BB_F8, board_square_size));
 
-    pieces.emplace_back(new Rook(Color::BLACK, main_window, BR_A8, board_square_size));
-    pieces.emplace_back(new Rook(Color::BLACK, main_window, BR_H8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, BR_A8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, BR_H8, board_square_size));
 
-    pieces.emplace_back(new Queen(Color::BLACK, main_window, BQ_D8, board_square_size));
-    pieces.emplace_back(new King(Color::BLACK, main_window, BK_E8, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, BQ_D8, board_square_size));
+    pieces.emplace_back(new King("K", Color::BLACK, main_window, BK_E8, board_square_size));
 
 }
 
