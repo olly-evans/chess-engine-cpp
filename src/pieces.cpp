@@ -12,14 +12,18 @@ std::string Piece::resolve_texture_path() {
     return path.string() + "/assets/" + color_prefix + piece_id + ".png";
 }
 
-Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitb, int b_squ_sz) : 
+Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t squ_idx, int b_squ_sz) : 
     piece_id(std::move(id)), 
     color(col),
     window(w), 
-    bitboard(bitb),
+    start_square_index(squ_idx),
     board_square_size(b_squ_sz) {
-        
-    init_piece_positions_vector_from_bitboard(bitboard, piece_positions);
+    
+
+    // take squ_idx and convert to 2d normalised pos.
+    pos = index_to_2d(start_square_index);
+
+    // we then never touch index again.
     if (texture.loadFromFile(get_texture_path())) {
         sprite.setTexture(texture);
 
@@ -39,11 +43,32 @@ void Piece::draw(sf::RenderWindow& window) {
         on the board in their appropriate position.
     */
 
-    for (const auto& pos : piece_positions) {
-        sprite.setPosition(pos.vec.x, pos.vec.y);
-        window.draw(sprite);
-    }
+    sf::Vector2f window_pos = this->pos * (float)board_square_size;
+    sprite.setPosition(window_pos.x, window_pos.y);
+    window.draw(sprite);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos) {
 

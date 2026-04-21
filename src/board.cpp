@@ -58,11 +58,11 @@ int Board::square_index_to_piece_type_index(int square_index) {
     // this function might as well return piece pointer.
 
     int bitboard_idx = GRID_NUM_SQUARES - square_index - 1;
-    for (int i = 0; i < piece_types.size(); i++) {
-        // condition might be dodge.
-        // input is zero here, which would be 0,0.
-        if (is_bit_set(piece_types.at(i)->bitboard, bitboard_idx)) return i;
-    }
+    // for (int i = 0; i < piece_types.size(); i++) {
+    //     // condition might be dodge.
+    //     // input is zero here, which would be 0,0.
+    //     if (is_bit_set(piece_types.at(i)->bitboard, bitboard_idx)) return i;
+    // }
     return -1;
 }
 
@@ -140,24 +140,47 @@ void Board::init_pieces() {
 
     // Mindset rn, just get the 32 pieces in a vector. Add/remove class functionality as needed.
 
+
+    // must be a way to flip this for the other board. so we dont have to rewrite.
+
+    // if player == WHITE.
+        // maybe WN_G1 - SQUARES.
     // would be good if i could give a normalised x,y and class deals with indexing etc..
+    for (uint16_t i = WP_A2; i < WP_H2; i++) {
+        pieces.emplace_back(new Pawn(Color::WHITE, main_window, i, board_square_size));
+    }
+
+    pieces.emplace_back(new Knight(Color::WHITE, main_window, WN_G1, board_square_size));
+    pieces.emplace_back(new Knight(Color::WHITE, main_window, WN_B1, board_square_size));
     
-    piece_types.emplace_back(new Pawn(Color::WHITE, main_window, w_pawns, board_square_size));
-    
-    piece_types.emplace_back(new Knight(Color::WHITE, main_window, w_knights, board_square_size));
-    piece_types.emplace_back(new Bishop(Color::WHITE, main_window, w_bishops, board_square_size));
-    piece_types.emplace_back(new Rook(Color::WHITE, main_window, w_rooks, board_square_size));
-    piece_types.emplace_back(new Queen(Color::WHITE, main_window, w_queen, board_square_size));
-    piece_types.emplace_back(new King(Color::WHITE, main_window, w_king, board_square_size));
+    pieces.emplace_back(new Bishop(Color::WHITE, main_window, WB_F1, board_square_size));
+    pieces.emplace_back(new Bishop(Color::WHITE, main_window, WB_C1, board_square_size));
+
+    pieces.emplace_back(new Rook(Color::WHITE, main_window, WR_A1, board_square_size));
+    pieces.emplace_back(new Rook(Color::WHITE, main_window, WR_H1, board_square_size));
+
+        
+    pieces.emplace_back(new Queen(Color::WHITE, main_window, WQ_D1, board_square_size));
+    pieces.emplace_back(new King(Color::WHITE, main_window, WK_E1, board_square_size));
 
     /* BLACK */
 
-    piece_types.emplace_back(new Pawn(Color::BLACK, main_window, b_pawns, board_square_size));
-    piece_types.emplace_back(new Knight(Color::BLACK, main_window, b_knights, board_square_size));
-    piece_types.emplace_back(new Bishop(Color::BLACK, main_window, b_bishops, board_square_size));
-    piece_types.emplace_back(new Rook(Color::BLACK, main_window, b_rooks, board_square_size));
-    piece_types.emplace_back(new Queen(Color::BLACK, main_window, b_queen, board_square_size));
-    piece_types.emplace_back(new King(Color::BLACK, main_window, b_king, board_square_size));
+    for (uint16_t i = BP_A7; i < BP_H7; i++) {
+        pieces.emplace_back(new Pawn(Color::WHITE, main_window, i, board_square_size));
+    }
+
+    pieces.emplace_back(new Knight(Color::BLACK, main_window, BN_B8, board_square_size));
+    pieces.emplace_back(new Knight(Color::BLACK, main_window, BN_G8, board_square_size));
+    
+    pieces.emplace_back(new Bishop(Color::BLACK, main_window, BB_C8, board_square_size));
+    pieces.emplace_back(new Bishop(Color::BLACK, main_window, BB_F8, board_square_size));
+
+    pieces.emplace_back(new Rook(Color::BLACK, main_window, BR_A8, board_square_size));
+    pieces.emplace_back(new Rook(Color::BLACK, main_window, BR_H8, board_square_size));
+
+    pieces.emplace_back(new Queen(Color::BLACK, main_window, BQ_D8, board_square_size));
+    pieces.emplace_back(new King(Color::BLACK, main_window, BK_E8, board_square_size));
+
 }
 
 // void init_board_coords() {
@@ -187,7 +210,7 @@ void Board::render_main_window() {
 
     // render_board_coords();
 
-    for (auto& piece_type : piece_types) {piece_type->draw(main_window);}
+    for (auto& piece : pieces) {piece->draw(main_window);}
     main_window.display();
 }
 
@@ -270,7 +293,7 @@ void Board::on_mouse_press(sf::Event &event) {
         
         sf::Vector2f pos = index_to_2d(square_index);
         
-        piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
+        // piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
         // pieces_types[piece_index]->get_legal_moves();
         // piece_types[piece_index]->render_legal_moves();
 

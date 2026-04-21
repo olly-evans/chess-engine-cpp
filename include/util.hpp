@@ -29,6 +29,7 @@ inline bool is_bit_set(uint64_t bitboard, int index) {
 }
 
 /* INDEXING */
+
 static sf::Vector2f index_to_2d(int i) {
         return sf::Vector2f(i % GRID_SZ, i / GRID_SZ);
 }

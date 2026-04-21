@@ -16,6 +16,9 @@ class Piece {
 protected:
     int board_square_size;
 
+    uint16_t start_square_index;
+    sf::Vector2f pos;
+    
     sf::Texture texture;
     sf::Sprite sprite;
 
@@ -30,9 +33,8 @@ protected:
     std::string resolve_texture_path();
 
 public:
-    uint64_t bitboard;
 
-    Piece(std::string id, Color col, sf::RenderWindow& w, uint64_t bitb, int b_squ_sz);
+    Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t squ_idx, int b_squ_sz);
 
     virtual std::string get_texture_path();
 
