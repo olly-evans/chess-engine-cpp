@@ -288,11 +288,20 @@ void Board::on_mouse_press(sf::Event &event) {
 
         
         int square_index = mouse_win_pos_to_square_index();
-        uint64_t piece_index = square_index_to_piece_type_index(square_index);
-        if (piece_index == -1) return;
+        // uint64_t piece_index = square_index_to_piece_type_index(square_index);
+        // if (piece_index == -1) return;
         
-        sf::Vector2f pos = index_to_2d(square_index);
+        sf::Vector2f clicked_pos = index_to_2d(square_index);
         
+        std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
+
+        // is a piece where we clicked.
+        // is piece on our team.
+
+        for (auto& piece : pieces) {
+            if (is_vecs_equal(piece->pos, clicked_pos)) piece->render_highlight(clicked_pos, squares, piece_highlight_active);
+        }
+
         // piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
         // pieces_types[piece_index]->get_legal_moves();
         // piece_types[piece_index]->render_legal_moves();

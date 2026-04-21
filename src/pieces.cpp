@@ -84,22 +84,12 @@ void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::ve
     }
 }
 
-void Piece::render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active) {
+void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active) {
     
-    for (int i = 0; i < piece_positions.size(); i++) {
-
-        sf::Vector2f stored_pos = piece_positions[i].vec;
-
-        stored_pos.x = stored_pos.x / board_square_size;
-        stored_pos.y = stored_pos.y / board_square_size;
-        
-        if (!piece_highlight_active && is_vecs_equal(stored_pos, piece_pos)) {
-            piece_highlight_active = true;
-            int index = pos2d_to_index(piece_pos);
-            squares[index].setFillColor(TURQOISE);
-            this->piece_positions[i].is_highlighted = true;
-        }
-            
+    if (!piece_highlight_active && is_vecs_equal(clicked_pos, this->pos)) {
+        piece_highlight_active = true;
+        int index = pos2d_to_index(this->pos);
+        squares[index].setFillColor(TURQOISE);
     }
 }
 

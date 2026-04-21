@@ -17,7 +17,6 @@ protected:
     int board_square_size;
 
     uint16_t start_square_index;
-    sf::Vector2f pos;
 
     sf::Texture texture;
     sf::Sprite sprite;
@@ -33,6 +32,7 @@ protected:
     std::string resolve_texture_path();
 
 public:
+    sf::Vector2f pos;
 
     Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t squ_idx, int b_squ_sz);
 
@@ -42,7 +42,7 @@ public:
 
     void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos);
     void make_highlighted();
-    void render_highlight(sf::Vector2f piece_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
+    void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
 
     bool move_square_has_friendly_piece(Pos piece_pos, sf::Vector2f move);
     virtual void get_legal_moves(Pos pos) = 0;
