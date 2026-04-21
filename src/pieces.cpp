@@ -54,6 +54,7 @@ void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::Rectangle
         piece_highlight_active = true;
         int index = pos2d_to_index(this->pos);
         squares[index].setFillColor(TURQOISE);
+        piece_highlight_active = true;
     }
 }
 

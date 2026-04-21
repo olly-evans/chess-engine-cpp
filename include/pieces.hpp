@@ -38,7 +38,6 @@ public:
 
     void draw(sf::RenderWindow& window);
 
-    void make_highlighted();
     void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
 
     bool move_square_has_friendly_piece(sf::Vector2f piece_pos, sf::Vector2f move);

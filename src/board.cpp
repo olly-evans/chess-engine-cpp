@@ -275,37 +275,33 @@ void Board::on_key_pressed(sf::Event &event) {
 void Board::on_mouse_press(sf::Event &event) {
 
     // IF WE HAVE A HIGHLIGHTED PIECE
-    // GET ITS VECTOR FROM Pos STRUCT
     // SET IT BACK TO FALSE.
     // MAYBE
+
+    if (highlighted_piece != nullptr) {
+        uint16_t reset_idx = pos2d_to_index(highlighted_piece->pos);
+        squares[reset_idx].setFillColor(is_square_black(reset_idx) ? MEDIUM_BROWN : WARM_CREAM);
+
+        is_piece_highlighted = false;
+        highlighted_piece = nullptr;
+    }
 
     auto mouse_press = event.mouseButton.button;
 
     if (mouse_press == sf::Mouse::Left) {
-        // ideally all rendering is done in render().
-        // but this is all rendering pretty much.
-        // but it is piece methods so i guess its eh.
 
-        
         int square_index = mouse_win_pos_to_square_index();
-        // uint64_t piece_index = square_index_to_piece_type_index(square_index);
-        // if (piece_index == -1) return;
-        
         sf::Vector2f clicked_pos = index_to_2d(square_index);
-        
+
         std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
-
-        // is a piece where we clicked.
-        // is piece on our team.
-
         for (auto& piece : pieces) {
-            if (is_vecs_equal(piece->pos, clicked_pos)) piece->render_highlight(clicked_pos, squares, piece_highlight_active);
+
+            // and player is white.
+            if (is_vecs_equal(piece->pos, clicked_pos)) {
+                piece->render_highlight(clicked_pos, squares, is_piece_highlighted);
+                highlighted_piece = piece;
+            }
         }
-
-        // piece_types[piece_index]->render_highlight(pos, squares, piece_highlight_active);
-        // pieces_types[piece_index]->get_legal_moves();
-        // piece_types[piece_index]->render_legal_moves();
-
 
         // piece_selected();
             // .render_highlight();
