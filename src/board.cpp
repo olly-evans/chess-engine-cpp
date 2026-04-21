@@ -60,10 +60,6 @@ void Board::reset_square_color(sf::Vector2f square) {
     highlighted_piece = nullptr;
 }
 
-bool Board::move_square_has_friendly_piece(sf::Vector2f move) {
-    
-}
-
 /* BITBOARD METHODS */
 
 uint64_t Board::white_occupancy() {
@@ -306,7 +302,13 @@ void Board::on_mouse_press(sf::Event &event) {
 
                 // perhaps should be board function.
                 piece->render_highlight(clicked_pos, squares, is_piece_highlighted);
-                // piece->show_legal_moves(clicked_pos, squares);
+                std::cout << "white bb: "<< white_occupancy() << "\n";
+                std::cout << "black bb: "<< black_occupancy() << "\n";
+
+                std::vector<sf::Vector2f> legal_moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
+                piece->highlight_legal_moves(legal_moves, squares);
+
+
                 highlighted_piece = piece;
             }
         }

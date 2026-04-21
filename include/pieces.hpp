@@ -40,8 +40,14 @@ public:
 
     void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
 
-    bool move_square_has_friendly_piece(sf::Vector2f piece_pos, sf::Vector2f move);
-    virtual void get_legal_moves() = 0;
+    bool move_square_has_friendly_piece(uint64_t w_bitboard, 
+                                        uint64_t b_bitboard, 
+                                        Color col, 
+                                        sf::Vector2f move);
+
+    virtual std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
+    void highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squares);
+
 };
 
 class Pawn : public Piece {
@@ -52,7 +58,7 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    void get_legal_moves() override;
+    std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -72,7 +78,8 @@ public:
     
     bool is_knight_move_on_board(sf::Vector2f piece_square, int dx, int dy);
 
-    void get_legal_moves() override;
+    std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+
 };
 
 class Bishop : public Piece {
@@ -84,7 +91,7 @@ public:
         return resolve_texture_path();
     }
     
-    void get_legal_moves() override;
+    std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -97,8 +104,7 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves() override;
-
+    std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 };
 
 class Queen : public Piece {
@@ -110,7 +116,7 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves() override;
+    std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -122,6 +128,6 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    void get_legal_moves() override;
+    std::vector<sf::Vector2f> get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };

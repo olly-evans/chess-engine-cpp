@@ -58,13 +58,38 @@ void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::Rectangle
     }
 }
 
+bool Piece::move_square_has_friendly_piece(uint64_t w_bitboard, 
+                                           uint64_t b_bitboard, 
+                                           Color col, 
+                                           sf::Vector2f move) {
+    
+    int index = pos2d_to_index(move);
+    int square_idx = GRID_NUM_SQUARES - index - 1;
+
+    // going wrong here.
+    if (w_bitboard & (1ULL << square_idx) && col == Color::WHITE) return true;
+    if (b_bitboard & (1ULL << square_idx) && col == Color::BLACK) return true;
+    return false;
+}
+
+void Piece::highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squares) {
+    
+    std::vector<uint16_t> indexes{};
+
+    for (int i = 0; i < legal_moves.size(); i++) {indexes.emplace_back(pos2d_to_index(legal_moves[i]));}
+
+    for (int i = 0; i < indexes.size(); i++) {squares[indexes[i]].setFillColor(TURQOISE);}
+
+}
+
+
 // bool Piece::move_square_has_friendly_piece(Pos piece_pos, int dx, int dy) {
 //     // Pos gunna need the color.
 // }
 
 /* PAWN */
 
-void Pawn::get_legal_moves() {};
+std::vector<sf::Vector2f> Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KNIGHT */
 
@@ -74,36 +99,39 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
     return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ); 
 }
 
-void Knight::get_legal_moves() {
+std::vector<sf::Vector2f> Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
+    // const and can put somewhere else.
     int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
     
+    std::vector<sf::Vector2f> legal_moves;
+
     for (int i = 0; i < num_offsets; i++) {
 
         int new_x = this->pos.x + Knight::offsets[i][0];
         int new_y = this->pos.y + Knight::offsets[i][1];
+
         sf::Vector2f move(new_x, new_y);
 
         if (!is_knight_move_on_board(this->pos, Knight::offsets[i][0], Knight::offsets[i][1])) continue;
-        // if (move_square_has_friendly_piece(this->pos, move)) continue;
+        if (move_square_has_friendly_piece(w_bb, b_bb, this->color, move)) continue;
 
-            // pass piece in here, is piece on square color ==
-
-            // then we can fill the square.
+        legal_moves.push_back(move);
     }        
+    return legal_moves;
 }
 
 /* BISHOP */
 
-void Bishop::get_legal_moves() {};
+std::vector<sf::Vector2f> Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* ROOK */
 
-void Rook::get_legal_moves() {};
+std::vector<sf::Vector2f> Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* QUEEN */
-void Queen::get_legal_moves() {};
+std::vector<sf::Vector2f> Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KING */
 
-void King::get_legal_moves() {};
+std::vector<sf::Vector2f> King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
