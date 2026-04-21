@@ -107,7 +107,6 @@ private:
     // Only two instances of each piece for black or white, black and white Pawn instance for example.
     std::vector<Piece*> pieces;
 
-    bool is_piece_highlighted = false;
     Piece* highlighted_piece = nullptr;
 
 public:

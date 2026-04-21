@@ -55,8 +55,6 @@ int Board::mouse_win_pos_to_square_index() {
 void Board::reset_square_color(sf::Vector2f square) {
     uint16_t reset_idx = pos2d_to_index(square);
     squares[reset_idx].setFillColor(is_square_black(reset_idx) ? MEDIUM_BROWN : WARM_CREAM);
-
-    is_piece_highlighted = false;
 }
 
 /* BITBOARD METHODS */
@@ -307,7 +305,7 @@ void Board::on_mouse_press(sf::Event &event) {
             if (is_vecs_equal(piece->pos, clicked_pos)) {
 
                 // perhaps should be board function.
-                piece->render_highlight(clicked_pos, squares, is_piece_highlighted);
+                piece->render_highlight(clicked_pos, squares);
                 piece->get_legal_moves(white_occupancy(), black_occupancy());
 
                 piece->highlight_legal_moves(piece->legal_moves, squares);

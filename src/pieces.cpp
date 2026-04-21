@@ -48,13 +48,11 @@ void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active) {
+void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares) {
     
-    if (!piece_highlight_active && is_vecs_equal(clicked_pos, this->pos)) {
-        piece_highlight_active = true;
+    if (is_vecs_equal(clicked_pos, this->pos)) {
         int index = pos2d_to_index(this->pos);
         squares[index].setFillColor(TURQOISE);
-        piece_highlight_active = true;
     }
 }
 

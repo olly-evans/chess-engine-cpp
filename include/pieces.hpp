@@ -40,7 +40,7 @@ public:
 
     void draw(sf::RenderWindow& window);
 
-    void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
+    void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares);
 
     bool move_square_has_friendly_piece(uint64_t w_bitboard, 
                                         uint64_t b_bitboard, 
@@ -130,7 +130,7 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    
+
     void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
