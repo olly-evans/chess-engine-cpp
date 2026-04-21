@@ -125,6 +125,8 @@ public:
     void die(const std::string& err);
     bool is_square_black(int i);
     int mouse_win_pos_to_square_index();
+    void reset_square_color(sf::Vector2f square);
+
     int square_index_to_piece_type_index(int square_index);
 
     // only here in case we pass board to pieces, well maybe other reasons too eventually.

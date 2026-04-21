@@ -52,23 +52,12 @@ int Board::mouse_win_pos_to_square_index() {
     return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
 }
 
+void Board::reset_square_color(sf::Vector2f square) {
+    uint16_t reset_idx = pos2d_to_index(square);
+    squares[reset_idx].setFillColor(is_square_black(reset_idx) ? MEDIUM_BROWN : WARM_CREAM);
 
-int Board::square_index_to_piece_type_index(int square_index) {
-
-    // this function might as well return piece pointer.
-
-    int bitboard_idx = GRID_NUM_SQUARES - square_index - 1;
-    // for (int i = 0; i < piece_types.size(); i++) {
-    //     // condition might be dodge.
-    //     // input is zero here, which would be 0,0.
-    //     if (is_bit_set(piece_types.at(i)->bitboard, bitboard_idx)) return i;
-    // }
-    return -1;
-}
-
-// only here in case we pass board to pieces, well maybe other reasons too eventually.
-const unsigned int Board::get_win_width() {
-    return win_w; 
+    is_piece_highlighted = false;
+    highlighted_piece = nullptr;
 }
 
 /* INIT */
@@ -274,37 +263,36 @@ void Board::on_key_pressed(sf::Event &event) {
 
 void Board::on_mouse_press(sf::Event &event) {
 
-    // IF WE HAVE A HIGHLIGHTED PIECE
-    // SET IT BACK TO FALSE.
-    // MAYBE
-
-    if (highlighted_piece != nullptr) {
-        uint16_t reset_idx = pos2d_to_index(highlighted_piece->pos);
-        squares[reset_idx].setFillColor(is_square_black(reset_idx) ? MEDIUM_BROWN : WARM_CREAM);
-
-        is_piece_highlighted = false;
-        highlighted_piece = nullptr;
-    }
+    
 
     auto mouse_press = event.mouseButton.button;
 
     if (mouse_press == sf::Mouse::Left) {
 
+        if (highlighted_piece) {
+        reset_square_color(highlighted_piece->pos);
+        // reset_square_color(moves) no clue tbh but needs to happen.
+
+        //click on move then move highlighted_piece->set_pos(move)
+        }
+        
+        // clicked_piece(); {
         int square_index = mouse_win_pos_to_square_index();
         sf::Vector2f clicked_pos = index_to_2d(square_index);
 
         std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
-        for (auto& piece : pieces) {
 
+        for (auto& piece : pieces) {
             // and player is white.
             if (is_vecs_equal(piece->pos, clicked_pos)) {
                 piece->render_highlight(clicked_pos, squares, is_piece_highlighted);
+                // piece->show_legal_moves(clicked_pos, squares);
                 highlighted_piece = piece;
             }
         }
 
-        // piece_selected();
-            // .render_highlight();
-            // .render_moves();
+
+        // }
+
     }
 }
