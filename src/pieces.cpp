@@ -89,7 +89,7 @@ void Piece::highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::ve
 
 /* PAWN */
 
-std::vector<sf::Vector2f> Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KNIGHT */
 
@@ -99,7 +99,7 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
     return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ); 
 }
 
-std::vector<sf::Vector2f> Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+void Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     // const and can put somewhere else.
     int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
@@ -117,21 +117,21 @@ std::vector<sf::Vector2f> Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) 
         if (move_square_has_friendly_piece(w_bb, b_bb, this->color, move)) continue;
 
         legal_moves.push_back(move);
-    }        
-    return legal_moves;
+    }   
+    this->legal_moves = legal_moves;     
 }
 
 /* BISHOP */
 
-std::vector<sf::Vector2f> Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* ROOK */
 
-std::vector<sf::Vector2f> Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* QUEEN */
-std::vector<sf::Vector2f> Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KING */
 
-std::vector<sf::Vector2f> King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};

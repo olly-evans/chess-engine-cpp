@@ -57,7 +57,6 @@ void Board::reset_square_color(sf::Vector2f square) {
     squares[reset_idx].setFillColor(is_square_black(reset_idx) ? MEDIUM_BROWN : WARM_CREAM);
 
     is_piece_highlighted = false;
-    highlighted_piece = nullptr;
 }
 
 /* BITBOARD METHODS */
@@ -290,9 +289,16 @@ void Board::on_mouse_press(sf::Event &event) {
         std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
 
         if (highlighted_piece) {
+            // reset_highlight() {
+            //}
+            std::cout << highlighted_piece->legal_moves.size() << "\n";
+
             reset_square_color(highlighted_piece->pos);
             // reset_square_color(moves) no clue tbh but needs to happen.
-
+            for (int i = 0; i < highlighted_piece->legal_moves.size(); i++) {
+                reset_square_color(highlighted_piece->legal_moves.at(i));
+            }
+            highlighted_piece = nullptr;
             //click on move then move highlighted_piece->set_pos(move)
         }
 
@@ -302,13 +308,9 @@ void Board::on_mouse_press(sf::Event &event) {
 
                 // perhaps should be board function.
                 piece->render_highlight(clicked_pos, squares, is_piece_highlighted);
-                std::cout << "white bb: "<< white_occupancy() << "\n";
-                std::cout << "black bb: "<< black_occupancy() << "\n";
+                piece->get_legal_moves(white_occupancy(), black_occupancy());
 
-                std::vector<sf::Vector2f> legal_moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
-                piece->highlight_legal_moves(legal_moves, squares);
-
-
+                piece->highlight_legal_moves(piece->legal_moves, squares);
                 highlighted_piece = piece;
             }
         }
