@@ -7,8 +7,6 @@
 #include <cstdint>
 
 std::string Piece::resolve_texture_path() {
-
-    // Change assets to 160px when bothered. In folder.
     std::filesystem::path path = std::filesystem::current_path();
     std::string color_prefix = (color == Color::WHITE ? "w" : "b");
     return path.string() + "/assets/" + color_prefix + piece_id + ".png";

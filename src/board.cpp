@@ -136,8 +136,14 @@ void Board::init_pieces() {
     // else        
 
     /* WHITE */
+    
 
+    // Mindset rn, just get the 32 pieces in a vector. Add/remove class functionality as needed.
+
+    // would be good if i could give a normalised x,y and class deals with indexing etc..
+    
     piece_types.emplace_back(new Pawn(Color::WHITE, main_window, w_pawns, board_square_size));
+    
     piece_types.emplace_back(new Knight(Color::WHITE, main_window, w_knights, board_square_size));
     piece_types.emplace_back(new Bishop(Color::WHITE, main_window, w_bishops, board_square_size));
     piece_types.emplace_back(new Rook(Color::WHITE, main_window, w_rooks, board_square_size));

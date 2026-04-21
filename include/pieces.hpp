@@ -18,14 +18,12 @@ protected:
 
     sf::Texture texture;
     sf::Sprite sprite;
-    bool is_highlighted = false;
 
     Color color;
 
     sf::RenderWindow& window;
 
     std::vector<Pos> piece_positions;
-    // assert king/queen piece_pos.size() == 1.
 
     std::string piece_id;
 
