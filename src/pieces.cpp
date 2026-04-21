@@ -48,42 +48,6 @@ void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void Piece::init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos) {
-
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (bitboard & (1ULL << i)) {
-            int draw_idx = GRID_NUM_SQUARES - i - 1;
-            sf::Vector2f pos = index_to_2d(draw_idx) * (float)board_square_size;
-            Pos piece_data = {pos, false};
-            // mouses pos coords not squares on grid coords.
-
-            piece_pos.push_back(piece_data);
-        }
-    }
-}
-
 void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active) {
     
     if (!piece_highlight_active && is_vecs_equal(clicked_pos, this->pos)) {
@@ -99,45 +63,45 @@ void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::Rectangle
 
 /* PAWN */
 
-void Pawn::get_legal_moves(Pos pos) {};
+void Pawn::get_legal_moves() {};
 
 /* KNIGHT */
 
-bool Knight::is_knight_move_on_board(Pos piece_square, int move_dx, int move_dy) {
-    int new_x = piece_square.vec.x + move_dx;
-    int new_y = piece_square.vec.y + move_dy;
+bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int move_dy) {
+    int new_x = piece_pos.x + move_dx;
+    int new_y = piece_pos.y + move_dy;
     return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ); 
 }
 
-void Knight::get_legal_moves(Pos piece_pos) {
+void Knight::get_legal_moves() {
 
-    int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
+    // int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
     
-    for (int i = 0; i < num_offsets; i++) {
+    // for (int i = 0; i < num_offsets; i++) {
 
-        int new_x = piece_pos.vec.x + Knight::offsets[i][0];
-        int new_y = piece_pos.vec.y + Knight::offsets[i][1];
-        sf::Vector2f move(new_x, new_y);
+    //     int new_x = piece_pos.vec.x + Knight::offsets[i][0];
+    //     int new_y = piece_pos.vec.y + Knight::offsets[i][1];
+    //     sf::Vector2f move(new_x, new_y);
 
-        if (!is_knight_move_on_board(piece_pos, Knight::offsets[i][0], Knight::offsets[i][1])) continue;
-        // if (move_square_has_friendly_piece(piece_pos, move)) continue;
-            // pass piece in here, is piece on square color ==
+    //     if (!is_knight_move_on_board(piece_pos, Knight::offsets[i][0], Knight::offsets[i][1])) continue;
+    //     // if (move_square_has_friendly_piece(piece_pos, move)) continue;
+    //         // pass piece in here, is piece on square color ==
 
-            // then we can fill the square.
-    }        
+    //         // then we can fill the square.
+    // }        
 }
 
 /* BISHOP */
 
-void Bishop::get_legal_moves(Pos pos) {};
+void Bishop::get_legal_moves() {};
 
 /* ROOK */
 
-void Rook::get_legal_moves(Pos pos) {};
+void Rook::get_legal_moves() {};
 
 /* QUEEN */
-void Queen::get_legal_moves(Pos pos) {};
+void Queen::get_legal_moves() {};
 
 /* KING */
 
-void King::get_legal_moves(Pos pos) {};
+void King::get_legal_moves() {};

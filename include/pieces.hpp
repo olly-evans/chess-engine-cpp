@@ -25,8 +25,6 @@ protected:
 
     sf::RenderWindow& window;
 
-    std::vector<Pos> piece_positions;
-
     std::string piece_id;
 
     std::string resolve_texture_path();
@@ -40,12 +38,11 @@ public:
 
     void draw(sf::RenderWindow& window);
 
-    void init_piece_positions_vector_from_bitboard(uint64_t bitboard, std::vector<Pos> &piece_pos);
     void make_highlighted();
     void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares, bool& piece_highlight_active);
 
-    bool move_square_has_friendly_piece(Pos piece_pos, sf::Vector2f move);
-    virtual void get_legal_moves(Pos pos) = 0;
+    bool move_square_has_friendly_piece(sf::Vector2f piece_pos, sf::Vector2f move);
+    virtual void get_legal_moves() = 0;
 };
 
 class Pawn : public Piece {
@@ -56,7 +53,7 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    void get_legal_moves(Pos pos) override;
+    void get_legal_moves() override;
 
 };
 
@@ -74,9 +71,9 @@ public:
         return resolve_texture_path();
     }
     
-    bool is_knight_move_on_board(Pos piece_square, int dx, int dy);
+    bool is_knight_move_on_board(sf::Vector2f piece_square, int dx, int dy);
 
-    void get_legal_moves(Pos pos) override;
+    void get_legal_moves() override;
 };
 
 class Bishop : public Piece {
@@ -88,7 +85,7 @@ public:
         return resolve_texture_path();
     }
     
-    void get_legal_moves(Pos pos) override;
+    void get_legal_moves() override;
 
 };
 
@@ -101,7 +98,7 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves(Pos pos) override;
+    void get_legal_moves() override;
 
 };
 
@@ -114,7 +111,7 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves(Pos pos) override;
+    void get_legal_moves() override;
 
 };
 
@@ -126,6 +123,6 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    void get_legal_moves(Pos pos) override;
+    void get_legal_moves() override;
 
 };

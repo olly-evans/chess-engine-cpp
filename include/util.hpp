@@ -6,11 +6,6 @@
 constexpr unsigned int GRID_SZ = 8;
 constexpr unsigned int GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
-struct Pos {
-    sf::Vector2f vec;
-    bool is_highlighted = false;
-};
-
 enum PieceID {
 
     // Represents starting piece index.
