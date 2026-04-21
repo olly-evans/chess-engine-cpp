@@ -76,20 +76,21 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
 
 void Knight::get_legal_moves() {
 
-    // int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
+    int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
     
-    // for (int i = 0; i < num_offsets; i++) {
+    for (int i = 0; i < num_offsets; i++) {
 
-    //     int new_x = piece_pos.vec.x + Knight::offsets[i][0];
-    //     int new_y = piece_pos.vec.y + Knight::offsets[i][1];
-    //     sf::Vector2f move(new_x, new_y);
+        int new_x = this->pos.x + Knight::offsets[i][0];
+        int new_y = this->pos.y + Knight::offsets[i][1];
+        sf::Vector2f move(new_x, new_y);
 
-    //     if (!is_knight_move_on_board(piece_pos, Knight::offsets[i][0], Knight::offsets[i][1])) continue;
-    //     // if (move_square_has_friendly_piece(piece_pos, move)) continue;
-    //         // pass piece in here, is piece on square color ==
+        if (!is_knight_move_on_board(this->pos, Knight::offsets[i][0], Knight::offsets[i][1])) continue;
+        // if (move_square_has_friendly_piece(this->pos, move)) continue;
 
-    //         // then we can fill the square.
-    // }        
+            // pass piece in here, is piece on square color ==
+
+            // then we can fill the square.
+    }        
 }
 
 /* BISHOP */

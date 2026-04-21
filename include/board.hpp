@@ -83,13 +83,9 @@ private:
 
     // Vector of all bitboards.
     std::vector<uint64_t> bitboards;
-
-    // need to try and use this.
-    // enum PieceType { W_PAWNS, W_KNIGHTS, W_BISHOPS, W_ROOKS, W_QUEEN, W_KING,
-    //              B_PAWNS, B_KNIGHTS, B_BISHOPS, B_ROOKS, B_QUEEN, B_KING };
-
     std::vector<std::string> bitboard_names;
     int bitboard_vec_index = 0;
+    
 
     // All bitboards.
     uint64_t w_pawns = 0xFF00ULL;
@@ -126,6 +122,11 @@ public:
     bool is_square_black(int i);
     int mouse_win_pos_to_square_index();
     void reset_square_color(sf::Vector2f square);
+
+
+    uint64_t white_occupancy();
+    uint64_t black_occupancy();
+
 
     int square_index_to_piece_type_index(int square_index);
 

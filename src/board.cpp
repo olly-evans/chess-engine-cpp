@@ -60,6 +60,22 @@ void Board::reset_square_color(sf::Vector2f square) {
     highlighted_piece = nullptr;
 }
 
+bool Board::move_square_has_friendly_piece(sf::Vector2f move) {
+    
+}
+
+/* BITBOARD METHODS */
+
+uint64_t Board::white_occupancy() {
+    return bitboards[W_PAWNS] | bitboards[W_KNIGHTS] | bitboards[W_BISHOPS] |
+           bitboards[W_ROOKS] | bitboards[W_QUEEN]   | bitboards[W_KING];
+}
+
+uint64_t Board::black_occupancy() {
+    return bitboards[B_PAWNS] | bitboards[B_KNIGHTS] | bitboards[B_BISHOPS] |
+           bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
+}
+
 /* INIT */
 
 void Board::init() {
@@ -269,22 +285,26 @@ void Board::on_mouse_press(sf::Event &event) {
 
     if (mouse_press == sf::Mouse::Left) {
 
-        if (highlighted_piece) {
-        reset_square_color(highlighted_piece->pos);
-        // reset_square_color(moves) no clue tbh but needs to happen.
-
-        //click on move then move highlighted_piece->set_pos(move)
-        }
         
+
         // clicked_piece(); {
         int square_index = mouse_win_pos_to_square_index();
         sf::Vector2f clicked_pos = index_to_2d(square_index);
 
         std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
 
+        if (highlighted_piece) {
+            reset_square_color(highlighted_piece->pos);
+            // reset_square_color(moves) no clue tbh but needs to happen.
+
+            //click on move then move highlighted_piece->set_pos(move)
+        }
+
         for (auto& piece : pieces) {
             // and player is white.
             if (is_vecs_equal(piece->pos, clicked_pos)) {
+
+                // perhaps should be board function.
                 piece->render_highlight(clicked_pos, squares, is_piece_highlighted);
                 // piece->show_legal_moves(clicked_pos, squares);
                 highlighted_piece = piece;
