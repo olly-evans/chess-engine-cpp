@@ -64,7 +64,6 @@ bool Piece::move_square_has_friendly_piece(uint64_t w_bitboard,
     int index = pos2d_to_index(move);
     int square_idx = GRID_NUM_SQUARES - index - 1;
 
-    // going wrong here.
     if (w_bitboard & (1ULL << square_idx) && col == Color::WHITE) return true;
     if (b_bitboard & (1ULL << square_idx) && col == Color::BLACK) return true;
     return false;
@@ -80,14 +79,9 @@ void Piece::highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::ve
 
 }
 
-
-// bool Piece::move_square_has_friendly_piece(Pos piece_pos, int dx, int dy) {
-//     // Pos gunna need the color.
-// }
-
 /* PAWN */
 
-void Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Pawn::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KNIGHT */
 
@@ -97,7 +91,7 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
     return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ); 
 }
 
-void Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+void Knight::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     // const and can put somewhere else.
     int num_offsets = sizeof(Knight::offsets) / sizeof(Knight::offsets[0]);
@@ -121,15 +115,15 @@ void Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
 /* BISHOP */
 
-void Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Bishop::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* ROOK */
 
-void Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Rook::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* QUEEN */
-void Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void Queen::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KING */
 
-void King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+void King::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};

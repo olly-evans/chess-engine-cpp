@@ -306,7 +306,7 @@ void Board::on_mouse_press(sf::Event &event) {
 
                 // perhaps should be board function.
                 piece->render_highlight(clicked_pos, squares);
-                piece->get_legal_moves(white_occupancy(), black_occupancy());
+                piece->set_legal_moves(white_occupancy(), black_occupancy());
 
                 piece->highlight_legal_moves(piece->legal_moves, squares);
                 highlighted_piece = piece;

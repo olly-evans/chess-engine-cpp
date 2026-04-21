@@ -47,7 +47,7 @@ public:
                                         Color col, 
                                         sf::Vector2f move);
 
-    virtual void get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
+    virtual void set_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
     void highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squares);
 
 };
@@ -60,7 +60,7 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -80,7 +80,7 @@ public:
     
     bool is_knight_move_on_board(sf::Vector2f piece_square, int dx, int dy);
 
-    void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -93,7 +93,7 @@ public:
         return resolve_texture_path();
     }
     
-    void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -106,7 +106,7 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 };
 
 class Queen : public Piece {
@@ -118,7 +118,7 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -131,6 +131,6 @@ public:
         return resolve_texture_path();
     }
 
-    void get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };

@@ -36,3 +36,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - Should replace all int with uint_t.
 
 - sort out files. get functional code out of headers ffs.
+
+
+- implement set_legal_moves() and highlight_legal_moves() for all pieces.
