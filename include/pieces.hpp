@@ -36,8 +36,6 @@ public:
 
     uint64_t attacks = 0ULL;
     uint64_t bit;
-
-    std::vector<sf::Vector2f> legal_moves;
     
     virtual std::string get_texture_path();
 

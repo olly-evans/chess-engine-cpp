@@ -53,9 +53,9 @@ int Board::mouse_win_pos_to_square_index() {
     return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
 }
 
-void Board::reset_square_color(sf::Vector2f square) {
-    uint16_t reset_idx = pos2d_to_index(square);
-    squares[reset_idx].setFillColor(is_square_black(reset_idx) ? MEDIUM_BROWN : WARM_CREAM);
+void Board::reset_square_color(int square) {
+    int bit = BitboardHelper::square_to_bit(square);
+    squares[square].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
 }
 
 /* BITBOARD METHODS */
@@ -135,10 +135,6 @@ void Board::init_pieces() {
     // else        
 
     /* WHITE */
-    
-
-    // Mindset rn, just get the 32 pieces in a vector. Add/remove class functionality as needed.
-
 
     // must be a way to flip this for the other board. so we dont have to rewrite.
 
@@ -282,31 +278,29 @@ void Board::on_mouse_press(sf::Event &event) {
         
 
         // clicked_piece(); {
+        // and mouse on attack from piece->attack.
+        if (highlighted_piece) {
+            // reset_highlight() {
+
+
+            reset_square_color(BitboardHelper::bit_to_square(highlighted_piece->bit));
+
+            for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+                // this not okay.
+                if (highlighted_piece->attacks & (1ULL << i)) {
+                    int square = BitboardHelper::bit_to_square(i);
+                    reset_square_color(square);
+                }
+            }
+            //click on move then move highlighted_piece->set_pos(move)
+
+            highlighted_piece = nullptr;
+        }
+        
         int square_index = mouse_win_pos_to_square_index();
         sf::Vector2f clicked_pos = index_to_2d(square_index);
 
         std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
-
-        if (highlighted_piece) {
-            // reset_highlight() {
-            //}
-            std::cout << highlighted_piece->legal_moves.size() << "\n";
-
-            reset_square_color(highlighted_piece->pos);
-            // reset_square_color(moves) no clue tbh but needs to happen.
-            for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-                if (highlighted_piece->attacks & (1ULL << i)) {
-                    int square = BitboardHelper::bit_to_square(i);
-                    sf::Vector2f pos = index_to_2d(square);
-                    reset_square_color(pos);
-                }
-            
-            //click on move then move highlighted_piece->set_pos(move)
-            }
-            highlighted_piece = nullptr;
-
-        }
-        
 
             for (auto& piece : pieces) {
                 // and player is white.

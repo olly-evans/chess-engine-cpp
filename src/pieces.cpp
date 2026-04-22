@@ -23,6 +23,8 @@ Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t s_squ_idx,
 
     // take squ_idx and convert to 2d normalised pos.
     pos = index_to_2d(start_square_index);
+    
+    bit = BitboardHelper::square_to_bit(start_square_index);
 
     // we then never touch index again.
     if (texture.loadFromFile(get_texture_path())) {
@@ -97,7 +99,7 @@ uint64_t Knight::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
 
     // gunna be interesting when we need to flip the board.
-    
+
     attacks |= (knight & NOT_AB_FILE) << 6;   // 2 left, 1 up
     attacks |= (knight & NOT_A_FILE)  << 15;  // 1 left, 2 up  
     attacks |= (knight & NOT_H_FILE)  << 17;  // 1 right, 2 up
