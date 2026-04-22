@@ -12,11 +12,11 @@ std::string Piece::resolve_texture_path() {
     return path.string() + "/assets/" + color_prefix + piece_id + ".png";
 }
 
-Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t squ_idx, int b_squ_sz) : 
+Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t s_squ_idx, int b_squ_sz) : 
     piece_id(std::move(id)), 
     color(col),
     window(w), 
-    start_square_index(squ_idx),
+    start_square_index(s_squ_idx),
     board_square_size(b_squ_sz) {
     
 

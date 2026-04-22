@@ -14,7 +14,6 @@ enum PieceID {
 
     WP_A2 = 48, WP_B2, WP_C2, WP_D2, WP_E2, WP_F2, WP_G2, WP_H2,  
     WR_A1, WN_B1, WB_C1, WQ_D1, WK_E1, WB_F1, WN_G1, WR_H1,
-      
 };
 
 enum Bitboards { W_PAWNS, W_KNIGHTS, W_BISHOPS, W_ROOKS, W_QUEEN, W_KING,

@@ -300,15 +300,15 @@ void Board::on_mouse_press(sf::Event &event) {
             //click on move then move highlighted_piece->set_pos(move)
         }
 
+        
+
         for (auto& piece : pieces) {
             // and player is white.
             if (is_vecs_equal(piece->pos, clicked_pos)) {
-
-                // perhaps should be board function.
                 piece->render_highlight(clicked_pos, squares);
                 piece->set_legal_moves(white_occupancy(), black_occupancy());
-
                 piece->highlight_legal_moves(piece->legal_moves, squares);
+
                 highlighted_piece = piece;
             }
         }

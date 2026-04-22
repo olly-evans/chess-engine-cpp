@@ -31,7 +31,7 @@ protected:
     std::string resolve_texture_path();
 
 public:
-    Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t squ_idx, int b_squ_sz);
+    Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t s_squ_idx, int b_squ_sz);
 
     sf::Vector2f pos;
     std::vector<sf::Vector2f> legal_moves;
