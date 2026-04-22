@@ -305,10 +305,12 @@ void Board::on_mouse_press(sf::Event &event) {
             for (auto& piece : pieces) {
                 // and player is white.
                 if (is_vecs_equal(piece->pos, clicked_pos)) {
-                    piece->render_highlight(clicked_pos, squares);
-                    piece->attacks = piece->set_legal_moves(white_occupancy(), black_occupancy());
 
-                    std::cout << "piece_attacks: " << std::hex << piece->attacks << "\n";
+                    // use bitboards in render_highlight()
+                    // then can use friendly to allow for white/black player.
+                    piece->render_highlight(clicked_pos, squares);
+
+                    piece->attacks = piece->set_legal_moves(white_occupancy(), black_occupancy());
                     piece->highlight_legal_moves(piece->attacks, squares);
                     highlighted_piece = piece;
                 }
