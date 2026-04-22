@@ -74,7 +74,7 @@ void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleSha
 
 /* PAWN */
 
-uint64_t Pawn::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KNIGHT */
 
@@ -84,7 +84,7 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
     return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ);
 }
 
-uint64_t Knight::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     
     int square = pos2d_to_index(this->pos); // 1,7 -> 57
     int bit = BitboardHelper::square_to_bit(square); // should conv 57 to 6.
@@ -116,15 +116,15 @@ uint64_t Knight::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
 /* BISHOP */
 
-uint64_t Bishop::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* ROOK */
 
-uint64_t Rook::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* QUEEN */
-uint64_t Queen::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KING */
 
-uint64_t King::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};

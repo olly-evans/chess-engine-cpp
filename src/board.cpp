@@ -310,7 +310,7 @@ void Board::on_mouse_press(sf::Event &event) {
                     // then can use friendly to allow for white/black player.
                     piece->render_highlight(clicked_pos, squares);
 
-                    piece->attacks = piece->set_legal_moves(white_occupancy(), black_occupancy());
+                    piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
                     piece->highlight_legal_moves(piece->attacks, squares);
                     highlighted_piece = piece;
                 }
