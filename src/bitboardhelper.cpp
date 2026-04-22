@@ -30,3 +30,7 @@ bool BitboardHelper::has_friendly_piece(uint64_t friendly_bb, int square) {
     int bit = BitboardHelper::square_to_bit(square);
     return friendly_bb & (1ULL << bit);
 }
+
+uint64_t BitboardHelper::remove_friendly_pieces(uint64_t attacks, uint64_t friendly) {
+    return attacks &= ~friendly;
+}

@@ -4,10 +4,10 @@
 
 class BitboardHelper {
 public:
-    uint64_t piece_type_bitboards;
+    // uint64_t piece_type_bitboards;
 
-    static uint64_t white_occupancy;
-    static uint64_t white_occupancy;
+    // static uint64_t white_occupancy;
+    // static uint64_t white_occupancy;
 
     static int square_to_bit(int square);
 
@@ -18,6 +18,7 @@ public:
 
     /* CHECKS */
     static bool has_friendly_piece(uint64_t friendly_bb, int square);
+    static uint64_t remove_friendly_pieces(uint64_t attacks, uint64_t friendly);
 
     
     /* MOVE GENERATION */

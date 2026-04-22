@@ -34,6 +34,9 @@ public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t s_squ_idx, int b_squ_sz);
 
     sf::Vector2f pos;
+
+    uint64_t bit;
+
     std::vector<sf::Vector2f> legal_moves;
     
     virtual std::string get_texture_path();
@@ -42,14 +45,8 @@ public:
 
     void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares);
 
-    bool move_square_has_friendly_piece(uint64_t w_bitboard, 
-                                        uint64_t b_bitboard, 
-                                        Color col, 
-                                        sf::Vector2f move);
-
-    virtual void set_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
-    void highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squares);
-
+    virtual uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
+    void highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squareuint64_t);
 };
 
 class Pawn : public Piece {
@@ -60,7 +57,7 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
-    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -78,9 +75,8 @@ public:
         return resolve_texture_path();
     }
     
-    bool is_knight_move_on_board(sf::Vector2f piece_square, int dx, int dy);
-
-    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    bool is_knight_move_on_board(sf::Vector2f piece_square, int move_dx, int move_dy);
+    uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -93,7 +89,7 @@ public:
         return resolve_texture_path();
     }
     
-    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -106,7 +102,7 @@ public:
         return resolve_texture_path();
     }
 
-    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 };
 
 class Queen : public Piece {
@@ -118,7 +114,7 @@ public:
         return resolve_texture_path();
     }
 
-    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -131,6 +127,6 @@ public:
         return resolve_texture_path();
     }
 
-    void set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
