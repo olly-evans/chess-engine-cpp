@@ -10,6 +10,7 @@ public:
     // static uint64_t white_occupancy;
 
     static int square_to_bit(int square);
+    static int bit_to_square(int bit);
 
     // manipulation
     static uint64_t set_bit(uint64_t b, int square);

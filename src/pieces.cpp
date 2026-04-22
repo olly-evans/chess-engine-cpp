@@ -57,14 +57,17 @@ void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::Rectangle
     }
 }
 
-void Piece::highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squares) {
+void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squares) {
     
-    std::vector<uint16_t> indexes{};
+    // find bits that are 1.
 
-    for (int i = 0; i < legal_moves.size(); i++) {indexes.emplace_back(pos2d_to_index(legal_moves[i]));}
+    for (int bit = 0; bit < GRID_NUM_SQUARES; bit++) {
 
-    for (int i = 0; i < indexes.size(); i++) {squares[indexes[i]].setFillColor(TURQOISE);}
-
+        if (attacks & (1ULL << bit)) {
+            int square = BitboardHelper::square_to_bit(bit);
+            squares[square].setFillColor(TURQOISE);
+        }
+    }
 }
 
 /* PAWN */
@@ -81,29 +84,30 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
 
 uint64_t Knight::set_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     
-    int square = pos2d_to_index(this->pos);
-    int bit = BitboardHelper::square_to_bit(square);
+    int square = pos2d_to_index(this->pos); // 1,7 -> 57
+    int bit = BitboardHelper::square_to_bit(square); // should conv 57 to 6.
 
-    uint64_t knight = 0ULL << bit;
-    uint64_t attacks;
+    uint64_t knight = 1ULL << bit;
+    uint64_t attacks = 0ULL;
     
-    attacks |= (knight << 17);
-    attacks |= (knight << 15);
-    attacks |= (knight << 10);
-    attacks |= (knight << 6);
+    // MASKS.
+    const uint64_t NOT_A_FILE  = 0xFEFEFEFEFEFEFEFEULL;
+    const uint64_t NOT_AB_FILE = 0xFCFCFCFCFCFCFCFCULL;
+    const uint64_t NOT_H_FILE  = 0x7F7F7F7F7F7F7F7FULL;
+    const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
 
-    attacks |= (knight >> 17);
-    attacks |= (knight >> 15);
-    attacks |= (knight >> 10);
-    attacks |= (knight >> 6);
-
+    // gunna be interesting when we need to flip the board.
+    
+    attacks |= (knight & NOT_AB_FILE) << 6;   // 2 left, 1 up
+    attacks |= (knight & NOT_A_FILE)  << 15;  // 1 left, 2 up  
+    attacks |= (knight & NOT_H_FILE)  << 17;  // 1 right, 2 up
+    attacks |= (knight & NOT_GH_FILE) << 10;  // 2 right, 1 up
+    attacks |= (knight & NOT_GH_FILE) >> 6;   // 2 right, 1 down
+    attacks |= (knight & NOT_H_FILE)  >> 15;  // 1 right, 2 down
+    attacks |= (knight & NOT_A_FILE)  >> 17;  // 1 left, 2 down
+    attacks |= (knight & NOT_AB_FILE) >> 10;  // 2 left, 1 down
 
     return BitboardHelper::remove_friendly_pieces(attacks, this->color == Color::WHITE ? w_bb : b_bb);
-        // Checks.
-        // if (!is_knight_move_on_board(this->pos, Knight::offsets[i][0], Knight::offsets[i][1])) continue;
-    // if (this->color == Color::WHITE && BitboardHelper::has_friendly_piece(w_bb, move_square)) continue;
-    // if (this->color == Color::BLACK && BitboardHelper::has_friendly_piece(b_bb, move_square)) continue;
-
 }
 
 

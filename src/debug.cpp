@@ -11,6 +11,19 @@ void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, 
     }
 }
 
+// void Debug::draw_bitboard(uint64_t bb,
+//                           sf::RenderWindow& window, 
+//                           int win_w, 
+//                           int win_h, 
+//                           std::vector<sf::RectangleShape>& squares) 
+// {
+//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+//         int draw_idx = GRID_NUM_SQUARES - i - 1;
+//         squares[draw_idx].setFillColor(bb & (1ULL << i) ? WHITE : BLACK);
+//     }
+
+// }
+
 void Debug::show_mouse_pos(int x, int y) {
     std::cout << "(" << x << ", " << y << ")" << std::endl;
 }

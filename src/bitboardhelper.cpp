@@ -7,6 +7,11 @@ int BitboardHelper::square_to_bit(int square) {
     return GRID_NUM_SQUARES - square - 1;
 }
 
+int BitboardHelper::bit_to_square(int bit) {
+    return GRID_NUM_SQUARES - bit - 1;
+}
+
+
 uint64_t BitboardHelper::set_bit(uint64_t b, int square) {
 
     int bit = BitboardHelper::square_to_bit(square);

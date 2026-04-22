@@ -4,6 +4,7 @@
 
 #include "pieces.hpp"
 #include "debug.hpp"
+#include "bitboardhelper.hpp"
 
 #include "board.hpp"
 
@@ -293,28 +294,31 @@ void Board::on_mouse_press(sf::Event &event) {
 
             reset_square_color(highlighted_piece->pos);
             // reset_square_color(moves) no clue tbh but needs to happen.
-            for (int i = 0; i < highlighted_piece->legal_moves.size(); i++) {
-                reset_square_color(highlighted_piece->legal_moves.at(i));
+            for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+                if (highlighted_piece->attacks & (1ULL << i)) {
+                    int square = BitboardHelper::bit_to_square(i);
+                    sf::Vector2f pos = index_to_2d(square);
+                    reset_square_color(pos);
+                }
+            
+            //click on move then move highlighted_piece->set_pos(move)
             }
             highlighted_piece = nullptr;
-            //click on move then move highlighted_piece->set_pos(move)
-        }
 
+        }
         
 
-        for (auto& piece : pieces) {
-            // and player is white.
-            if (is_vecs_equal(piece->pos, clicked_pos)) {
-                piece->render_highlight(clicked_pos, squares);
-                piece->set_legal_moves(white_occupancy(), black_occupancy());
-                piece->highlight_legal_moves(piece->legal_moves, squares);
+            for (auto& piece : pieces) {
+                // and player is white.
+                if (is_vecs_equal(piece->pos, clicked_pos)) {
+                    piece->render_highlight(clicked_pos, squares);
+                    piece->attacks = piece->set_legal_moves(white_occupancy(), black_occupancy());
 
-                highlighted_piece = piece;
+                    std::cout << "piece_attacks: " << std::hex << piece->attacks << "\n";
+                    piece->highlight_legal_moves(piece->attacks, squares);
+                    highlighted_piece = piece;
+                }
             }
-        }
-
-
-        // }
-
+        
     }
 }

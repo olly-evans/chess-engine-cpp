@@ -20,8 +20,7 @@ protected:
 
     sf::Texture texture;
     sf::Sprite sprite;
-
-
+    
     Color color;
 
     sf::RenderWindow& window;
@@ -35,6 +34,7 @@ public:
 
     sf::Vector2f pos;
 
+    uint64_t attacks = 0ULL;
     uint64_t bit;
 
     std::vector<sf::Vector2f> legal_moves;
@@ -46,7 +46,7 @@ public:
     void render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares);
 
     virtual uint64_t set_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
-    void highlight_legal_moves(std::vector<sf::Vector2f> legal_moves, std::vector<sf::RectangleShape>& squareuint64_t);
+    void highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squareuint64_t);
 };
 
 class Pawn : public Piece {
