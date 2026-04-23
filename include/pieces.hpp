@@ -46,7 +46,7 @@ public:
 
     void draw(sf::RenderWindow& window);
 
-    void render_highlight(uint8_t clicked_pos, std::vector<sf::RectangleShape>& squares);
+    // void render_highlight(uint8_t clicked_pos, std::vector<sf::RectangleShape>& squares);
 
     virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
     void highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squareuint64_t);

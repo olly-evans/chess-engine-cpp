@@ -19,10 +19,7 @@ Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t b, int b_s
     window(w), 
     bit(b),
     board_square_size(b_squ_sz) {
-    
-    int square_idx = BitboardHelper::bit_to_square(bit);
-    pos = index_to_2d(square_idx);
-    
+        
     // we then never touch index again.
     if (texture.loadFromFile(get_texture_path())) {
         sprite.setTexture(texture);
@@ -38,22 +35,19 @@ std::string Piece::get_texture_path() {
 }
 
 void Piece::draw(sf::RenderWindow& window) {
-    /*
-        For a piece type (i.e White Rook or Black Bishop), draw all active pieces
-        on the board in their appropriate position.
-    */
 
-    sf::Vector2f window_pos = this->pos * (float)board_square_size;
-    sprite.setPosition(window_pos.x, window_pos.y);
+    uint8_t square = BitboardHelper::bit_to_square(this->bit);
+    sf::Vector2f pos = index_to_2d(square) * (float)board_square_size;
+    sprite.setPosition(pos.x, pos.y);
     window.draw(sprite);
 }
 
-void Piece::render_highlight(uint8_t clicked_bit, std::vector<sf::RectangleShape>& squares) {
+// void Piece::render_highlight(uint8_t clicked_bit, std::vector<sf::RectangleShape>& squares) {
     
-    if (clicked_bit == this->bit) {
-        squares[clicked_bit].setFillColor(TURQOISE);
-    }
-}
+//     if (clicked_bit == this->bit) {
+//         squares[clicked_bit].setFillColor(TURQOISE);
+//     }
+// }
 
 void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squares) {
     

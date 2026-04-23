@@ -62,6 +62,12 @@ int Board::mouse_win_pos_to_bit() {
 
 void Board::reset_square_color(int bit) {
 
+    /* 
+
+    Board as uin64_t where H8 is MSB 
+    insert bit to reset color of.
+
+    */
 
     squares[bit].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
 }
@@ -184,7 +190,6 @@ void Board::init_pieces() {
 
     pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, D8, board_square_size));
     pieces.emplace_back(new King("K", Color::BLACK, main_window, E8, board_square_size));
-
 }
 
 // void init_board_coords() {
@@ -280,57 +285,50 @@ void Board::on_key_pressed(sf::Event &event) {
 
 void Board::on_mouse_press(sf::Event &event) {
 
-    
-
     auto mouse_press = event.mouseButton.button;
+    uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (mouse_press == sf::Mouse::Left) {
 
-        
-
-        // select piece.
-
-        // piece = piece_at(square)
-        // if piece {select(Piece)}
-
-        // select 
-
-
-        // clicked_piece(); {
-        // and mouse on attack from piece->attack.
         if (selected_piece) {
             // reset_highlight() {
 
-
-            reset_square_color(selected_piece->bit);
-
-            for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-                if (selected_piece->attacks & (1ULL << i)) {
-                    reset_square_color(i);
-                }
-            }
-            //click on move then move selected_piece->set_pos(move)
-
-            selected_piece = nullptr;
+            if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit))
+                selected_piece->bit = clicked_bit;
+            
+            deselect_piece();
             return;
         }
+
+        select_piece(clicked_bit);
         
-        uint8_t clicked_bit = mouse_win_pos_to_bit();
+    }
+}
 
-        std::cout << "clicked bit: " << clicked_bit << "\n";
+void Board::deselect_piece() {
 
-            for (auto& piece : pieces) {
-                // and player is white.
-                if (clicked_bit == piece->bit) {
+    reset_square_color(selected_piece->bit);
 
-                    // then can use friendly to allow for white/black player.
-                    piece->render_highlight(clicked_bit, squares);
+    for (int i = H1; i <= A8; i++) {
+        if (BitboardHelper::get_bit(selected_piece->attacks, i)) {
+            reset_square_color(i);
+        }
+    }
+    selected_piece = nullptr;
+}
 
-                    piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
-                    piece->highlight_legal_moves(piece->attacks, squares);
-                    selected_piece = piece;
-                }
-            }
-        
+void Board::select_piece(uint8_t clicked_bit) {
+    
+    for (auto& piece : pieces) {
+        // and player is white.
+        if (clicked_bit == piece->bit) {
+
+            // then can use friendly to allow for white/black player.
+            // piece->render_highlight(clicked_bit, squares);
+            squares[clicked_bit].setFillColor(TURQOISE);
+            piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
+            piece->highlight_legal_moves(piece->attacks, squares);
+            selected_piece = piece;
+        }
     }
 }

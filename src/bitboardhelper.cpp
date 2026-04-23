@@ -24,15 +24,13 @@ uint64_t BitboardHelper::clear_bit(uint64_t b, int square) {
     return (b) &= ~(1ULL << bit);
 }
 
-bool BitboardHelper::get_bit(uint64_t b, int square) {
-    int bit = BitboardHelper::square_to_bit(square);
+bool BitboardHelper::get_bit(uint64_t b, int bit) {
     return b & (1ULL << bit);
 }
 
 /* CHECKS */
 
-bool BitboardHelper::has_friendly_piece(uint64_t friendly_bb, int square) {
-    int bit = BitboardHelper::square_to_bit(square);
+bool BitboardHelper::has_friendly_piece(uint64_t friendly_bb, int bit) {
     return friendly_bb & (1ULL << bit);
 }
 
