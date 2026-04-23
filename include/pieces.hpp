@@ -16,8 +16,6 @@ class Piece {
 protected:
     int board_square_size;
 
-    uint16_t start_square_index;
-
     sf::Texture texture;
     sf::Sprite sprite;
     
@@ -29,13 +27,20 @@ protected:
 
     std::string resolve_texture_path();
 
+    /* NOT MASKS */ 
+
+    const uint64_t NOT_A_FILE  = 0xFEFEFEFEFEFEFEFEULL;
+    const uint64_t NOT_AB_FILE = 0xFCFCFCFCFCFCFCFCULL;
+    const uint64_t NOT_H_FILE  = 0x7F7F7F7F7F7F7F7FULL;
+    const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
+
 public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t s_squ_idx, int b_squ_sz);
 
     sf::Vector2f pos;
 
     uint64_t attacks = 0ULL;
-    uint64_t bit;
+    uint64_t bit = 0ULL;
     
     virtual std::string get_texture_path();
 

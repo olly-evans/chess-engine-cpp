@@ -13,19 +13,19 @@ std::string Piece::resolve_texture_path() {
     return path.string() + "/assets/" + color_prefix + piece_id + ".png";
 }
 
-Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t s_squ_idx, int b_squ_sz) : 
+Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t b, int b_squ_sz) : 
     piece_id(std::move(id)), 
     color(col),
     window(w), 
-    start_square_index(s_squ_idx),
+    bit(b),
     board_square_size(b_squ_sz) {
     
 
-    // take squ_idx and convert to 2d normalised pos.
-    pos = index_to_2d(start_square_index);
-    
-    bit = BitboardHelper::square_to_bit(start_square_index);
+    // // take squ_idx and convert to 2d normalised pos.
 
+    int square_idx = BitboardHelper::bit_to_square(bit);
+    pos = index_to_2d(square_idx);
+    
     // we then never touch index again.
     if (texture.loadFromFile(get_texture_path())) {
         sprite.setTexture(texture);
@@ -91,12 +91,6 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t knight = 1ULL << bit;
     uint64_t attacks = 0ULL;
-    
-    // MASKS.
-    const uint64_t NOT_A_FILE  = 0xFEFEFEFEFEFEFEFEULL;
-    const uint64_t NOT_AB_FILE = 0xFCFCFCFCFCFCFCFCULL;
-    const uint64_t NOT_H_FILE  = 0x7F7F7F7F7F7F7F7FULL;
-    const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
 
     // gunna be interesting when we need to flip the board.
 

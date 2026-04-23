@@ -35,7 +35,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - Linux unsigned long is 64 bit.
 - Should replace all int with uint_t.
 
-- sort out files. get functional code out of headers ffs.
+- remove most use of vectors ffs just use index and enum for squares to
 
-
-- implement set_legal_moves() and highlight_legal_moves() for all pieces.

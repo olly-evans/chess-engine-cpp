@@ -28,7 +28,12 @@ win_w(ww),
 win_h(wh), 
 win_name(std::move(wn)), 
 main_window(sf::VideoMode(win_w, win_h), 
-win_name) {};
+win_name) {
+
+    // who is white who is black..
+
+    // SquareToBits enum updated depending on board orientation.
+};
 
 unsigned int board_square_size;
 
@@ -54,6 +59,7 @@ int Board::mouse_win_pos_to_square_index() {
 }
 
 void Board::reset_square_color(int square) {
+    // put A2 in and reset it from the bit of a2. 
     int bit = BitboardHelper::square_to_bit(square);
     squares[square].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
 }
@@ -141,40 +147,40 @@ void Board::init_pieces() {
     // if player == WHITE.
         // maybe WN_G1 - SQUARES.
     // would be good if i could give a normalised x,y and class deals with indexing etc..
-    for (uint16_t i = WP_A2; i <= WP_H2; i++) {
+    for (uint8_t i = H2; i <= A2; i++) {
         pieces.emplace_back(new Pawn("P", Color::WHITE, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WN_G1, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WN_B1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, G1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, B1, board_square_size));
     
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WB_F1, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WB_C1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, F1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, C1, board_square_size));
 
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WR_A1, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WR_H1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, A1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, H1, board_square_size));
 
         
-    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, WQ_D1, board_square_size));
-    pieces.emplace_back(new King("K", Color::WHITE, main_window, WK_E1, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, D1, board_square_size));
+    pieces.emplace_back(new King("K", Color::WHITE, main_window, E1, board_square_size));
 
     /* BLACK */
 
-    for (uint16_t i = BP_A7; i <= BP_H7; i++) {
+    for (uint16_t i = H7; i <= A7; i++) {
         pieces.emplace_back(new Pawn("P", Color::BLACK, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, BN_B8, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, BN_G8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, B8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, G8, board_square_size));
     
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, BB_C8, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, BB_F8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, C8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, F8, board_square_size));
 
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, BR_A8, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, BR_H8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, A8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, H8, board_square_size));
 
-    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, BQ_D8, board_square_size));
-    pieces.emplace_back(new King("K", Color::BLACK, main_window, BK_E8, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, D8, board_square_size));
+    pieces.emplace_back(new King("K", Color::BLACK, main_window, E8, board_square_size));
 
 }
 
@@ -277,42 +283,47 @@ void Board::on_mouse_press(sf::Event &event) {
 
         
 
+        // select piece.
+
+        // piece = piece_at(square)
+        // if piece {select(Piece)}
+
+        // select 
+
+
         // clicked_piece(); {
         // and mouse on attack from piece->attack.
-        if (highlighted_piece) {
+        if (selected_piece) {
             // reset_highlight() {
 
 
-            reset_square_color(BitboardHelper::bit_to_square(highlighted_piece->bit));
+            reset_square_color(BitboardHelper::bit_to_square(selected_piece->bit));
 
             for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-                // this not okay.
-                if (highlighted_piece->attacks & (1ULL << i)) {
+                if (selected_piece->attacks & (1ULL << i)) {
                     int square = BitboardHelper::bit_to_square(i);
                     reset_square_color(square);
                 }
             }
-            //click on move then move highlighted_piece->set_pos(move)
+            //click on move then move selected_piece->set_pos(move)
 
-            highlighted_piece = nullptr;
+            selected_piece = nullptr;
+            return;
         }
         
         int square_index = mouse_win_pos_to_square_index();
         sf::Vector2f clicked_pos = index_to_2d(square_index);
 
-        std::cout << clicked_pos.x << ", " << clicked_pos.y << "\n";
-
             for (auto& piece : pieces) {
                 // and player is white.
                 if (is_vecs_equal(piece->pos, clicked_pos)) {
 
-                    // use bitboards in render_highlight()
                     // then can use friendly to allow for white/black player.
                     piece->render_highlight(clicked_pos, squares);
 
                     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
                     piece->highlight_legal_moves(piece->attacks, squares);
-                    highlighted_piece = piece;
+                    selected_piece = piece;
                 }
             }
         
