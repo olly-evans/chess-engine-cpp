@@ -20,9 +20,6 @@ Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t b, int b_s
     bit(b),
     board_square_size(b_squ_sz) {
     
-
-    // // take squ_idx and convert to 2d normalised pos.
-
     int square_idx = BitboardHelper::bit_to_square(bit);
     pos = index_to_2d(square_idx);
     

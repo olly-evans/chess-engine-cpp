@@ -131,7 +131,7 @@ public:
 
     void die(const std::string& err);
     bool is_square_black(int i);
-    int mouse_win_pos_to_square_index();
+    int mouse_win_pos_to_bit();
     void reset_square_color(int square);
 
     bool move_square_has_friendly_piece(Color col, sf::Vector2f move);

@@ -50,12 +50,14 @@ bool Board::is_square_black(int i) {
     return ((int)vec.x + (int)vec.y) % 2;
 }
 
-int Board::mouse_win_pos_to_square_index() {
+int Board::mouse_win_pos_to_bit() {
     // May need to be broken up into smaller functions.
     sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
     sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), 
                                     (mouse_window_pos.y / board_square_size));
-    return (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
+    int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
+
+    return GRID_NUM_SQUARES - square - 1;
 }
 
 void Board::reset_square_color(int square) {
@@ -115,12 +117,13 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
 
 void Board::init_main_window_squares() {
 
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+    for (int i = H1; i <= A8; i++) {
         sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
-        squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-        squares[i].setPosition(pos);
-        squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-    }   
+        sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
+        rec.setPosition(pos);
+        rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+        squares.insert(squares.begin(), rec);
+    }
 }
 
 void Board::init_bitboard_window_squares() {
@@ -207,7 +210,11 @@ void Board::render_main_window() {
     
     // std::cout << "render_main_window()" << std::endl;
 
-    for (auto& squ : squares) {main_window.draw(squ);}
+    // for (auto& squ : squares) {main_window.draw(squ);}
+
+    for (int i = H1; i <= A8; i++) {
+        main_window.draw(squares[i]);
+    }
 
     // render_board_coords();
 
@@ -311,7 +318,7 @@ void Board::on_mouse_press(sf::Event &event) {
             return;
         }
         
-        int square_index = mouse_win_pos_to_square_index();
+        int square_index = mouse_win_pos_to_bit();
         sf::Vector2f clicked_pos = index_to_2d(square_index);
 
             for (auto& piece : pieces) {
