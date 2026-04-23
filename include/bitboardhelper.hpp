@@ -13,8 +13,8 @@ public:
     static int bit_to_square(int bit);
 
     // manipulation
-    static uint64_t set_bit(uint64_t b, int square);
-    static uint64_t clear_bit(uint64_t b, int square);
+    static uint64_t set_bit(uint64_t b, int bit);
+    static uint64_t clear_bit(uint64_t b, int bit);
     static bool get_bit(uint64_t b, int square);
 
     /* CHECKS */

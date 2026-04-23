@@ -292,7 +292,10 @@ void Board::on_mouse_press(sf::Event &event) {
     }
 }
 
+/* LEFT MOUSE PRESS */
+
 void Board::on_left_mouse_press() {
+
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
@@ -301,21 +304,25 @@ void Board::on_left_mouse_press() {
     }
 
     deselect_piece();
-
+    
     if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
         
         // move_piece() {
             // need way to index into correct bitboard.
 
-            // get_pieces_bitboard();
-            // BitboardHelper::clear_bit(pieces_bb, selected_piece->bit)
+            // get_pieces_bitboard(clicked_bit);
 
+            for (auto& bitboard: bitboards) {
+                if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
+                
+                    bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
+                    bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
+                    white_occupancy();
+                    black_occupancy();
+                }
+            }
 
-            // take clicked_bit, loop through all bitboards
-            // make clicked_bit on correct bb 1
-            // make selected_piece bit 0 on correct bb.
             selected_piece->bit = clicked_bit;
-            
     }
     selected_piece = nullptr;
 }
@@ -344,3 +351,5 @@ void Board::deselect_piece() {
         }
     }
 }
+
+/* OTHER MOUSE PRESS */

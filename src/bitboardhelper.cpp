@@ -12,15 +12,13 @@ int BitboardHelper::bit_to_square(int bit) {
 }
 
 
-uint64_t BitboardHelper::set_bit(uint64_t b, int square) {
+uint64_t BitboardHelper::set_bit(uint64_t b, int bit) {
 
-    int bit = BitboardHelper::square_to_bit(square);
     return (b) |= (1ULL << bit);
 }
 
-uint64_t BitboardHelper::clear_bit(uint64_t b, int square) {
+uint64_t BitboardHelper::clear_bit(uint64_t b, int bit) {
 
-    int bit = BitboardHelper::square_to_bit(square);
     return (b) &= ~(1ULL << bit);
 }
 
