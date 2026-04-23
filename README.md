@@ -35,5 +35,4 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - Linux unsigned long is 64 bit.
 - Should replace all int with uint_t.
 
-- why can a knight move and attack its own knight off the start squares?
-- because im not updating the bitboards.
+- create a capture piece function in on_left_mouse_press()

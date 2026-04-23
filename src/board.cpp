@@ -304,10 +304,10 @@ void Board::on_left_mouse_press() {
         return;
     }
 
-    // We've clicked again and do have a selected piece, deselect it and its moves.
+    // We've clicked again and have a selected piece (past first condition), deselect it and its moves.
     deselect_piece();
 
-    // If our click is not an attack then reset.
+    // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
         selected_piece = nullptr;
         return;
@@ -320,16 +320,28 @@ void Board::on_left_mouse_press() {
             bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
 
         } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
+            // capture_piece();
+
             bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
             Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
             
-            // capture_piece();
             // free memory of piece perhaps and remove size of vector.
-            // this works for now but still drawing presumably offscreen?
-            piece->bit = 64;
-            
-        }
+            // would be useful as we'll know no. active pieces and what.
+            // std::shared_ptr
 
+            // this works for now but still drawing presumably offscreen?
+            // free(piece); // kind of works but crashes after you capture enough   
+            // find, delete and remove from vector
+            auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
+                return p->bit == clicked_bit;
+            });
+
+            if (it != pieces.end()) {
+                delete *it;        // free the memory
+                pieces.erase(it);  // remove from vector
+            }
+            // }
+        }
     }
 
     selected_piece->bit = clicked_bit;
@@ -346,8 +358,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
         piece->highlight_legal_moves(piece->attacks, squares);
         return piece;
     }
-            
-
     return nullptr;
 }
 
@@ -367,5 +377,7 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
         if (clicked_bit == piece->bit)
             return piece;
     }
+    return nullptr;
 }
+
 /* OTHER MOUSE PRESS */
