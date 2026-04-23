@@ -303,11 +303,35 @@ void Board::on_left_mouse_press() {
     deselect_piece();
 
     if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
-        selected_piece->bit = clicked_bit;
-        selected_piece = nullptr;
-    }
         
-    return;
+        // move_piece() {
+            // need way to index into correct bitboard.
+
+            // get_pieces_bitboard();
+            // BitboardHelper::clear_bit(pieces_bb, selected_piece->bit)
+
+
+            // take clicked_bit, loop through all bitboards
+            // make clicked_bit on correct bb 1
+            // make selected_piece bit 0 on correct bb.
+            selected_piece->bit = clicked_bit;
+            
+    }
+    selected_piece = nullptr;
+}
+
+Piece* Board::select_piece(uint8_t clicked_bit) {
+    
+    for (auto& piece : pieces) {
+        // and player is white.
+        if (clicked_bit == piece->bit) {
+            squares[clicked_bit].setFillColor(TURQOISE);
+            piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
+            piece->highlight_legal_moves(piece->attacks, squares);
+            return piece;
+        }
+    }
+    return nullptr;
 }
 
 void Board::deselect_piece() {
@@ -319,21 +343,4 @@ void Board::deselect_piece() {
             reset_square_color(i);
         }
     }
-}
-
-Piece* Board::select_piece(uint8_t clicked_bit) {
-    
-    for (auto& piece : pieces) {
-        // and player is white.
-        if (clicked_bit == piece->bit) {
-
-            // then can use friendly to allow for white/black player.
-            // piece->render_highlight(clicked_bit, squares);
-            squares[clicked_bit].setFillColor(TURQOISE);
-            piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
-            piece->highlight_legal_moves(piece->attacks, squares);
-            return piece;
-        }
-    }
-    return nullptr;
 }
