@@ -60,10 +60,10 @@ int Board::mouse_win_pos_to_bit() {
     return GRID_NUM_SQUARES - square - 1;
 }
 
-void Board::reset_square_color(int square) {
-    // put A2 in and reset it from the bit of a2. 
-    int bit = BitboardHelper::square_to_bit(square);
-    squares[square].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
+void Board::reset_square_color(int bit) {
+
+
+    squares[bit].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
 }
 
 /* BITBOARD METHODS */
@@ -212,9 +212,7 @@ void Board::render_main_window() {
 
     // for (auto& squ : squares) {main_window.draw(squ);}
 
-    for (int i = H1; i <= A8; i++) {
-        main_window.draw(squares[i]);
-    }
+    for (int i = H1; i <= A8; i++) {main_window.draw(squares[i]);}
 
     // render_board_coords();
 
@@ -304,12 +302,11 @@ void Board::on_mouse_press(sf::Event &event) {
             // reset_highlight() {
 
 
-            reset_square_color(BitboardHelper::bit_to_square(selected_piece->bit));
+            reset_square_color(selected_piece->bit);
 
             for (int i = 0; i < GRID_NUM_SQUARES; i++) {
                 if (selected_piece->attacks & (1ULL << i)) {
-                    int square = BitboardHelper::bit_to_square(i);
-                    reset_square_color(square);
+                    reset_square_color(i);
                 }
             }
             //click on move then move selected_piece->set_pos(move)
@@ -318,15 +315,16 @@ void Board::on_mouse_press(sf::Event &event) {
             return;
         }
         
-        int square_index = mouse_win_pos_to_bit();
-        sf::Vector2f clicked_pos = index_to_2d(square_index);
+        uint8_t clicked_bit = mouse_win_pos_to_bit();
+
+        std::cout << "clicked bit: " << clicked_bit << "\n";
 
             for (auto& piece : pieces) {
                 // and player is white.
-                if (is_vecs_equal(piece->pos, clicked_pos)) {
+                if (clicked_bit == piece->bit) {
 
                     // then can use friendly to allow for white/black player.
-                    piece->render_highlight(clicked_pos, squares);
+                    piece->render_highlight(clicked_bit, squares);
 
                     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
                     piece->highlight_legal_moves(piece->attacks, squares);

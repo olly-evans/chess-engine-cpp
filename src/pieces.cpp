@@ -48,11 +48,10 @@ void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-void Piece::render_highlight(sf::Vector2f clicked_pos, std::vector<sf::RectangleShape>& squares) {
+void Piece::render_highlight(uint8_t clicked_bit, std::vector<sf::RectangleShape>& squares) {
     
-    if (is_vecs_equal(clicked_pos, this->pos)) {
-        int index = pos2d_to_index(this->pos);
-        squares[index].setFillColor(TURQOISE);
+    if (clicked_bit == this->bit) {
+        squares[clicked_bit].setFillColor(TURQOISE);
     }
 }
 
@@ -63,8 +62,7 @@ void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleSha
     for (int bit = 0; bit < GRID_NUM_SQUARES; bit++) {
 
         if (attacks & (1ULL << bit)) {
-            int square = BitboardHelper::square_to_bit(bit);
-            squares[square].setFillColor(TURQOISE);
+            squares[bit].setFillColor(TURQOISE);
         }
     }
 }
@@ -83,10 +81,7 @@ bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int mo
 
 uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     
-    int square = pos2d_to_index(this->pos); // 1,7 -> 57
-    int bit = BitboardHelper::square_to_bit(square); // should conv 57 to 6.
-
-    uint64_t knight = 1ULL << bit;
+    uint64_t knight = 1ULL << this->bit;
     uint64_t attacks = 0ULL;
 
     // gunna be interesting when we need to flip the board.
