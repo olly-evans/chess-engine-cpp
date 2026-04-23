@@ -288,24 +288,26 @@ void Board::on_mouse_press(sf::Event &event) {
     auto mouse_press = event.mouseButton.button;
 
     if (mouse_press == sf::Mouse::Left) {
-
-        uint8_t clicked_bit = mouse_win_pos_to_bit();
-
-        if (selected_piece) {
-
-            deselect_piece();
-
-            if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit))
-                selected_piece->bit = clicked_bit;
-                selected_piece = nullptr;
-
-            
-            return;
-        }
-        selected_piece = select_piece(clicked_bit);
-
-        
+        on_left_mouse_press();
     }
+}
+
+void Board::on_left_mouse_press() {
+    uint8_t clicked_bit = mouse_win_pos_to_bit();
+
+    if (!selected_piece) {
+        selected_piece = select_piece(clicked_bit);
+        return;
+    }
+
+    deselect_piece();
+
+    if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
+        selected_piece->bit = clicked_bit;
+        selected_piece = nullptr;
+    }
+        
+    return;
 }
 
 void Board::deselect_piece() {
