@@ -286,21 +286,24 @@ void Board::on_key_pressed(sf::Event &event) {
 void Board::on_mouse_press(sf::Event &event) {
 
     auto mouse_press = event.mouseButton.button;
-    uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (mouse_press == sf::Mouse::Left) {
 
+        uint8_t clicked_bit = mouse_win_pos_to_bit();
+
         if (selected_piece) {
-            // reset_highlight() {
+
+            deselect_piece();
 
             if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit))
                 selected_piece->bit = clicked_bit;
+                selected_piece = nullptr;
+
             
-            deselect_piece();
             return;
         }
+        selected_piece = select_piece(clicked_bit);
 
-        select_piece(clicked_bit);
         
     }
 }
@@ -314,10 +317,9 @@ void Board::deselect_piece() {
             reset_square_color(i);
         }
     }
-    selected_piece = nullptr;
 }
 
-void Board::select_piece(uint8_t clicked_bit) {
+Piece* Board::select_piece(uint8_t clicked_bit) {
     
     for (auto& piece : pieces) {
         // and player is white.
@@ -328,7 +330,8 @@ void Board::select_piece(uint8_t clicked_bit) {
             squares[clicked_bit].setFillColor(TURQOISE);
             piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
             piece->highlight_legal_moves(piece->attacks, squares);
-            selected_piece = piece;
+            return piece;
         }
     }
+    return nullptr;
 }
