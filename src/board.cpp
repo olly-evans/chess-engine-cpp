@@ -309,12 +309,14 @@ void Board::on_left_mouse_press() {
 
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
+        // would like deselect_piece()
         selected_piece = nullptr;
         return;
     }
 
     // Will be executed if we have a selected piece and its an attack.
     for (auto& bitboard: bitboards) {
+
         if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
             bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
@@ -325,13 +327,8 @@ void Board::on_left_mouse_press() {
             bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
             Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
             
-            // free memory of piece perhaps and remove size of vector.
-            // would be useful as we'll know no. active pieces and what.
-            // std::shared_ptr
+            //std::shared_ptr perhaps. This works well though but not sure about dangling pointers.
 
-            // this works for now but still drawing presumably offscreen?
-            // free(piece); // kind of works but crashes after you capture enough   
-            // find, delete and remove from vector
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
                 return p->bit == clicked_bit;
             });
@@ -344,7 +341,8 @@ void Board::on_left_mouse_press() {
         }
     }
 
-    selected_piece->bit = clicked_bit;
+    selected_piece->bit = clicked_bit; // overwrites deselect_piece() reset.
+    // would like deselect_piece()
     selected_piece = nullptr;
 }
 
