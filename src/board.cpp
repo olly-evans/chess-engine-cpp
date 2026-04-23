@@ -299,45 +299,55 @@ void Board::on_left_mouse_press() {
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
+        // If we dont have a selected piece, try and get one.
         selected_piece = select_piece(clicked_bit);
         return;
     }
 
+    // We've clicked again and do have a selected piece, deselect it and its moves.
     deselect_piece();
-    
-    if (BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
-        
-        // move_piece() {
-            // need way to index into correct bitboard.
 
-            // get_pieces_bitboard(clicked_bit);
-
-            for (auto& bitboard: bitboards) {
-                if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
-                
-                    bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
-                    bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
-                    white_occupancy();
-                    black_occupancy();
-                }
-            }
-
-            selected_piece->bit = clicked_bit;
+    // If our click is not an attack then reset.
+    if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
+        selected_piece = nullptr;
+        return;
     }
+
+    // Will be executed if we have a selected piece and its an attack.
+    for (auto& bitboard: bitboards) {
+        if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
+            bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
+            bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
+
+        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
+            bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
+            Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
+            
+            // capture_piece();
+            // free memory of piece perhaps and remove size of vector.
+            // this works for now but still drawing presumably offscreen?
+            piece->bit = 64;
+            
+        }
+
+    }
+
+    selected_piece->bit = clicked_bit;
     selected_piece = nullptr;
 }
 
 Piece* Board::select_piece(uint8_t clicked_bit) {
     
-    for (auto& piece : pieces) {
-        // and player is white.
-        if (clicked_bit == piece->bit) {
-            squares[clicked_bit].setFillColor(TURQOISE);
-            piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
-            piece->highlight_legal_moves(piece->attacks, squares);
-            return piece;
-        }
+    Piece* piece = get_piece(clicked_bit);
+
+    if (piece) {
+        squares[clicked_bit].setFillColor(TURQOISE);
+        piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
+        piece->highlight_legal_moves(piece->attacks, squares);
+        return piece;
     }
+            
+
     return nullptr;
 }
 
@@ -352,4 +362,10 @@ void Board::deselect_piece() {
     }
 }
 
+Piece* Board::get_piece(uint8_t clicked_bit) {
+    for (auto& piece : pieces) {
+        if (clicked_bit == piece->bit)
+            return piece;
+    }
+}
 /* OTHER MOUSE PRESS */
