@@ -275,11 +275,10 @@ void Board::on_key_pressed(sf::Event &event) {
     auto key = event.key.code;
 
     if (key == sf::Keyboard::Tab) {
-        if (!bitboard_window.isOpen() && Debug::enabled)
-            // Cycle through bitboard vector and change title of bitboard_window.
-            bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-            bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);            
+        if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
+
+        bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
+        bitboard_window.setTitle(bitboard_names[bitboard_vec_index]); 
     }
 }
 
@@ -292,7 +291,6 @@ void Board::on_mouse_press(sf::Event &event) {
     switch (mouse_press) {
         case sf::Mouse::Left:
             on_left_mouse_press();
-            break;
     }
 }
 
