@@ -175,5 +175,7 @@ public:
     void deselect_piece();
     Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
+    void handle_piece_move(uint8_t clicked_bit);
+
 
 };

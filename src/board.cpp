@@ -175,7 +175,7 @@ void Board::init_pieces() {
 
     /* BLACK */
 
-    for (uint16_t i = H7; i <= A7; i++) {
+    for (uint8_t i = H7; i <= A7; i++) {
         pieces.emplace_back(new Pawn("P", Color::BLACK, main_window, i, board_square_size));
     }
 
@@ -315,31 +315,7 @@ void Board::on_left_mouse_press() {
     }
 
     // Will be executed if we have a selected piece and its an attack.
-    for (auto& bitboard: bitboards) {
-
-        if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
-            bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
-            bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
-
-        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
-            // capture_piece();
-
-            bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
-            Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
-            
-            //std::shared_ptr perhaps. This works well though but not sure about dangling pointers.
-
-            auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
-                return p->bit == clicked_bit;
-            });
-
-            if (it != pieces.end()) {
-                delete *it;        // free the memory
-                pieces.erase(it);  // remove from vector
-            }
-            // }
-        }
-    }
+    handle_piece_move(clicked_bit);
 
     selected_piece->bit = clicked_bit; // overwrites deselect_piece() reset.
     // would like deselect_piece()
@@ -378,4 +354,33 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
     return nullptr;
 }
 
+
+void Board::handle_piece_move(uint8_t clicked_bit) {
+
+    for (auto& bitboard: bitboards) {
+
+        if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
+            bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
+            bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
+
+        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
+            // capture_piece();
+
+            bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
+            Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
+            
+            //std::shared_ptr perhaps. This works well though but not sure about dangling pointers.
+
+            auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
+                return p->bit == clicked_bit;
+            });
+
+            if (it != pieces.end()) {
+                delete *it;        // free the memory
+                pieces.erase(it);  // remove from vector
+            }
+            // }
+        }
+    }
+}
 /* OTHER MOUSE PRESS */

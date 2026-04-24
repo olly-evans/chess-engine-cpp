@@ -29,10 +29,15 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 ## TODO List (I'm forgetful)
 
 - toggle mouse pos in console too.
-- open window with tab not auto-spawn bullshit
-- pieces need to have bitboards because i theres only one instance of each!!!! <-----
 
 - Linux unsigned long is 64 bit.
 - Should replace all int with uint_t.
 
 - create a capture piece function in on_left_mouse_press()
+
+- remove every fucking instatnce of index_to_2d() its not doing what it should
+and if it is its by complete accident.
+
+- also now need some idea of a turn/team turn.
+
+- perhaps draw circles for attacks instead of the fillcolors, will mean i dont have to fuck with squares.
