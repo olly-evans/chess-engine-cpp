@@ -274,11 +274,11 @@ void Board::on_key_pressed(sf::Event &event) {
 
     auto key = event.key.code;
 
-    if (key == sf::Keyboard::Tab) {
-        if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-
-        bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-        bitboard_window.setTitle(bitboard_names[bitboard_vec_index]); 
+    switch (key) {
+        case sf::Keyboard::Tab:
+            if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
+            bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
+            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]); 
     }
 }
 
