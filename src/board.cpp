@@ -57,7 +57,7 @@ int Board::mouse_win_pos_to_bit() {
                                     (mouse_window_pos.y / board_square_size));
     int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
 
-    return GRID_NUM_SQUARES - square - 1;
+    return BitboardHelper::square_to_bit(square);
 }
 
 void Board::reset_square_color(int bit) {
