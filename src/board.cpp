@@ -279,6 +279,7 @@ void Board::on_key_pressed(sf::Event &event) {
             if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]); 
+            break;
     }
 }
 
@@ -291,6 +292,7 @@ void Board::on_mouse_press(sf::Event &event) {
     switch (mouse_press) {
         case sf::Mouse::Left:
             on_left_mouse_press();
+            break;
     }
 }
 
