@@ -302,24 +302,25 @@ void Board::on_left_mouse_press() {
         // If we dont have a selected piece, try and get one.
         selected_piece = select_piece(clicked_bit);
         return;
-    }
+    }  
+    
+    uint8_t old_bit = selected_piece->bit;
+
 
     // We've clicked again and have a selected piece (past first condition), deselect it and its moves.
-    deselect_piece();
 
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
         // would like deselect_piece()
-        selected_piece = nullptr;
+        deselect_piece(old_bit);
         return;
     }
 
     // Will be executed if we have a selected piece and its an attack.
-    handle_piece_move(clicked_bit);
 
-    selected_piece->bit = clicked_bit; // overwrites deselect_piece() reset.
-    // would like deselect_piece()
-    selected_piece = nullptr;
+    handle_piece_move(clicked_bit);
+    
+    deselect_piece(old_bit);
 }
 
 Piece* Board::select_piece(uint8_t clicked_bit) {
@@ -335,15 +336,18 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     return nullptr;
 }
 
-void Board::deselect_piece() {
+void Board::deselect_piece(uint8_t old_bit) {
 
-    reset_square_color(selected_piece->bit);
+    // Old bit is bit of piece we clicked on.
+    reset_square_color(old_bit);
 
+    // Reset square color of its attacks now its not selected.
     for (int i = H1; i <= A8; i++) {
         if (BitboardHelper::get_bit(selected_piece->attacks, i)) {
             reset_square_color(i);
         }
     }
+    selected_piece = nullptr;
 }
 
 Piece* Board::get_piece(uint8_t clicked_bit) {
@@ -357,6 +361,7 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
+    // can invert these ifs.
     for (auto& bitboard: bitboards) {
 
         if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
@@ -364,7 +369,6 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
 
         } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
-            // capture_piece();
 
             bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
             Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
@@ -379,8 +383,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
                 delete *it;        // free the memory
                 pieces.erase(it);  // remove from vector
             }
-            // }
         }
     }
+    selected_piece->bit = clicked_bit; // overwrites deselect_piece() reset.
 }
+
+
 /* OTHER MOUSE PRESS */

@@ -172,10 +172,8 @@ public:
     void on_key_pressed(sf::Event &event);
     void on_mouse_press(sf::Event &event);
     void on_left_mouse_press();
-    void deselect_piece();
+    void deselect_piece(uint8_t old_bit);
     Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
     void handle_piece_move(uint8_t clicked_bit);
-
-
 };
