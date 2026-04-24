@@ -283,16 +283,18 @@ void Board::on_key_pressed(sf::Event &event) {
     }
 }
 
+/* MOUSE PRESSES */
+
 void Board::on_mouse_press(sf::Event &event) {
 
     auto mouse_press = event.mouseButton.button;
 
-    if (mouse_press == sf::Mouse::Left) {
-        on_left_mouse_press();
+    switch (mouse_press) {
+        case sf::Mouse::Left:
+            on_left_mouse_press();
+            break;
     }
 }
-
-/* LEFT MOUSE PRESS */
 
 void Board::on_left_mouse_press() {
 
@@ -304,10 +306,8 @@ void Board::on_left_mouse_press() {
         return;
     }  
     
+    // Save this bit so we can reset the color later in deselect_piece().
     uint8_t old_bit = selected_piece->bit;
-
-
-    // We've clicked again and have a selected piece (past first condition), deselect it and its moves.
 
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
@@ -317,9 +317,7 @@ void Board::on_left_mouse_press() {
     }
 
     // Will be executed if we have a selected piece and its an attack.
-
     handle_piece_move(clicked_bit);
-    
     deselect_piece(old_bit);
 }
 
@@ -361,20 +359,33 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
-    // can invert these ifs.
+    /* 
+        This function is a bit funny. For it to be called selected_piece must
+        not be null.
+        
+        Essentially we find the bitboard of the selected piece type and update 
+        it.
+
+        Find the bitboard of the clicked bit if any, clear the bitboard bit and 
+        place the selected_piece there by updating its piece->bit.
+
+        If a piece is selected we cannot attack/move to a friendly piece, so no
+        need for that logic.
+
+    */
+
+    if (!selected_piece) return;
+
     for (auto& bitboard: bitboards) {
 
         if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
             bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
 
-        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
-
+        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {            
             bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
-            Piece* piece = get_piece(clicked_bit); // another pointer to this vector. needs to be freed.
             
-            //std::shared_ptr perhaps. This works well though but not sure about dangling pointers.
-
+            // Find piece and remove piece from pieces vector.
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
                 return p->bit == clicked_bit;
             });
@@ -385,7 +396,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             }
         }
     }
-    selected_piece->bit = clicked_bit; // overwrites deselect_piece() reset.
+    selected_piece->bit = clicked_bit;
 }
 
 
