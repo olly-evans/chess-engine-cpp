@@ -37,24 +37,17 @@ std::string Piece::get_texture_path() {
 void Piece::draw(sf::RenderWindow& window) {
 
     uint8_t square = BitboardHelper::bit_to_square(this->bit);
-    sf::Vector2f pos = index_to_2d(square) * (float)board_square_size;
+    sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
+    sf::Vector2f pos = normalised_pos * (float)board_square_size;
     sprite.setPosition(pos.x, pos.y);
     window.draw(sprite);
 }
-
-// void Piece::render_highlight(uint8_t clicked_bit, std::vector<sf::RectangleShape>& squares) {
-    
-//     if (clicked_bit == this->bit) {
-//         squares[clicked_bit].setFillColor(TURQOISE);
-//     }
-// }
 
 void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squares) {
     
     // find bits that are 1.
 
     for (int bit = 0; bit < GRID_NUM_SQUARES; bit++) {
-
         if (attacks & (1ULL << bit)) {
             squares[bit].setFillColor(TURQOISE);
         }
@@ -66,12 +59,6 @@ void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleSha
 uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* KNIGHT */
-
-bool Knight::is_knight_move_on_board(sf::Vector2f piece_pos, int move_dx, int move_dy) {
-    int new_x = piece_pos.x + move_dx;
-    int new_y = piece_pos.y + move_dy;
-    return (new_x >= 0 && new_x < GRID_SZ && new_y >= 0 && new_y < GRID_SZ);
-}
 
 uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     
@@ -92,8 +79,6 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     return BitboardHelper::remove_friendly_pieces(attacks, this->color == Color::WHITE ? w_bb : b_bb);
 }
-
-
 
 /* BISHOP */
 

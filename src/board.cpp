@@ -14,7 +14,7 @@
 
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
-//     virtual void index_to_2d(int i) = 0;
+//     
 //     .
 //     .
 //     .
@@ -58,14 +58,6 @@ int Board::mouse_win_pos_to_bit() {
 }
 
 void Board::reset_square_color(int bit) {
-
-    /* 
-
-    Board as uin64_t where H8 is MSB 
-    insert bit to reset color of.
-
-    */
-
     squares[bit].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
 }
 
@@ -121,7 +113,8 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
 void Board::init_main_window_squares() {
 
     for (int i = H1; i <= A8; i++) {
-        sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
+        sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
+        sf::Vector2f pos = normalised_pos * (float)board_square_size;
         sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
         rec.setPosition(pos);
         rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
@@ -133,7 +126,8 @@ void Board::init_bitboard_window_squares() {
 
     // From A8-H1.
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
+        sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
+        sf::Vector2f pos = normalised_pos * (float)board_square_size;
         bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
         bitboard_window_squares[i].setPosition(pos);
     }   

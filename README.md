@@ -33,11 +33,8 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - Linux unsigned long is 64 bit.
 - Should replace all int with uint_t.
 
-- create a capture piece function in on_left_mouse_press()
-
-- remove every fucking instatnce of index_to_2d() its not doing what it should
-and if it is its by complete accident.
-
 - also now need some idea of a turn/team turn.
 
 - perhaps draw circles for attacks instead of the fillcolors, will mean i dont have to fuck with squares.
+
+- when you remake the focus the main_window, if you click on a piece w/o get_legal_moves crashes.
