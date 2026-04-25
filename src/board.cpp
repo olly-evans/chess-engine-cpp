@@ -88,6 +88,19 @@ void Board::init() {
     Board::init_bitboards();
     Board::init_get_board_square_size(board_square_size, win_h, win_w);
     // init_board_coords();
+
+    // if white_player->is_human()
+        // init_main_window_squares_white();
+    // else
+        // init_main_window_squares_black();
+
+    if (white_player->is_human()) {
+        init_main_window_squares();
+    } else {
+
+    }
+
+
     Board::init_main_window_squares();
 
     // I like this for now. Keeps it in init and only runs if debug enabled.
@@ -102,6 +115,7 @@ void Board::init_players() {
 
     white_player = new Human(is_white);
     black_player = new Human(!is_white);
+
 }
 
 void Board::init_bitboards() {
@@ -122,6 +136,7 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
     sz = win_h / GRID_SZ;
 }
 
+//
 void Board::init_main_window_squares() {
 
     for (int i = H1; i <= A8; i++) {
@@ -132,6 +147,14 @@ void Board::init_main_window_squares() {
         rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         squares.insert(squares.begin(), rec);
     }
+}
+
+void Board::init_main_window_squares_black() {
+
+    // draw black in top right i think.
+    // honestly im too fried rn.
+
+    return;
 }
 
 void Board::init_bitboard_window_squares() {

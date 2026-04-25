@@ -163,6 +163,8 @@ public:
     void init_bitboards();
     void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
     void init_main_window_squares();
+    void init_main_window_squares_black();
+
     void init_bitboard_window_squares();
     void init_pieces();
 
