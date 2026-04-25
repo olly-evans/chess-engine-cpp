@@ -29,8 +29,6 @@ win_name) {
 
     // who is white who is black..
 
-
-    // WPSquare enum updated depending on board orientation.
 };
 
 unsigned int board_square_size;
@@ -102,7 +100,7 @@ void Board::init() {
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
-    Board::init_pieces_white_pov();
+    Board::init_pieces();
 }
 
 void Board::init_players() {
@@ -156,43 +154,54 @@ void Board::init_bitboard_window_squares() {
     }   
 }
 
-void Board::init_pieces_white_pov() {
+void Board::init_pieces() {
 
     // as far as i can tell the only difference between black and white pov is piece positions.
 
-    for (uint8_t i = H2; i <= A2; i++) {
+    // map white pos to black in case of black pov.
+    // white pawns from 8-15
+    // would just need black pawns to 8-15 instead.
+
+    // needs a mapping function really.
+
+    // auto white_to_black_pov = [] (int arg1, int arg2) {
+    //     // function code
+    //     return;
+    // };
+
+    for (uint8_t i = WhitePOV::H2; i <= WhitePOV::A2; i++) {
         pieces.emplace_back(new Pawn("P", Color::WHITE, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, G1, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, B1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WhitePOV::G1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WhitePOV::B1, board_square_size));
     
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, F1, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, C1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WhitePOV::F1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WhitePOV::C1, board_square_size));
 
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, A1, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, H1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WhitePOV::A1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WhitePOV::H1, board_square_size));
 
-    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, D1, board_square_size));
-    pieces.emplace_back(new King("K", Color::WHITE, main_window, E1, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, WhitePOV::D1, board_square_size));
+    pieces.emplace_back(new King("K", Color::WHITE, main_window, WhitePOV::E1, board_square_size));
 
     /* BLACK */
 
-    for (uint8_t i = H7; i <= A7; i++) {
+    for (uint8_t i = WhitePOV::H7; i <= WhitePOV::A7; i++) {
         pieces.emplace_back(new Pawn("P", Color::BLACK, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, B8, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, G8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, WhitePOV::B8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, WhitePOV::G8, board_square_size));
     
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, C8, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, F8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, WhitePOV::C8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, WhitePOV::F8, board_square_size));
 
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, A8, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, H8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, WhitePOV::A8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, WhitePOV::H8, board_square_size));
 
-    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, D8, board_square_size));
-    pieces.emplace_back(new King("K", Color::BLACK, main_window, E8, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, WhitePOV::D8, board_square_size));
+    pieces.emplace_back(new King("K", Color::BLACK, main_window, WhitePOV::E8, board_square_size));
 }
 
 // void init_board_coords() {
