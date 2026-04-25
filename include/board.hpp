@@ -59,7 +59,7 @@ private:
     std::vector<sf::RectangleShape> squares;
 
     // White player.
-    enum WPSquares : uint8_t {
+    enum WhitePOV : uint8_t {
         A8 = 63, B8 = 62, C8 = 61, D8 = 60, E8 = 59, F8 = 58, G8 = 57, H8 = 56,
         A7 = 55, B7 = 54, C7 = 53, D7 = 52, E7 = 51, F7 = 50, G7 = 49, H7 = 48,
         A6 = 47, B6 = 46, C6 = 47, D6 = 44, E6 = 43, F6 = 42, G6 = 41, H6 = 40,
@@ -69,6 +69,17 @@ private:
         A2 = 15, B2 = 14, C2 = 13, D2 = 12, E2 = 11, F2 = 10, G2 = 9, H2 = 8,
         A1 = 7, B1 = 6, C1 = 5, D1 = 4, E1 = 3, F1 = 2, G1 = 1, H1 = 0 
     };
+
+//     enum class BlackPOV : uint8_t {
+//         H1 = 63, G1 = 62, F1 = 61, E1 = 60, D1 = 59, C1 = 58, B1 = 57, A1 = 56,
+//         H2 = 55, G2 = 54, F2 = 53, E2 = 52, D2 = 51, C2 = 50, B2 = 49, A2 = 48,
+//         H3 = 47, G3 = 46, F3 = 45, E3 = 44, D3 = 43, C3 = 42, B3 = 41, A3 = 40,
+//         H4 = 39, G4 = 38, F4 = 37, E4 = 36, D4 = 35, C4 = 34, B4 = 33, A4 = 32,
+//         H5 = 31, G5 = 30, F5 = 29, E5 = 28, D5 = 27, C5 = 26, B5 = 25, A5 = 24,
+//         H6 = 23, G6 = 22, F6 = 21, E6 = 20, D6 = 19, C6 = 18, B6 = 17, A6 = 16,
+//         H7 = 15, G7 = 14, F7 = 13, E7 = 12, D7 = 11, C7 = 10, B7 = 9,  A7 = 8,
+//         H8 = 7,  G8 = 6,  F8 = 5,  E8 = 4,  D8 = 3,  C8 = 2,  B8 = 1,  A8 = 0 
+// };
 
     // Black player squares
 
@@ -162,11 +173,12 @@ public:
     void init_players();
     void init_bitboards();
     void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
+    
     void init_main_window_squares();
-    void init_main_window_squares_black();
 
     void init_bitboard_window_squares();
-    void init_pieces();
+    void init_pieces_white_pov();
+    void init_pieces_black_pov();
 
     /* RENDER */
 

@@ -13,7 +13,7 @@ std::string Piece::resolve_texture_path() {
     return path.string() + "/assets/" + color_prefix + piece_id + ".png";
 }
 
-Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint16_t b, int b_squ_sz) : 
+Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
     piece_id(std::move(id)), 
     color(col),
     window(w), 

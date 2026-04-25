@@ -6,7 +6,6 @@
 #include "debug.hpp"
 #include "bitboardhelper.hpp"
 #include "player.hpp"
-
 #include "board.hpp"
 
 #include <sstream>
@@ -94,19 +93,16 @@ void Board::init() {
     // else
         // init_main_window_squares_black();
 
-    if (white_player->is_human()) {
-        init_main_window_squares();
-    } else {
 
-    }
+    // for now i wont flip the board if we have two human players.
+    // so for now we'll assume one player is an Engine but as a Human.
 
-
-    Board::init_main_window_squares();
+    init_main_window_squares();
 
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
-    Board::init_pieces();
+    Board::init_pieces_white_pov();
 }
 
 void Board::init_players() {
@@ -136,7 +132,6 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
     sz = win_h / GRID_SZ;
 }
 
-//
 void Board::init_main_window_squares() {
 
     for (int i = H1; i <= A8; i++) {
@@ -149,13 +144,6 @@ void Board::init_main_window_squares() {
     }
 }
 
-void Board::init_main_window_squares_black() {
-
-    // draw black in top right i think.
-    // honestly im too fried rn.
-
-    return;
-}
 
 void Board::init_bitboard_window_squares() {
 
@@ -168,21 +156,10 @@ void Board::init_bitboard_window_squares() {
     }   
 }
 
-void Board::init_pieces() {
+void Board::init_pieces_white_pov() {
 
-    // if player = black_pieces
-        // different starting pos.
-        // prob a bitwise operation for that.
+    // as far as i can tell the only difference between black and white pov is piece positions.
 
-    // else        
-
-    /* WHITE */
-
-    // must be a way to flip this for the other board. so we dont have to rewrite.
-
-    // if player == WHITE.
-        // maybe WN_G1 - SQUARES.
-    // would be good if i could give a normalised x,y and class deals with indexing etc..
     for (uint8_t i = H2; i <= A2; i++) {
         pieces.emplace_back(new Pawn("P", Color::WHITE, main_window, i, board_square_size));
     }
