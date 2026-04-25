@@ -6,6 +6,7 @@
 
 #include "pieces.hpp"
 #include "debug.hpp"
+#include "player.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -38,6 +39,13 @@ class Board {
 
 private:
 
+    /* GAMESTATE */
+    
+    Player* white_player;
+    Player* black_player;
+
+    bool is_whites_turn = true;
+
     /* WINDOW */
     
     const std::string win_name;
@@ -47,6 +55,7 @@ private:
     sf::RenderWindow main_window;
     
     /* GRID */
+    
     std::vector<sf::RectangleShape> squares;
 
     // White player.
@@ -60,6 +69,10 @@ private:
         A2 = 15, B2 = 14, C2 = 13, D2 = 12, E2 = 11, F2 = 10, G2 = 9, H2 = 8,
         A1 = 7, B1 = 6, C1 = 5, D1 = 4, E1 = 3, F1 = 2, G1 = 1, H1 = 0 
     };
+
+    // Black player squares
+
+    // enum BPSquares : uint8_t {};
 
     /* DEBUG */
 
@@ -116,9 +129,7 @@ private:
 
     /* PIECES */
     
-    // Only two instances of each piece for black or white, black and white Pawn instance for example.
     std::vector<Piece*> pieces;
-
     Piece* selected_piece = nullptr;
 
 public:
@@ -148,6 +159,7 @@ public:
     /* INIT */
 
     void init();
+    void init_players();
     void init_bitboards();
     void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
     void init_main_window_squares();
@@ -164,12 +176,14 @@ public:
 
     void run();
 
-    /* RUN -> EVENT HANDLING */
+    /* EVENT HANDLING */
 
     void handle_events();
     void on_main_window_event(sf::Event &event);
     void on_bitboard_window_event(sf::Event &event);
+
     void on_key_pressed(sf::Event &event);
+
     void on_mouse_press(sf::Event &event);
     void on_left_mouse_press();
     void deselect_piece(uint8_t old_bit);

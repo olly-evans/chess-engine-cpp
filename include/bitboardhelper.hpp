@@ -4,10 +4,6 @@
 
 class BitboardHelper {
 public:
-    // uint64_t piece_type_bitboards;
-
-    // static uint64_t white_occupancy;
-    // static uint64_t white_occupancy;
 
     static int square_to_bit(int square);
     static int bit_to_square(int bit);

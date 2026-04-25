@@ -5,6 +5,7 @@
 #include "pieces.hpp"
 #include "debug.hpp"
 #include "bitboardhelper.hpp"
+#include "player.hpp"
 
 #include "board.hpp"
 
@@ -29,7 +30,8 @@ win_name) {
 
     // who is white who is black..
 
-    // SquareToBits enum updated depending on board orientation.
+
+    // WPSquare enum updated depending on board orientation.
 };
 
 unsigned int board_square_size;
@@ -80,16 +82,26 @@ void Board::init() {
     // Is player black or white?
     // If black, board must be inverted.
     // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
+
+    Board::init_players();
+    
     Board::init_bitboards();
     Board::init_get_board_square_size(board_square_size, win_h, win_w);
+    // init_board_coords();
     Board::init_main_window_squares();
 
     // I like this for now. Keeps it in init and only runs if debug enabled.
-    if (Debug::enabled)
-        Board::init_bitboard_window_squares();
+    if (Debug::enabled) Board::init_bitboard_window_squares();
 
     Board::init_pieces();
-    // init_board_coords();
+}
+
+void Board::init_players() {
+
+    bool is_white = true; //temp
+
+    white_player = new Human(is_white);
+    black_player = new Human(!is_white);
 }
 
 void Board::init_bitboards() {
@@ -359,6 +371,9 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     */
 
     for (auto& bitboard: bitboards) {
+
+        // TODO: Log the move into a move class.
+        // TODO: Allow moves to be undone.
 
         if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
             bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "board.hpp"
+#include "player.hpp"
 
 int main() {
     Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
