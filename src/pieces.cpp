@@ -80,14 +80,15 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     // gunna be interesting when we need to flip the board.
 
-    attacks |= (knight & NOT_AB_FILE) << 6;   // 2 left, 1 up
-    attacks |= (knight & NOT_A_FILE)  << 15;  // 1 left, 2 up  
-    attacks |= (knight & NOT_H_FILE)  << 17;  // 1 right, 2 up
-    attacks |= (knight & NOT_GH_FILE) << 10;  // 2 right, 1 up
-    attacks |= (knight & NOT_GH_FILE) >> 6;   // 2 right, 1 down
-    attacks |= (knight & NOT_H_FILE)  >> 15;  // 1 right, 2 down
-    attacks |= (knight & NOT_A_FILE)  >> 17;  // 1 left, 2 down
-    attacks |= (knight & NOT_AB_FILE) >> 10;  // 2 left, 1 down
+    attacks |= (knight & NOT_AB_FILE) << 6;
+    attacks |= (knight & NOT_A_FILE)  << 15; 
+    attacks |= (knight & NOT_H_FILE)  << 17;
+    attacks |= (knight & NOT_GH_FILE) << 10;
+    
+    attacks |= (knight & NOT_GH_FILE) >> 6;   
+    attacks |= (knight & NOT_H_FILE)  >> 15;  
+    attacks |= (knight & NOT_A_FILE)  >> 17; 
+    attacks |= (knight & NOT_AB_FILE) >> 10; 
 
     return BitboardHelper::remove_friendly_pieces(attacks, this->color == Color::WHITE ? w_bb : b_bb);
 }

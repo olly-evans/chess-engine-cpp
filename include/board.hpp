@@ -130,7 +130,7 @@ public:
     /* UTIL METHODS */
 
     void die(const std::string& err);
-    bool is_square_black(int i);
+    bool is_square_black(uint8_t i);
     int mouse_win_pos_to_bit();
     void reset_square_color(int square);
 
@@ -166,7 +166,7 @@ public:
 
     /* RUN -> EVENT HANDLING */
 
-    void run_handle_events();
+    void handle_events();
     void on_main_window_event(sf::Event &event);
     void on_bitboard_window_event(sf::Event &event);
     void on_key_pressed(sf::Event &event);

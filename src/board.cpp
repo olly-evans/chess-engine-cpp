@@ -12,8 +12,6 @@
 #include <iostream>
 #include <cmath>
 
-
-
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
 //     virtual void index_to_2d(int i) = 0;
@@ -21,7 +19,6 @@
 //     .
 //     .
 // };
-
 
 Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
 win_w(ww), 
@@ -45,9 +42,10 @@ void Board::die(const std::string& err) {
     exit(1);
 }
 
-bool Board::is_square_black(int i) {
-    sf::Vector2f vec = index_to_2d(i);
-    return ((int)vec.x + (int)vec.y) % 2;
+bool Board::is_square_black(uint8_t i) {
+    uint8_t x = i % GRID_SZ;
+    uint8_t y = i / GRID_SZ;
+    return (x + y) % 2;
 }
 
 int Board::mouse_win_pos_to_bit() {
@@ -56,7 +54,6 @@ int Board::mouse_win_pos_to_bit() {
     sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), 
                                     (mouse_window_pos.y / board_square_size));
     int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
-
     return BitboardHelper::square_to_bit(square);
 }
 
@@ -134,6 +131,7 @@ void Board::init_main_window_squares() {
 
 void Board::init_bitboard_window_squares() {
 
+    // From A8-H1.
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         sf::Vector2f pos = index_to_2d(i) * (float)board_square_size;
         bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
@@ -169,7 +167,6 @@ void Board::init_pieces() {
     pieces.emplace_back(new Rook("R", Color::WHITE, main_window, A1, board_square_size));
     pieces.emplace_back(new Rook("R", Color::WHITE, main_window, H1, board_square_size));
 
-        
     pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, D1, board_square_size));
     pieces.emplace_back(new King("K", Color::WHITE, main_window, E1, board_square_size));
 
@@ -205,19 +202,13 @@ void Board::init_pieces() {
 /* RENDER */
 
 void Board::render() {
-    
     render_main_window();
-    if (Debug::enabled) render_bitboard_window(); 
+    if (Debug::enabled) render_bitboard_window(); // dodge.
 }
 
 void Board::render_main_window() {
     main_window.clear();
-    
-    // std::cout << "render_main_window()" << std::endl;
-
-    // for (auto& squ : squares) {main_window.draw(squ);}
-
-    for (int i = H1; i <= A8; i++) {main_window.draw(squares[i]);}
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
 
     // render_board_coords();
 
@@ -236,14 +227,14 @@ void Board::render_bitboard_window() {
 
 void Board::run() {
     while (main_window.isOpen()) {
-        run_handle_events();
+        handle_events();
         render();     
     }
 }
 
 /* RUN -> EVENT HANDLING */
 
-void Board::run_handle_events() {
+void Board::handle_events() {
 
     sf::Event event;
     // changed this to if from while and it didn't seem to do anything.
@@ -301,7 +292,6 @@ void Board::on_left_mouse_press() {
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
-        // If we dont have a selected piece, try and get one.
         selected_piece = select_piece(clicked_bit);
         return;
     }  
@@ -311,12 +301,11 @@ void Board::on_left_mouse_press() {
 
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
-        // would like deselect_piece()
         deselect_piece(old_bit);
         return;
     }
 
-    // Will be executed if we have a selected piece and its an attack.
+    // Will be executed if we have a selected piece and click on a valid attack square.
     handle_piece_move(clicked_bit);
     deselect_piece(old_bit);
 }
@@ -360,8 +349,9 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* 
-        This function is a bit funny. For it to be called selected_piece must
-        not be null.
+
+        This function is a bit funny. For it to be called selected_piece
+        must not be null so no check needed.
         
         Essentially we find the bitboard of the selected piece type and update 
         it.
@@ -373,8 +363,6 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         need for that logic.
 
     */
-
-    if (!selected_piece) return;
 
     for (auto& bitboard: bitboards) {
 
@@ -398,6 +386,3 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     }
     selected_piece->bit = clicked_bit;
 }
-
-
-/* OTHER MOUSE PRESS */

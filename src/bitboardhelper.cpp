@@ -11,14 +11,11 @@ int BitboardHelper::bit_to_square(int bit) {
     return GRID_NUM_SQUARES - bit - 1;
 }
 
-
 uint64_t BitboardHelper::set_bit(uint64_t b, int bit) {
-
     return (b) |= (1ULL << bit);
 }
 
 uint64_t BitboardHelper::clear_bit(uint64_t b, int bit) {
-
     return (b) &= ~(1ULL << bit);
 }
 
