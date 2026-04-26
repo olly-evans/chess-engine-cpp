@@ -176,8 +176,16 @@ void Board::init_piece_positions_from_fen(std::string fen) {
 
     int bit = 63;
     for (int i = 0; i < fen.length(); i++) {
+
+        std::cout << i << "\n";
+
         // get_fen_char_info(fen[i]);
         PieceInfo piece_info = FenParser::parse_fen_char(fen[i]);
+
+        std::cout << piece_info.piece_id << "\n";
+        //                 0123456789...
+        std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        
 
         // for now we wont handle the castling stuff.
         if (isspace(piece_info.piece_id)) 
@@ -188,9 +196,11 @@ void Board::init_piece_positions_from_fen(std::string fen) {
             create_piece(piece_info, bit);
             bit--;
             continue;
+        
         } else if (piece_info.piece_id == '/') {
             continue;
         } else if (isdigit(piece_info.piece_id)) {
+            // Convert char to its int value.
             bit -= (piece_info.piece_id - '0');
             continue;
         }
