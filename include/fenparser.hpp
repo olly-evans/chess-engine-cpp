@@ -11,5 +11,5 @@ struct PieceInfo {
 
 class FenParser {
 public:
-    static PieceInfo parse_fen_char(const char ch);
+    static PieceInfo get_fen_char_info(const char ch);
 };

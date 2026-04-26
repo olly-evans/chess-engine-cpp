@@ -175,21 +175,12 @@ void Board::init_bitboard_window_squares() {
 void Board::init_piece_positions_from_fen(std::string fen) {
 
     int bit = 63;
-    for (int i = 0; i < fen.length(); i++) {
+    for (char ch : fen) {
 
-        std::cout << i << "\n";
+        PieceInfo piece_info = FenParser::get_fen_char_info(ch);
 
-        // get_fen_char_info(fen[i]);
-        PieceInfo piece_info = FenParser::parse_fen_char(fen[i]);
-
-        std::cout << piece_info.piece_id << "\n";
-        //                 0123456789...
-        std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        
-
-        // for now we wont handle the castling stuff.
-        if (isspace(piece_info.piece_id)) 
-            return;
+        // For now we wont handle the castling stuff.
+        if (isspace(piece_info.piece_id)) return;
 
 
         if (isalpha(piece_info.piece_id)){
@@ -201,7 +192,7 @@ void Board::init_piece_positions_from_fen(std::string fen) {
             continue;
         } else if (isdigit(piece_info.piece_id)) {
             // Convert char to its int value.
-            bit -= (piece_info.piece_id - '0');
+            bit = bit - (piece_info.piece_id - '0');
             continue;
         }
         
@@ -240,27 +231,6 @@ void Board::init_pieces() {
     // map white pos to black in case of black pov.
     // white pawns from 8-15
     // would just need black pawns to 8-15 instead.
-
-    // needs a mapping function really.
-
-    // auto white_to_black_pov = [] (int arg1, int arg2) {
-    //     // function code
-    //     return;
-    // };
-
-    // for bitboard in bitboards
-        // loop through bitboard with index. if we find a piece there we create the appropriate object
-        // depending on w or b in bitboard name we make it white or black.
-        // and set its bit.
-
-    // for (auto& bitboard : bitboards) {
-    //     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-    //         if (BitboardHelper::get_bit(bitboard, i)) {
-    //             pieces.emplace_back(new Piece())
-    //         }
-    //     }
-    // }
-
 
     // 8-15 (63-8 = 55) (63-15 = 48)
     for (uint8_t i = H2; i <= A2; i++) {
@@ -347,7 +317,7 @@ void Board::run() {
 void Board::handle_events() {
 
     sf::Event event;
-    // changed this to if from while and it didn't seem to do anything.
+
     while (main_window.pollEvent(event)) {
         on_main_window_event(event);
     }
@@ -370,6 +340,8 @@ void Board::on_main_window_event(sf::Event &event) {
 void Board::on_bitboard_window_event(sf::Event &event) {
     if (event.type == sf::Event::Closed) bitboard_window.close();   
 }
+
+/* KEYPRESSES */
 
 void Board::on_key_pressed(sf::Event &event) {
 
@@ -407,6 +379,7 @@ void Board::on_left_mouse_press() {
     }  
     
     // Save this bit so we can reset the color later in deselect_piece().
+    // could call the square init function if this gets hairy.
     uint8_t old_bit = selected_piece->bit;
 
     // If our click is not an attack then go again/reset.

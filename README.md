@@ -37,4 +37,8 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - perhaps draw circles for attacks instead of the fillcolors, will mean i dont have to fuck with squares.
 
-- when you remake the focus the main_window, if you click on a piece w/o get_legal_moves crashes.
+- see if can write init_piece_positions_from_fen() a bit tidier.
+
+- finish turn implementations.
+
+- record/log moves potentially.
