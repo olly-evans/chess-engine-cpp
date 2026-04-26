@@ -1,0 +1,15 @@
+
+#include <optional>
+#include <iostream>
+
+#include "pieces.hpp"
+
+struct PieceInfo {
+    Color color;
+    char piece_id;
+};
+
+class FenParser {
+public:
+    static PieceInfo parse_fen_char(const char ch);
+};

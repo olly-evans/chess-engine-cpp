@@ -25,11 +25,7 @@ win_w(ww),
 win_h(wh), 
 win_name(std::move(wn)), 
 main_window(sf::VideoMode(win_w, win_h), 
-win_name) {
-
-    // who is white who is black..
-
-};
+win_name) {};
 
 unsigned int board_square_size;
 
@@ -81,8 +77,13 @@ void Board::init() {
     // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
 
     Board::init_players();
-    
+
+    // TODO:
+    // init_bitboards_from_fen();
+
     Board::init_bitboards();
+
+
     Board::init_get_board_square_size(board_square_size, win_h, win_w);
     // init_board_coords();
 
@@ -100,7 +101,10 @@ void Board::init() {
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
-    Board::init_pieces();
+
+    std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    init_piece_positions_from_fen(fen);
+    // init_pieces();
 }
 
 void Board::init_players() {
@@ -113,6 +117,22 @@ void Board::init_players() {
 }
 
 void Board::init_bitboards() {
+
+    // Right now assumes we'll have an engine player and not pvp.
+    uint64_t w_pawns = white_player->is_human() ? 0xFF00ULL : 0x00FF000000000000ULL;
+    uint64_t w_knights = white_player->is_human() ? 0x42ULL : 0x4200000000000000ULL;
+    uint64_t w_bishops = white_player->is_human() ? 0x24ULL : 0x2400000000000000ULL;
+    uint64_t w_rooks = white_player->is_human() ? 0x81ULL : 0x8100000000000000ULL;
+    uint64_t w_queen = white_player->is_human() ? 0x10ULL : 0x1000000000000000ULL;
+    uint64_t w_king = white_player->is_human() ? 0x08ULL : 0x0800000000000000ULL;
+
+    uint64_t b_pawns = white_player->is_human() ? 0x00FF000000000000ULL : 0xFF00ULL;
+    uint64_t b_knights = white_player->is_human() ? 0x4200000000000000ULL : 0x42ULL;
+    uint64_t b_bishops = white_player->is_human() ? 0x2400000000000000ULL : 0x24ULL;
+    uint64_t b_rooks = white_player->is_human() ? 0x8100000000000000ULL : 0x81ULL;
+    uint64_t b_queen = white_player->is_human() ? 0x1000000000000000ULL : 0x10ULL;
+    uint64_t b_king = white_player->is_human() ? 0x0800000000000000ULL : 0x08ULL;
+
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
         b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
@@ -122,7 +142,6 @@ void Board::init_bitboards() {
         NAME_OF(w_pawns), NAME_OF(w_knights), NAME_OF(w_bishops), NAME_OF(w_rooks), NAME_OF(w_queen), NAME_OF(w_king),
         NAME_OF(b_pawns), NAME_OF(b_knights), NAME_OF(b_bishops), NAME_OF(b_rooks), NAME_OF(b_queen), NAME_OF(b_king)
     };
-
 }
 
 void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
@@ -142,7 +161,6 @@ void Board::init_main_window_squares() {
     }
 }
 
-
 void Board::init_bitboard_window_squares() {
 
     // From A8-H1.
@@ -152,6 +170,57 @@ void Board::init_bitboard_window_squares() {
         bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
         bitboard_window_squares[i].setPosition(pos);
     }   
+}
+
+void Board::init_piece_positions_from_fen(std::string fen) {
+
+    int bit = 63;
+    for (int i = 0; i < fen.length(); i++) {
+        // get_fen_char_info(fen[i]);
+        PieceInfo piece_info = FenParser::parse_fen_char(fen[i]);
+
+        // for now we wont handle the castling stuff.
+        if (isspace(piece_info.piece_id)) 
+            return;
+
+
+        if (isalpha(piece_info.piece_id)){
+            create_piece(piece_info, bit);
+            bit--;
+            continue;
+        } else if (piece_info.piece_id == '/') {
+            continue;
+        } else if (isdigit(piece_info.piece_id)) {
+            bit -= (piece_info.piece_id - '0');
+            continue;
+        }
+        
+    }
+}
+
+void Board::create_piece(const PieceInfo& info, uint8_t bit) {
+
+    switch (info.piece_id) {
+        case 'P': 
+            pieces.emplace_back(new Pawn("P", info.color, main_window, bit, board_square_size));
+            break;
+        case 'N': 
+            pieces.emplace_back(new Knight("N", info.color, main_window, bit, board_square_size));
+            break;
+        case 'B': 
+            pieces.emplace_back(new Bishop("B", info.color, main_window, bit, board_square_size));
+            break;
+        case 'R': 
+            pieces.emplace_back(new Rook("R", info.color, main_window, bit, board_square_size));
+            break;
+        case 'Q': 
+            pieces.emplace_back(new Queen("Q", info.color, main_window, bit, board_square_size));
+            break;
+        case 'K': 
+            pieces.emplace_back(new King("K", info.color, main_window, bit, board_square_size));
+            break;
+        default: break;
+    }
 }
 
 void Board::init_pieces() {
@@ -169,39 +238,55 @@ void Board::init_pieces() {
     //     return;
     // };
 
-    for (uint8_t i = WhitePOV::H2; i <= WhitePOV::A2; i++) {
+    // for bitboard in bitboards
+        // loop through bitboard with index. if we find a piece there we create the appropriate object
+        // depending on w or b in bitboard name we make it white or black.
+        // and set its bit.
+
+    // for (auto& bitboard : bitboards) {
+    //     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+    //         if (BitboardHelper::get_bit(bitboard, i)) {
+    //             pieces.emplace_back(new Piece())
+    //         }
+    //     }
+    // }
+
+
+    // 8-15 (63-8 = 55) (63-15 = 48)
+    for (uint8_t i = H2; i <= A2; i++) {
         pieces.emplace_back(new Pawn("P", Color::WHITE, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WhitePOV::G1, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, WhitePOV::B1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, G1, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, B1, board_square_size));
     
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WhitePOV::F1, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, WhitePOV::C1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, F1, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, C1, board_square_size));
 
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WhitePOV::A1, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, WhitePOV::H1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, A1, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, H1, board_square_size));
 
-    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, WhitePOV::D1, board_square_size));
-    pieces.emplace_back(new King("K", Color::WHITE, main_window, WhitePOV::E1, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, D1, board_square_size));
+    pieces.emplace_back(new King("K", Color::WHITE, main_window, E1, board_square_size));
 
     /* BLACK */
 
-    for (uint8_t i = WhitePOV::H7; i <= WhitePOV::A7; i++) {
+    // 48-55
+    for (uint8_t i = H7; i <= A7; i++) {
         pieces.emplace_back(new Pawn("P", Color::BLACK, main_window, i, board_square_size));
     }
 
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, WhitePOV::B8, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, WhitePOV::G8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, B8, board_square_size));
+    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, G8, board_square_size));
     
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, WhitePOV::C8, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, WhitePOV::F8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, C8, board_square_size));
+    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, F8, board_square_size));
 
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, WhitePOV::A8, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, WhitePOV::H8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, A8, board_square_size));
+    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, H8, board_square_size));
 
-    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, WhitePOV::D8, board_square_size));
-    pieces.emplace_back(new King("K", Color::BLACK, main_window, WhitePOV::E8, board_square_size));
+    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, D8, board_square_size));
+    pieces.emplace_back(new King("K", Color::BLACK, main_window, E8, board_square_size));
 }
 
 // void init_board_coords() {

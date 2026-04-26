@@ -7,6 +7,7 @@
 #include "pieces.hpp"
 #include "debug.hpp"
 #include "player.hpp"
+#include "fenparser.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -124,19 +125,20 @@ private:
     
 
     // Starting piece bitboards.
-    uint64_t w_pawns = 0xFF00ULL;
-    uint64_t w_knights = 0x42ULL;
-    uint64_t w_bishops = 0x24ULL;
-    uint64_t w_rooks = 0x81ULL;
-    uint64_t w_queen = 0x10ULL;
-    uint64_t w_king = 0x08ULL;
+    // did init them here //////
+    uint64_t w_pawns;
+    uint64_t w_knights;
+    uint64_t w_bishops;
+    uint64_t w_rooks;
+    uint64_t w_queen;
+    uint64_t w_king;
 
-    uint64_t b_pawns = 0x00FF000000000000ULL;
-    uint64_t b_knights = 0x4200000000000000ULL;
-    uint64_t b_bishops = 0x2400000000000000ULL;
-    uint64_t b_rooks = 0x8100000000000000ULL;
-    uint64_t b_queen = 0x1000000000000000ULL;
-    uint64_t b_king = 0x0800000000000000ULL;
+    uint64_t b_pawns;
+    uint64_t b_knights;
+    uint64_t b_bishops;
+    uint64_t b_rooks;
+    uint64_t b_queen;
+    uint64_t b_king;
 
     /* PIECES */
     
@@ -164,9 +166,6 @@ public:
 
     int square_index_to_piece_type_index(int square_index);
 
-    // only here in case we pass board to pieces, well maybe other reasons too eventually.
-    const unsigned int get_win_width();
-
     /* INIT */
 
     void init();
@@ -177,6 +176,10 @@ public:
     void init_main_window_squares();
 
     void init_bitboard_window_squares();
+    void init_piece_positions_from_fen(std::string fen);
+
+    void create_piece(const PieceInfo& info, uint8_t bit);
+
     void init_pieces();
 
     /* RENDER */
