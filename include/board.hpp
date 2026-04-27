@@ -126,19 +126,19 @@ private:
 
     // Starting piece bitboards.
     // did init them here //////
-    uint64_t w_pawns;
-    uint64_t w_knights;
-    uint64_t w_bishops;
-    uint64_t w_rooks;
-    uint64_t w_queen;
-    uint64_t w_king;
+    uint64_t w_pawns = 0ULL;
+    uint64_t w_knights = 0ULL;
+    uint64_t w_bishops = 0ULL;
+    uint64_t w_rooks = 0ULL;
+    uint64_t w_queen = 0ULL;
+    uint64_t w_king = 0ULL;
 
-    uint64_t b_pawns;
-    uint64_t b_knights;
-    uint64_t b_bishops;
-    uint64_t b_rooks;
-    uint64_t b_queen;
-    uint64_t b_king;
+    uint64_t b_pawns = 0ULL;
+    uint64_t b_knights = 0ULL;
+    uint64_t b_bishops = 0ULL;
+    uint64_t b_rooks = 0ULL;
+    uint64_t b_queen = 0ULL;
+    uint64_t b_king = 0ULL;
 
     /* PIECES */
     
@@ -170,7 +170,8 @@ public:
 
     void init();
     void init_players();
-    void init_bitboards();
+    void init_bitboards_from_fen(std::string fen);
+
     void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
     
     void init_main_window_squares();

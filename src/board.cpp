@@ -81,7 +81,18 @@ void Board::init() {
     // TODO:
     // init_bitboards_from_fen();
 
-    Board::init_bitboards();
+    std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+    // Board::init_bitboards_from_fen(fen);
+    bitboards = {
+        w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
+        b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
+    };
+
+    bitboard_names = {
+        NAME_OF(w_pawns), NAME_OF(w_knights), NAME_OF(w_bishops), NAME_OF(w_rooks), NAME_OF(w_queen), NAME_OF(w_king),
+        NAME_OF(b_pawns), NAME_OF(b_knights), NAME_OF(b_bishops), NAME_OF(b_rooks), NAME_OF(b_queen), NAME_OF(b_king)
+    };
 
 
     Board::init_get_board_square_size(board_square_size, win_h, win_w);
@@ -101,11 +112,10 @@ void Board::init() {
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
-    std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     init_piece_positions_from_fen(fen);
     // init_bitboards_from_fen(fen);
 
-    
+
     // init_pieces();
 }
 
@@ -118,32 +128,24 @@ void Board::init_players() {
 
 }
 
-void Board::init_bitboards() {
+void Board::init_bitboards_from_fen(std::string fen) {
 
     // Right now assumes we'll have an engine player and not pvp.
-    uint64_t w_pawns = white_player->is_human() ? 0xFF00ULL : 0x00FF000000000000ULL;
-    uint64_t w_knights = white_player->is_human() ? 0x42ULL : 0x4200000000000000ULL;
-    uint64_t w_bishops = white_player->is_human() ? 0x24ULL : 0x2400000000000000ULL;
-    uint64_t w_rooks = white_player->is_human() ? 0x81ULL : 0x8100000000000000ULL;
-    uint64_t w_queen = white_player->is_human() ? 0x10ULL : 0x1000000000000000ULL;
-    uint64_t w_king = white_player->is_human() ? 0x08ULL : 0x0800000000000000ULL;
+    // uint64_t w_pawns = white_player->is_human() ? 0xFF00ULL : 0x00FF000000000000ULL;
+    // uint64_t w_knights = white_player->is_human() ? 0x42ULL : 0x4200000000000000ULL;
+    // uint64_t w_bishops = white_player->is_human() ? 0x24ULL : 0x2400000000000000ULL;
+    // uint64_t w_rooks = white_player->is_human() ? 0x81ULL : 0x8100000000000000ULL;
+    // uint64_t w_queen = white_player->is_human() ? 0x10ULL : 0x1000000000000000ULL;
+    // uint64_t w_king = white_player->is_human() ? 0x08ULL : 0x0800000000000000ULL;
 
-    uint64_t b_pawns = white_player->is_human() ? 0x00FF000000000000ULL : 0xFF00ULL;
-    uint64_t b_knights = white_player->is_human() ? 0x4200000000000000ULL : 0x42ULL;
-    uint64_t b_bishops = white_player->is_human() ? 0x2400000000000000ULL : 0x24ULL;
-    uint64_t b_rooks = white_player->is_human() ? 0x8100000000000000ULL : 0x81ULL;
-    uint64_t b_queen = white_player->is_human() ? 0x1000000000000000ULL : 0x10ULL;
-    uint64_t b_king = white_player->is_human() ? 0x0800000000000000ULL : 0x08ULL;
+    // uint64_t b_pawns = white_player->is_human() ? 0x00FF000000000000ULL : 0xFF00ULL;
+    // uint64_t b_knights = white_player->is_human() ? 0x4200000000000000ULL : 0x42ULL;
+    // uint64_t b_bishops = white_player->is_human() ? 0x2400000000000000ULL : 0x24ULL;
+    // uint64_t b_rooks = white_player->is_human() ? 0x8100000000000000ULL : 0x81ULL;
+    // uint64_t b_queen = white_player->is_human() ? 0x1000000000000000ULL : 0x10ULL;
+    // uint64_t b_king = white_player->is_human() ? 0x0800000000000000ULL : 0x08ULL;
 
-    bitboards = {
-        w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
-        b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
-    };
-
-    bitboard_names = {
-        NAME_OF(w_pawns), NAME_OF(w_knights), NAME_OF(w_bishops), NAME_OF(w_rooks), NAME_OF(w_queen), NAME_OF(w_king),
-        NAME_OF(b_pawns), NAME_OF(b_knights), NAME_OF(b_bishops), NAME_OF(b_rooks), NAME_OF(b_queen), NAME_OF(b_king)
-    };
+    
 }
 
 void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
@@ -176,28 +178,38 @@ void Board::init_bitboard_window_squares() {
 
 void Board::init_piece_positions_from_fen(std::string fen) {
 
-    std::vector<std::string> tokens = FenParser::split(fen);
+    std::vector<std::string> fen_tokens = FenParser::split(fen);
 
-    std::string board = tokens[0];
+    std::string board = fen_tokens[0];
+    std::cout << board << "\n";
     int rank = 7, file = 0;
     for (char ch : board) {
-        // Spent forever trying to extract this logic to FenParser but failed.
+        // Spent forever trying to extract this logic to FenParser, 
+        // create_piece requires a lot of board members and can't be static.
+
+        if (ch == '\0') continue;
+
         if (ch == '/') {
             rank--;
             file = 0;
         } else if (isdigit(ch)) {
             file += ch - '0';
         } else if (isalpha(ch)) {
-            int bit = rank * 8 + (7 - file);
+            int draw_bit = rank * 8 + (7 - file);
+
             PieceInfo info = FenParser::get_fen_char_info(ch);
-            create_piece(info, bit);
+            create_piece(info, draw_bit);
             file++;
+
+            uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
+            std::cout << draw_bit << ": " << ch << "\n";
+            bitboard |= (1ULL << draw_bit);
         }
     }
 
-    is_whites_turn = (tokens[1] == "w") ? true : false;
+    is_whites_turn = (fen_tokens[1] == "w") ? true : false;
     
-    // parse more tokens if we want to.
+    // Parse more tokens later if we want to.
 }
 
 void Board::create_piece(const PieceInfo& info, uint8_t bit) {
