@@ -101,9 +101,11 @@ void Board::init() {
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
-
     std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     init_piece_positions_from_fen(fen);
+    // init_bitboards_from_fen(fen);
+
+    
     // init_pieces();
 }
 
@@ -174,29 +176,28 @@ void Board::init_bitboard_window_squares() {
 
 void Board::init_piece_positions_from_fen(std::string fen) {
 
-    int bit = 63;
-    for (char ch : fen) {
+    std::vector<std::string> tokens = FenParser::split(fen);
 
-        PieceInfo piece_info = FenParser::get_fen_char_info(ch);
-
-        // For now we wont handle the castling stuff.
-        if (isspace(piece_info.piece_id)) return;
-
-
-        if (isalpha(piece_info.piece_id)){
-            create_piece(piece_info, bit);
-            bit--;
-            continue;
-        
-        } else if (piece_info.piece_id == '/') {
-            continue;
-        } else if (isdigit(piece_info.piece_id)) {
-            // Convert char to its int value.
-            bit = bit - (piece_info.piece_id - '0');
-            continue;
+    std::string board = tokens[0];
+    int rank = 7, file = 0;
+    for (char ch : board) {
+        // Spent forever trying to extract this logic to FenParser but failed.
+        if (ch == '/') {
+            rank--;
+            file = 0;
+        } else if (isdigit(ch)) {
+            file += ch - '0';
+        } else if (isalpha(ch)) {
+            int bit = rank * 8 + (7 - file);
+            PieceInfo info = FenParser::get_fen_char_info(ch);
+            create_piece(info, bit);
+            file++;
         }
-        
     }
+
+    is_whites_turn = (tokens[1] == "w") ? true : false;
+    
+    // parse more tokens if we want to.
 }
 
 void Board::create_piece(const PieceInfo& info, uint8_t bit) {
@@ -397,13 +398,12 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     
     Piece* piece = get_piece(clicked_bit);
 
-    if (piece) {
-        squares[clicked_bit].setFillColor(TURQOISE);
-        piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
-        piece->highlight_legal_moves(piece->attacks, squares);
-        return piece;
-    }
-    return nullptr;
+    if (!piece) return nullptr;
+
+    squares[clicked_bit].setFillColor(TURQOISE);
+    piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
+    piece->highlight_legal_moves(piece->attacks, squares);
+    return piece;
 }
 
 void Board::deselect_piece(uint8_t old_bit) {

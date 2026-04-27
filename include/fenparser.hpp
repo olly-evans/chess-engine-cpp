@@ -12,4 +12,9 @@ struct PieceInfo {
 class FenParser {
 public:
     static PieceInfo get_fen_char_info(const char ch);
+
+    static std::vector<std::string> split(const std::string& str);
+
+
+
 };
