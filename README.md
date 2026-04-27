@@ -37,8 +37,11 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - perhaps draw circles for attacks instead of the fillcolors, will mean i dont have to fuck with squares.
 
-- see if can write init_piece_positions_from_fen() a bit tidier.
-
 - finish turn implementations.
+- players color determines who can move.
+
+- need global position to load fen.
+
+- is_white_turn in moves bit.
 
 - record/log moves potentially.

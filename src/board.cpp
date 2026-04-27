@@ -112,11 +112,9 @@ void Board::init() {
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
-    init_piece_positions_from_fen(fen);
+    init_position_from_fen(fen);
     // init_bitboards_from_fen(fen);
 
-
-    // init_pieces();
 }
 
 void Board::init_players() {
@@ -126,26 +124,6 @@ void Board::init_players() {
     white_player = new Human(is_white);
     black_player = new Human(!is_white);
 
-}
-
-void Board::init_bitboards_from_fen(std::string fen) {
-
-    // Right now assumes we'll have an engine player and not pvp.
-    // uint64_t w_pawns = white_player->is_human() ? 0xFF00ULL : 0x00FF000000000000ULL;
-    // uint64_t w_knights = white_player->is_human() ? 0x42ULL : 0x4200000000000000ULL;
-    // uint64_t w_bishops = white_player->is_human() ? 0x24ULL : 0x2400000000000000ULL;
-    // uint64_t w_rooks = white_player->is_human() ? 0x81ULL : 0x8100000000000000ULL;
-    // uint64_t w_queen = white_player->is_human() ? 0x10ULL : 0x1000000000000000ULL;
-    // uint64_t w_king = white_player->is_human() ? 0x08ULL : 0x0800000000000000ULL;
-
-    // uint64_t b_pawns = white_player->is_human() ? 0x00FF000000000000ULL : 0xFF00ULL;
-    // uint64_t b_knights = white_player->is_human() ? 0x4200000000000000ULL : 0x42ULL;
-    // uint64_t b_bishops = white_player->is_human() ? 0x2400000000000000ULL : 0x24ULL;
-    // uint64_t b_rooks = white_player->is_human() ? 0x8100000000000000ULL : 0x81ULL;
-    // uint64_t b_queen = white_player->is_human() ? 0x1000000000000000ULL : 0x10ULL;
-    // uint64_t b_king = white_player->is_human() ? 0x0800000000000000ULL : 0x08ULL;
-
-    
 }
 
 void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
@@ -176,19 +154,14 @@ void Board::init_bitboard_window_squares() {
     }   
 }
 
-void Board::init_piece_positions_from_fen(std::string fen) {
+void Board::init_position_from_fen(std::string fen) {
 
     std::vector<std::string> fen_tokens = FenParser::split(fen);
 
     std::string board = fen_tokens[0];
-    std::cout << board << "\n";
     int rank = 7, file = 0;
     for (char ch : board) {
-        // Spent forever trying to extract this logic to FenParser, 
-        // create_piece requires a lot of board members and can't be static.
-
-        if (ch == '\0') continue;
-
+        
         if (ch == '/') {
             rank--;
             file = 0;
@@ -202,8 +175,7 @@ void Board::init_piece_positions_from_fen(std::string fen) {
             file++;
 
             uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
-            std::cout << draw_bit << ": " << ch << "\n";
-            bitboard |= (1ULL << draw_bit);
+            BitboardHelper::set_bit_by_ref(bitboard, draw_bit);
         }
     }
 
@@ -235,51 +207,6 @@ void Board::create_piece(const PieceInfo& info, uint8_t bit) {
             break;
         default: break;
     }
-}
-
-void Board::init_pieces() {
-
-    // as far as i can tell the only difference between black and white pov is piece positions.
-
-    // map white pos to black in case of black pov.
-    // white pawns from 8-15
-    // would just need black pawns to 8-15 instead.
-
-    // 8-15 (63-8 = 55) (63-15 = 48)
-    for (uint8_t i = H2; i <= A2; i++) {
-        pieces.emplace_back(new Pawn("P", Color::WHITE, main_window, i, board_square_size));
-    }
-
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, G1, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::WHITE, main_window, B1, board_square_size));
-    
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, F1, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::WHITE, main_window, C1, board_square_size));
-
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, A1, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::WHITE, main_window, H1, board_square_size));
-
-    pieces.emplace_back(new Queen("Q", Color::WHITE, main_window, D1, board_square_size));
-    pieces.emplace_back(new King("K", Color::WHITE, main_window, E1, board_square_size));
-
-    /* BLACK */
-
-    // 48-55
-    for (uint8_t i = H7; i <= A7; i++) {
-        pieces.emplace_back(new Pawn("P", Color::BLACK, main_window, i, board_square_size));
-    }
-
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, B8, board_square_size));
-    pieces.emplace_back(new Knight("N", Color::BLACK, main_window, G8, board_square_size));
-    
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, C8, board_square_size));
-    pieces.emplace_back(new Bishop("B", Color::BLACK, main_window, F8, board_square_size));
-
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, A8, board_square_size));
-    pieces.emplace_back(new Rook("R", Color::BLACK, main_window, H8, board_square_size));
-
-    pieces.emplace_back(new Queen("Q", Color::BLACK, main_window, D8, board_square_size));
-    pieces.emplace_back(new King("K", Color::BLACK, main_window, E8, board_square_size));
 }
 
 // void init_board_coords() {
