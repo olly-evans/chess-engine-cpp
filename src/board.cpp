@@ -122,7 +122,7 @@ void Board::init_players() {
     bool is_white = true; //temp
 
     white_player = new Human(is_white);
-    black_player = new Human(!is_white);
+    black_player = new Engine(!is_white);
 
 }
 
@@ -156,7 +156,11 @@ void Board::init_bitboard_window_squares() {
 
 void Board::init_position_from_fen(std::string fen) {
 
-    std::vector<std::string> fen_tokens = FenParser::split(fen);
+    /* Parses fen string and converts position to appropriate bitboards */
+
+    // Not ideal that the split is 
+
+    std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
     std::string board = fen_tokens[0];
     int rank = 7, file = 0;
@@ -168,14 +172,15 @@ void Board::init_position_from_fen(std::string fen) {
         } else if (isdigit(ch)) {
             file += ch - '0';
         } else if (isalpha(ch)) {
-            int draw_bit = rank * 8 + (7 - file);
+            int bit = rank * 8 + (7 - file);
 
-            PieceInfo info = FenParser::get_fen_char_info(ch);
-            create_piece(info, draw_bit);
+            FenCharInfo info = FenParser::get_fen_char_info(ch);
+            create_piece(info, bit);
             file++;
 
+            // Convert fen to piece type bitboards.
             uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
-            BitboardHelper::set_bit_by_ref(bitboard, draw_bit);
+            BitboardHelper::set_bit_by_ref(bitboard, bit);
         }
     }
 
@@ -184,7 +189,7 @@ void Board::init_position_from_fen(std::string fen) {
     // Parse more tokens later if we want to.
 }
 
-void Board::create_piece(const PieceInfo& info, uint8_t bit) {
+void Board::create_piece(const FenCharInfo& info, uint8_t bit) {
 
     switch (info.piece_id) {
         case 'P': 
@@ -313,6 +318,7 @@ void Board::on_left_mouse_press() {
 
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
+    // and my team color.
     if (!selected_piece) {
         selected_piece = select_piece(clicked_bit);
         return;

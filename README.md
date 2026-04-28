@@ -28,8 +28,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 ## TODO List (I'm forgetful)
 
-- toggle mouse pos in console too.
-
 - Linux unsigned long is 64 bit.
 - Should replace all int with uint_t.
 
@@ -45,3 +43,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - is_white_turn in moves bit.
 
 - record/log moves potentially.
+
+- for castling, occupancy call and & all bitboards.

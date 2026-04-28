@@ -179,7 +179,7 @@ public:
     void init_bitboard_window_squares();
     void init_position_from_fen(std::string fen);
 
-    void create_piece(const PieceInfo& info, uint8_t bit);
+    void create_piece(const FenCharInfo& info, uint8_t bit);
 
     void init_pieces();
 
