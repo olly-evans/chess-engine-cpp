@@ -72,9 +72,7 @@ uint64_t Board::black_occupancy() {
 
 void Board::init() {
 
-    // Is player black or white?
-    // If black, board must be inverted.
-    // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
+    // Selection window with empty colored squares to choose white/black.
 
     // this kinda doesn't matter right now.
     Board::init_players();
@@ -147,12 +145,12 @@ void Board::init_bitboard_window_squares() {
 
 void Board::init_position_from_fen(std::string fen) {
 
-    /* Parses fen string and converts position to appropriate bitboards */
-
-    // Not ideal that the split is
+    /* Parses fen string and appropriately initialises bitboards. */
 
     std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
+
+    // i want these hardcoded tokens to have seperate functions,
     std::string board = fen_tokens[0];
     int rank = 7, file = 0;
     for (char ch : board) {

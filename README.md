@@ -47,3 +47,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - for castling, occupancy call and & all bitboards.
 
 - perhaps need some sort of gamestate class that holds whos turn, and game state like checkmate stalemate etc..
+
+- extract fen token code to functions in fenparser. create_piece() can be part of something else perhaps.
