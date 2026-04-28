@@ -14,17 +14,17 @@
 
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
-//     
+//
 //     .
 //     .
 //     .
 // };
 
-Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) : 
-win_w(ww), 
-win_h(wh), 
-win_name(std::move(wn)), 
-main_window(sf::VideoMode(win_w, win_h), 
+Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) :
+win_w(ww),
+win_h(wh),
+win_name(std::move(wn)),
+main_window(sf::VideoMode(win_w, win_h),
 win_name) {};
 
 unsigned int board_square_size;
@@ -46,7 +46,7 @@ bool Board::is_square_black(uint8_t i) {
 int Board::mouse_win_pos_to_bit() {
     // May need to be broken up into smaller functions.
     sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
-    sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size), 
+    sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
                                     (mouse_window_pos.y / board_square_size));
     int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
     return BitboardHelper::square_to_bit(square);
@@ -76,12 +76,10 @@ void Board::init() {
     // If black, board must be inverted.
     // grid is drawn, pop up asking black or white, maybe a welcome message. not docked.
 
+    // this kinda doesn't matter right now.
     Board::init_players();
 
-    // TODO:
-    // init_bitboards_from_fen();
-
-    std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    std::string fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w KQkq - 0 1";
 
     // Board::init_bitboards_from_fen(fen);
     bitboards = {
@@ -90,19 +88,13 @@ void Board::init() {
     };
 
     bitboard_names = {
-        NAME_OF(w_pawns), NAME_OF(w_knights), NAME_OF(w_bishops), NAME_OF(w_rooks), NAME_OF(w_queen), NAME_OF(w_king),
-        NAME_OF(b_pawns), NAME_OF(b_knights), NAME_OF(b_bishops), NAME_OF(b_rooks), NAME_OF(b_queen), NAME_OF(b_king)
+        "White Pawns Bitboard", "White Knights Bitboard", "White Bishops Bitboard", "White Rooks Bitboard", "White Queen Bitboard", "White King Bitboard",
+        "Black Pawns Bitboard", "Black Knights Bitboard", "Black Bishops Bitboard", "Black Rooks Bitboard", "Black Queen Bitboard", "Black King Bitboard",
     };
 
 
     Board::init_get_board_square_size(board_square_size, win_h, win_w);
     // init_board_coords();
-
-    // if white_player->is_human()
-        // init_main_window_squares_white();
-    // else
-        // init_main_window_squares_black();
-
 
     // for now i wont flip the board if we have two human players.
     // so for now we'll assume one player is an Engine but as a Human.
@@ -112,9 +104,8 @@ void Board::init() {
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
+    // What needs to happen if fen string is invalid.
     init_position_from_fen(fen);
-    // init_bitboards_from_fen(fen);
-
 }
 
 void Board::init_players() {
@@ -151,21 +142,21 @@ void Board::init_bitboard_window_squares() {
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
         bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
         bitboard_window_squares[i].setPosition(pos);
-    }   
+    }
 }
 
 void Board::init_position_from_fen(std::string fen) {
 
     /* Parses fen string and converts position to appropriate bitboards */
 
-    // Not ideal that the split is 
+    // Not ideal that the split is
 
     std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
     std::string board = fen_tokens[0];
     int rank = 7, file = 0;
     for (char ch : board) {
-        
+
         if (ch == '/') {
             rank--;
             file = 0;
@@ -185,29 +176,29 @@ void Board::init_position_from_fen(std::string fen) {
     }
 
     is_whites_turn = (fen_tokens[1] == "w") ? true : false;
-    
+
     // Parse more tokens later if we want to.
 }
 
 void Board::create_piece(const FenCharInfo& info, uint8_t bit) {
 
     switch (info.piece_id) {
-        case 'P': 
+        case 'P':
             pieces.emplace_back(new Pawn("P", info.color, main_window, bit, board_square_size));
             break;
-        case 'N': 
+        case 'N':
             pieces.emplace_back(new Knight("N", info.color, main_window, bit, board_square_size));
             break;
-        case 'B': 
+        case 'B':
             pieces.emplace_back(new Bishop("B", info.color, main_window, bit, board_square_size));
             break;
-        case 'R': 
+        case 'R':
             pieces.emplace_back(new Rook("R", info.color, main_window, bit, board_square_size));
             break;
-        case 'Q': 
+        case 'Q':
             pieces.emplace_back(new Queen("Q", info.color, main_window, bit, board_square_size));
             break;
-        case 'K': 
+        case 'K':
             pieces.emplace_back(new King("K", info.color, main_window, bit, board_square_size));
             break;
         default: break;
@@ -253,7 +244,7 @@ void Board::render_bitboard_window() {
 void Board::run() {
     while (main_window.isOpen()) {
         handle_events();
-        render();     
+        render();
     }
 }
 
@@ -278,12 +269,12 @@ void Board::handle_events() {
 void Board::on_main_window_event(sf::Event &event) {
 
     if (event.type == sf::Event::Closed) main_window.close();
-    if (event.type == sf::Event::KeyPressed) on_key_pressed(event); 
-    if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);   
+    if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
+    if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);
 }
 
 void Board::on_bitboard_window_event(sf::Event &event) {
-    if (event.type == sf::Event::Closed) bitboard_window.close();   
+    if (event.type == sf::Event::Closed) bitboard_window.close();
 }
 
 /* KEYPRESSES */
@@ -296,7 +287,7 @@ void Board::on_key_pressed(sf::Event &event) {
         case sf::Keyboard::Tab:
             if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]); 
+            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
     }
 }
@@ -325,8 +316,8 @@ void Board::on_left_mouse_press() {
     if (!selected_piece) {
         selected_piece = select_piece(clicked_bit);
         return;
-    }  
-    
+    }
+
     // Save this bit so we can reset the color later in deselect_piece().
     // could call the square init function if this gets hairy.
     uint8_t old_bit = selected_piece->bit;
@@ -351,7 +342,7 @@ void Board::on_left_mouse_press() {
 }
 
 Piece* Board::select_piece(uint8_t clicked_bit) {
-    
+
     Piece* piece = get_piece(clicked_bit);
     if (!piece) return nullptr;
 
@@ -394,15 +385,15 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
-    /* 
+    /*
 
         This function is a bit funny. For it to be called selected_piece
         must not be null so no check needed.
-        
-        Essentially we find the bitboard of the selected piece type and update 
+
+        Essentially we find the bitboard of the selected piece type and update
         it.
 
-        Find the bitboard of the clicked bit if any, clear the bitboard bit and 
+        Find the bitboard of the clicked bit if any, clear the bitboard bit and
         place the selected_piece there by updating its piece->bit.
 
         If a piece is selected we cannot attack/move to a friendly piece, so no
@@ -419,9 +410,9 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
 
-        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {            
+        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
             bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
-            
+
             // Find piece and remove piece from pieces vector.
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
                 return p->bit == clicked_bit;
