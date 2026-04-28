@@ -19,8 +19,6 @@ protected:
     sf::Texture texture;
     sf::Sprite sprite;
     
-    Color color;
-
     sf::RenderWindow& window;
 
     std::string piece_id;
@@ -37,7 +35,7 @@ protected:
 public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
 
-    sf::Vector2f pos;
+    Color color;
 
     uint64_t attacks = 0ULL;
     uint64_t bit = 0ULL;

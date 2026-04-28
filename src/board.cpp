@@ -316,9 +316,12 @@ void Board::on_mouse_press(sf::Event &event) {
 
 void Board::on_left_mouse_press() {
 
+    /* This doesn't really use Player class yet. Perhaps it doesn't need to
+    *  but may be useful later.
+    */
+
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
-    // and my team color.
     if (!selected_piece) {
         selected_piece = select_piece(clicked_bit);
         return;
@@ -335,8 +338,16 @@ void Board::on_left_mouse_press() {
     }
 
     // Will be executed if we have a selected piece and click on a valid attack square.
+
+    // if not your turn, dont show higlights.
+
+    if (!is_whites_turn && selected_piece->color == Color::WHITE) return;
+    if (is_whites_turn && selected_piece->color == Color::BLACK) return;
+
     handle_piece_move(clicked_bit);
     deselect_piece(old_bit);
+
+    is_whites_turn = !is_whites_turn;
 }
 
 Piece* Board::select_piece(uint8_t clicked_bit) {
@@ -344,7 +355,9 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     Piece* piece = get_piece(clicked_bit);
 
     if (!piece) return nullptr;
-
+    if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
+    if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
+    
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
     piece->highlight_legal_moves(piece->attacks, squares);

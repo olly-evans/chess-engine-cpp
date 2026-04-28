@@ -45,3 +45,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - record/log moves potentially.
 
 - for castling, occupancy call and & all bitboards.
+
+- perhaps need some sort of gamestate class that holds whos turn, and game state like checkmate stalemate etc..
