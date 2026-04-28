@@ -353,11 +353,16 @@ void Board::on_left_mouse_press() {
 Piece* Board::select_piece(uint8_t clicked_bit) {
     
     Piece* piece = get_piece(clicked_bit);
-
     if (!piece) return nullptr;
+
+    // Works fine but will eventually be a dependancy nightmare, perhaps move checks to gamestate class.
+    // bool can_white_move()
+    // bool can_black_move()
+
+    // If not your turn you can't select a piece.
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
-    
+
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
     piece->highlight_legal_moves(piece->attacks, squares);
