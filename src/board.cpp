@@ -7,6 +7,7 @@
 #include "bitboardhelper.hpp"
 #include "player.hpp"
 #include "board.hpp"
+#include "gamestate.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -77,7 +78,7 @@ void Board::init() {
     // this kinda doesn't matter right now.
     Board::init_players();
 
-    std::string fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w KQkq - 0 1";
+    
 
     // Board::init_bitboards_from_fen(fen);
     bitboards = {
@@ -103,7 +104,11 @@ void Board::init() {
     if (Debug::enabled) Board::init_bitboard_window_squares();
 
     // What needs to happen if fen string is invalid.
-    init_position_from_fen(fen);
+
+    std::string fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w KQkq - 0 1";
+    GameState::set_fen_pos(fen);
+    
+    init_position_from_fen(GameState::get_fen_pos());
 }
 
 void Board::init_players() {

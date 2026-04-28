@@ -13,7 +13,7 @@ public:
     bool is_whites_turn = true;
 
     // init via gui eventually as a load position option.
-    std::string fen_pos;
+    static std::string fen_pos;
 
     Player* p_white;
     Player* p_black;
@@ -26,5 +26,6 @@ public:
         STALEMATE
     };
 
-    void get_fen_pos();
+    static void set_fen_pos(std::string fen);
+    static std::string get_fen_pos();
 };
