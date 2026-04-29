@@ -21,8 +21,7 @@ public:
     
     /* MOVE GENERATION */
 
-    // static uint64_t rank_mask(int square);
-    // static uint64_t file_mask(int square);
-    // static uint64_t diagonal_mask(int square);
+    static uint64_t get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy);
+
 
 };

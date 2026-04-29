@@ -1,31 +1,31 @@
-#pragma once
+// #pragma once
 
-#include <iostream>
+// #include <iostream>
 
-#include "player.hpp"
+// #include "player.hpp"
 
 
-class GameState {
+// class GameState {
 
-/* Skeleton for GameState class and things from board I want to extract. */
+// /* Skeleton for GameState class and things from board I want to extract. */
 
-public:
-    bool is_whites_turn = true;
+// public:
+//     bool is_whites_turn = true;
 
-    // init via gui eventually as a load position option.
-    static std::string fen_pos;
+//     // init via gui eventually as a load position option.
+//     // std::string fen_pos;
 
-    Player* p_white;
-    Player* p_black;
+//     Player* p_white;
+//     Player* p_black;
 
-    enum State {
-        WHITE_TURN,
-        BLACK_TURN,
-        WHITE_CHECKMATE,
-        BLACK_CHECKMATE,
-        STALEMATE
-    };
+//     enum State {
+//         WHITE_TURN,
+//         BLACK_TURN,
+//         WHITE_CHECKMATE,
+//         BLACK_CHECKMATE,
+//         STALEMATE
+//     };
 
-    static void set_fen_pos(std::string fen);
-    static std::string get_fen_pos();
-};
+//     static void set_fen_pos(std::string fen);
+//     static std::string get_fen_pos();
+// };

@@ -105,10 +105,8 @@ void Board::init() {
 
     // What needs to happen if fen string is invalid.
 
-    std::string fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w KQkq - 0 1";
-    GameState::set_fen_pos(fen);
-    
-    init_position_from_fen(GameState::get_fen_pos());
+    std::string fen = "1r6/5pp1/R1R4p/1r1pP3/2pkQPP1/7P/1P6/2K5 w - - 0 41";
+    init_position_from_fen(fen);
 }
 
 void Board::init_players() {
@@ -125,6 +123,7 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
     sz = win_h / GRID_SZ;
 }
 
+// this can be done with one function for both functions below.
 void Board::init_main_window_squares() {
 
     for (int i = H1; i <= A8; i++) {
@@ -349,6 +348,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     Piece* piece = get_piece(clicked_bit);
     if (!piece) return nullptr;
 
+    // TODO:
     // Works fine but will eventually be a dependancy nightmare, perhaps move checks to gamestate class.
     // bool can_white_move()
     // bool can_black_move()
@@ -384,7 +384,6 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
     }
     return nullptr;
 }
-
 
 void Board::handle_piece_move(uint8_t clicked_bit) {
 

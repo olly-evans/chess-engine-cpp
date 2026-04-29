@@ -45,8 +45,6 @@ void Piece::draw(sf::RenderWindow& window) {
 
 void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squares) {
     
-    // find bits that are 1.
-
     for (int bit = 0; bit < GRID_NUM_SQUARES; bit++) {
         if (attacks & (1ULL << bit)) {
             squares[bit].setFillColor(TURQOISE);
@@ -86,7 +84,46 @@ uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
 
 /* ROOK */
 
-uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t rook = (1ULL << this->bit);
+    uint64_t attacks = 0ULL;
+
+    // There is only trial and error behind these masks I'll be real.
+
+    // condition into bitboardhelper func for sure.
+
+    // while attacks not including other pieces.
+
+    uint64_t north_attacks = BitboardHelper::get_viable_north_attacks(rook, w_bb, b_bb);
+
+    return attacks |= north_attacks;
+
+//     // condition stops all directions when we see a piece.
+
+
+//     while (!(w_bb & attacks) | !(b_bb & attacks)) {
+//         // condition isn't met for a while, number doesnt change after first iteration.
+
+
+//         // need to stop individually when condition met.
+//         // and stop in direction when friendly piece hit too, not at the end.
+
+//         // some mix of ifs and continue to stop directions at pieces i think.
+        
+    // get_viable_north_attacks(); // returns a bitboard then or with attacks.
+    // get_viable_south_offsets(); 
+
+
+//         // attacks |= (rook & NOT_H_FILE) << (hor_offset + i);
+//         // attacks |= (rook << (vert_offset + (vert_offset*i)));
+
+//         // attacks |= (rook & NOT_A_FILE) >> hor_offset + i;
+//         // attacks |= (rook >> (vert_offset + (vert_offset*i)));
+//    }
+
+   return attacks;
+};
 
 /* QUEEN */
 uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};

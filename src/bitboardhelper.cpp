@@ -36,3 +36,20 @@ bool BitboardHelper::has_friendly_piece(uint64_t friendly_bb, int bit) {
 uint64_t BitboardHelper::remove_friendly_pieces(uint64_t attacks, uint64_t friendly) {
     return attacks &= ~friendly;
 }
+
+/* PIECE MOVEMENT */
+
+uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy) {
+
+    uint64_t north_attacks = 0ULL;
+
+    int i = 0;
+
+    // condition wrong, goes off the board i think.
+    while (!(white_occupancy & north_attacks) | !(black_occupancy & north_attacks)) {
+        north_attacks |= (piece << (8 + (8*i)));
+        i++;
+    }
+    return north_attacks;
+
+}

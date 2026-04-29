@@ -25,5 +25,8 @@ public:
 
     static void show_mouse_pos(int x, int y);
     
-    static void log(const std::string& message);
+    static void draw_bitboard(sf::RenderWindow& window, 
+                              uint64_t bitboard, 
+                              std::vector<sf::RectangleShape>& squares);
+
 };

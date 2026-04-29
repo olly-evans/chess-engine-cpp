@@ -49,3 +49,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - perhaps need some sort of gamestate class that holds whos turn, and game state like checkmate stalemate etc..
 
 - extract fen token code to functions in fenparser. create_piece() can be part of something else perhaps.
+
+- add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
