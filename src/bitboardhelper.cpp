@@ -104,6 +104,7 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
     // to get the correct rank, dont think so acc.
 
     // divide bit by 8 with integer div gives the rank above hehe. <---------------
+    // index into vector of rank masks hehehe.
 
     // these mask names mean nothing ill be real.
     for (uint8_t i = 0; i < GRID_SZ; i++) {
