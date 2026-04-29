@@ -96,8 +96,11 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     // while attacks not including other pieces.
 
     uint64_t north_attacks = BitboardHelper::get_viable_north_attacks(rook, w_bb, b_bb);
+    uint64_t south_attacks = BitboardHelper::get_viable_south_attacks(rook, w_bb, b_bb);
 
-    return attacks | north_attacks;
+    attacks |= north_attacks;
+    attacks |= south_attacks;
+    return attacks;
 
 //     // condition stops all directions when we see a piece.
 
@@ -122,7 +125,6 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 //         // attacks |= (rook >> (vert_offset + (vert_offset*i)));
 //    }
 
-   return attacks;
 };
 
 /* QUEEN */

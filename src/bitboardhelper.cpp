@@ -50,10 +50,44 @@ uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t w_bb,
     uint64_t north_attacks = 0ULL;
     uint8_t north_offset = 8;
 
-    uint8_t i = 0;
-    while ((!(w_bb & north_attacks) || !(b_bb & north_attacks)) && (piece << (north_offset*i))) {
+    // uint8_t i = 0;
+    // while ((!(w_bb & north_attacks) || !(b_bb & north_attacks)) && (piece << (north_offset*i))) {
+    //     north_attacks |= (piece << (north_offset + (north_offset*i)));
+    //     i++;
+    // }
+
+    for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (w_bb & north_attacks) return north_attacks;
+        if (b_bb & north_attacks) return north_attacks;
+        if (!(piece << (north_offset*i))) return north_attacks;
+
         north_attacks |= (piece << (north_offset + (north_offset*i)));
-        i++;
+
     }
     return north_attacks;
+}
+
+uint64_t BitboardHelper::get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t south_attacks = 0ULL;
+    uint8_t south_offset = 8;
+
+    // uint8_t i = 0;
+    // while (!(w_bb & south_attacks) || !(b_bb & south_attacks) || (piece >> (south_bit_offset*i))) {
+    //     south_attacks |= (piece >> (south_bit_offset + (south_bit_offset*i)));
+    //     i++;
+    // }
+
+    // the occupancy bitboards or their conditional aint right.
+    
+    for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (w_bb & south_attacks) return south_attacks;
+        if (b_bb & south_attacks) return south_attacks;
+        if (!(piece >> (south_offset*i))) return south_attacks;
+
+        south_attacks |= (piece >> (south_offset + (south_offset*i)));
+
+    }
+
+    return south_attacks;
 }
