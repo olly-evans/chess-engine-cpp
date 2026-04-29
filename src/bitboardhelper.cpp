@@ -39,17 +39,21 @@ uint64_t BitboardHelper::remove_friendly_pieces(uint64_t attacks, uint64_t frien
 
 /* PIECE MOVEMENT */
 
-uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy) {
+// Maybe this will be useful, condition for north square valid attack.
+
+// bool BitboardHelper::north_square_valid(uint64_t piece, uint64_t north_attacks, uint64_t w_bb, uint64_t b_bb) {
+//     return (!(w_bb & north_attacks) | !(b_bb & north_attacks)) && (piece << (8*i);
+// }
+
+uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_attacks = 0ULL;
+    uint8_t north_offset = 8;
 
-    int i = 0;
-
-    // condition wrong, goes off the board i think.
-    while (!(white_occupancy & north_attacks) | !(black_occupancy & north_attacks)) {
-        north_attacks |= (piece << (8 + (8*i)));
+    uint8_t i = 0;
+    while ((!(w_bb & north_attacks) || !(b_bb & north_attacks)) && (piece << (north_offset*i))) {
+        north_attacks |= (piece << (north_offset + (north_offset*i)));
         i++;
     }
     return north_attacks;
-
 }

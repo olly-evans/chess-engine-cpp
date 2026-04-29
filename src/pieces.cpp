@@ -97,7 +97,7 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_attacks = BitboardHelper::get_viable_north_attacks(rook, w_bb, b_bb);
 
-    return attacks |= north_attacks;
+    return attacks | north_attacks;
 
 //     // condition stops all directions when we see a piece.
 
