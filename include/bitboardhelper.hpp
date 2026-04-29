@@ -4,6 +4,10 @@
 
 class BitboardHelper {
 public:
+    static const uint64_t NOT_A_FILE  = 0xFEFEFEFEFEFEFEFEULL;
+    static const uint64_t NOT_AB_FILE = 0xFCFCFCFCFCFCFCFCULL;
+    static const uint64_t NOT_H_FILE  = 0x7F7F7F7F7F7F7F7FULL;
+    static const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
 
     static int square_to_bit(int square);
     static int bit_to_square(int bit);
@@ -23,6 +27,7 @@ public:
 
     static uint64_t get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy);
     static uint64_t get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    static uint64_t get_viable_west_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
 
 
 };

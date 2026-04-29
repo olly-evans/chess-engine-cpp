@@ -65,15 +65,15 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     // gunna be interesting when we need to flip the board.
 
-    attacks |= (knight & NOT_AB_FILE) << 6;
-    attacks |= (knight & NOT_A_FILE)  << 15; 
-    attacks |= (knight & NOT_H_FILE)  << 17;
-    attacks |= (knight & NOT_GH_FILE) << 10;
+    attacks |= (knight & BitboardHelper::NOT_AB_FILE) << 6;
+    attacks |= (knight & BitboardHelper::NOT_A_FILE)  << 15; 
+    attacks |= (knight & BitboardHelper::NOT_H_FILE)  << 17;
+    attacks |= (knight & BitboardHelper::NOT_GH_FILE) << 10;
     
-    attacks |= (knight & NOT_GH_FILE) >> 6;   
-    attacks |= (knight & NOT_H_FILE)  >> 15;  
-    attacks |= (knight & NOT_A_FILE)  >> 17; 
-    attacks |= (knight & NOT_AB_FILE) >> 10; 
+    attacks |= (knight & BitboardHelper::NOT_GH_FILE) >> 6;   
+    attacks |= (knight & BitboardHelper::NOT_H_FILE)  >> 15;  
+    attacks |= (knight & BitboardHelper::NOT_A_FILE)  >> 17; 
+    attacks |= (knight & BitboardHelper::NOT_AB_FILE) >> 10; 
 
     return BitboardHelper::remove_friendly_pieces(attacks, this->color == Color::WHITE ? w_bb : b_bb);
 }
@@ -97,9 +97,13 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_attacks = BitboardHelper::get_viable_north_attacks(rook, w_bb, b_bb);
     uint64_t south_attacks = BitboardHelper::get_viable_south_attacks(rook, w_bb, b_bb);
+    uint64_t west_attacks = BitboardHelper::get_viable_west_attacks(rook, w_bb, b_bb);
+
 
     attacks |= north_attacks;
     attacks |= south_attacks;
+    attacks |= west_attacks;
+
     return attacks;
 
 //     // condition stops all directions when we see a piece.

@@ -56,7 +56,7 @@ uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t w_bb,
     //     i++;
     // }
 
-    for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
         if (w_bb & north_attacks) return north_attacks;
         if (b_bb & north_attacks) return north_attacks;
         if (!(piece << (north_offset*i))) return north_attacks;
@@ -72,15 +72,7 @@ uint64_t BitboardHelper::get_viable_south_attacks(uint64_t piece, uint64_t w_bb,
     uint64_t south_attacks = 0ULL;
     uint8_t south_offset = 8;
 
-    // uint8_t i = 0;
-    // while (!(w_bb & south_attacks) || !(b_bb & south_attacks) || (piece >> (south_bit_offset*i))) {
-    //     south_attacks |= (piece >> (south_bit_offset + (south_bit_offset*i)));
-    //     i++;
-    // }
-
-    // the occupancy bitboards or their conditional aint right.
-    
-    for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
         if (w_bb & south_attacks) return south_attacks;
         if (b_bb & south_attacks) return south_attacks;
         if (!(piece >> (south_offset*i))) return south_attacks;
@@ -89,5 +81,44 @@ uint64_t BitboardHelper::get_viable_south_attacks(uint64_t piece, uint64_t w_bb,
 
     }
 
+    // not 100% on this.
     return south_attacks;
+}
+
+uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+    uint64_t west_attacks = 0ULL;
+    uint8_t west_offset = 1;
+
+    // need the bit. convert bit to rank. rank + or -1 depending on color i think
+
+
+    uint64_t rank_0 = 0xFF00000000000000;
+    uint64_t rank_1 = 0x00FF000000000000;
+    uint64_t rank_2 = 0x0000FF0000000000;
+    uint64_t rank_3 = 0x000000FF00000000;
+    uint64_t rank_4 = 0x00000000FF000000;
+    uint64_t rank_5 = 0x0000000000FF0000;
+    uint64_t rank_6 = 0x000000000000FF00;
+    uint64_t rank_7 = 0x00000000000000FF;
+    // perhaps we can use i here actually???
+    // to get the correct rank, dont think so acc.
+
+    // divide bit by 8 with integer div gives the rank above hehe.
+
+    // these mask names mean nothing ill be real.
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+        west_attacks |= (piece << (west_offset + (west_offset*i)));
+
+        // think this needs to dynamically be the rank above the rook pos.
+        if (w_bb & west_attacks) return (west_attacks & ~rank_0);
+        // diff mask for diff color i think, maybe not actually.
+
+        if (b_bb & west_attacks) return (west_attacks & ~rank_0);
+        if (!(piece << (west_offset*i))) return (west_attacks & ~rank_0);
+
+        // these masks are fucked from the other person pov
+
+
+    }
+    return (west_attacks & ~rank_0);
 }

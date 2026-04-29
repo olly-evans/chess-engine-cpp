@@ -25,12 +25,6 @@ protected:
 
     std::string resolve_texture_path();
 
-    /* NOT MASKS */ 
-
-    const uint64_t NOT_A_FILE  = 0xFEFEFEFEFEFEFEFEULL;
-    const uint64_t NOT_AB_FILE = 0xFCFCFCFCFCFCFCFCULL;
-    const uint64_t NOT_H_FILE  = 0x7F7F7F7F7F7F7F7FULL;
-    const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
 
 public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
