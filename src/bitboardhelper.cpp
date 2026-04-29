@@ -103,7 +103,7 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
     // perhaps we can use i here actually???
     // to get the correct rank, dont think so acc.
 
-    // divide bit by 8 with integer div gives the rank above hehe.
+    // divide bit by 8 with integer div gives the rank above hehe. <---------------
 
     // these mask names mean nothing ill be real.
     for (uint8_t i = 0; i < GRID_SZ; i++) {
@@ -116,7 +116,7 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
         if (b_bb & west_attacks) return (west_attacks & ~rank_0);
         if (!(piece << (west_offset*i))) return (west_attacks & ~rank_0);
 
-        // these masks are fucked from the other person pov
+        // these masks are fucked from the other person pov, might not be actually. east will handle this for black and vice versa i believe.
 
 
     }
