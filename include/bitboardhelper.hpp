@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 class BitboardHelper {
 public:
@@ -11,14 +12,17 @@ public:
     static const uint64_t NOT_GH_FILE = 0x3F3F3F3F3F3F3F3FULL;
 
     // Rank masks.
-    static const uint64_t rank_0 = 0xFF00000000000000;
-    static const uint64_t rank_1 = 0x00FF000000000000;
-    static const uint64_t rank_2 = 0x0000FF0000000000;
-    static const uint64_t rank_3 = 0x000000FF00000000;
-    static const uint64_t rank_4 = 0x00000000FF000000;
-    static const uint64_t rank_5 = 0x0000000000FF0000;
-    static const uint64_t rank_6 = 0x000000000000FF00;
-    static const uint64_t rank_7 = 0x00000000000000FF;
+    inline static std::vector<uint64_t> rank_masks = {
+        0x00000000000000FF, // top, 7
+        0x000000000000FF00,
+        0x0000000000FF0000,
+        0x00000000FF000000,
+        0x000000FF00000000,
+        0x0000FF0000000000,
+        0x00FF000000000000,
+        0xFF00000000000000 // bottom, 0
+
+    };
 
     static int square_to_bit(int square);
     static int bit_to_square(int bit);

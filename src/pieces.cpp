@@ -104,7 +104,7 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     attacks |= south_attacks;
     attacks |= west_attacks;
 
-    return attacks;
+    return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE ? w_bb : b_bb));
 
 //     // condition stops all directions when we see a piece.
 

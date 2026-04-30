@@ -1,6 +1,8 @@
 #include "bitboardhelper.hpp"
 #include "util.hpp"
 
+#include <cmath>
+
 /* MANIPULATION */
 
 int BitboardHelper::square_to_bit(int square) {
@@ -29,6 +31,8 @@ bool BitboardHelper::get_bit(uint64_t b, int bit) {
 
 uint8_t BitboardHelper::get_first_bit(uint64_t b) {
     
+    /* Return the first bit encountered in a bitboard. */
+
     for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
         if (b & (1ULL << i)) return i;
     }
@@ -57,16 +61,10 @@ uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t w_bb,
     uint64_t north_attacks = 0ULL;
     uint8_t north_offset = 8;
 
-    // uint8_t i = 0;
-    // while ((!(w_bb & north_attacks) || !(b_bb & north_attacks)) && (piece << (north_offset*i))) {
-    //     north_attacks |= (piece << (north_offset + (north_offset*i)));
-    //     i++;
-    // }
-
     for (uint8_t i = 0; i < GRID_SZ; i++) {
-        if (w_bb & north_attacks) return north_attacks;
-        if (b_bb & north_attacks) return north_attacks;
-        if (!(piece << (north_offset*i))) return north_attacks;
+        if (w_bb & north_attacks) break;
+        if (b_bb & north_attacks) break;
+        if (!(piece << (north_offset*i))) break;
 
         north_attacks |= (piece << (north_offset + (north_offset*i)));
 
@@ -80,46 +78,34 @@ uint64_t BitboardHelper::get_viable_south_attacks(uint64_t piece, uint64_t w_bb,
     uint8_t south_offset = 8;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
-        if (w_bb & south_attacks) return south_attacks;
-        if (b_bb & south_attacks) return south_attacks;
-        if (!(piece >> (south_offset*i))) return south_attacks;
+        if (w_bb & south_attacks) break;
+        if (b_bb & south_attacks) break;
+        if (!(piece >> (south_offset*i))) break;
 
         south_attacks |= (piece >> (south_offset + (south_offset*i)));
 
     }
 
-    // not 100% on this.
     return south_attacks;
 }
 
 uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
     uint64_t west_attacks = 0ULL;
     uint8_t west_offset = 1;
-
-    // need to be careful with this mapping without the square names showing, super dodge.
     
-    uint8_t piece_bit = BitboardHelper::get_first_bit();
+    // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
+    uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
+    float rank_to_mask = float(piece_bit) / float(GRID_SZ);
+    uint8_t index = std::ceil(rank_to_mask);
 
-    // TODO:
-    // pass in piece->bit in parent function.                                   <-------------------
-    // divide bit by 8 with integer div gives the rank above hehe.              <-------------------
-    // index into vector of rank masks held hopefully in bbhelper hehehe.       <-------------------
-
-    // these mask names mean nothing ill be real.
     for (uint8_t i = 0; i < GRID_SZ; i++) {
+        if (w_bb & west_attacks) break;
+        if (b_bb & west_attacks) break;
+        if (!(piece << (west_offset*i))) break;
+
         west_attacks |= (piece << (west_offset + (west_offset*i)));
-
-        // think this needs to dynamically be the rank above the rook pos.
-        if (w_bb & west_attacks) return (west_attacks & ~rank_0);
-        // diff mask for diff color i think, maybe not actually.
-
-        if (b_bb & west_attacks) return (west_attacks & ~rank_0);
-        if (!(piece << (west_offset*i))) return (west_attacks & ~rank_0);
-
-        // these masks are fucked from the other person pov, might not be actually. 
-        // east will handle west for black and vice versa i believe.
-
-
     }
-    return (west_attacks & ~rank_0);
+    
+    return (west_attacks & ~(BitboardHelper::rank_masks[index]));
 }
