@@ -105,11 +105,12 @@ uint64_t Piece::get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
 
     uint8_t piece_file;
     uint8_t attack_file;
+        
+    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
         // this will be until we hit the end of the board, always 7 if no pieces in the way.
-        piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
         attack_file = piece_file - i;
 
         if (w_bb & north_west_attacks) break;
@@ -158,10 +159,12 @@ uint64_t Piece::get_south_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
     uint8_t piece_file;
     uint8_t attack_file;
 
+    // Perhaps a bitboard function.
+    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
         // this will be until we hit the end of the board, always 7 if no pieces in the way.
-        piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
         attack_file = piece_file - i;
 
         if (w_bb & north_west_attacks) break;
@@ -201,6 +204,7 @@ uint64_t Piece::get_south_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
     }
     return north_east_attacks;
 }
+
 /* ROOK */
 
 uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
