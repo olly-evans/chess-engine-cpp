@@ -27,6 +27,13 @@ bool BitboardHelper::get_bit(uint64_t b, int bit) {
     return b & (1ULL << bit);
 }
 
+uint8_t BitboardHelper::get_first_bit(uint64_t b) {
+    
+    for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (b & (1ULL << i)) return i;
+    }
+}
+
 /* CHECKS */
 
 bool BitboardHelper::has_friendly_piece(uint64_t friendly_bb, int bit) {
@@ -89,22 +96,14 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
     uint64_t west_attacks = 0ULL;
     uint8_t west_offset = 1;
 
-    // need the bit. convert bit to rank. rank + or -1 depending on color i think
+    // need to be careful with this mapping without the square names showing, super dodge.
+    
+    uint8_t piece_bit = BitboardHelper::get_first_bit();
 
-
-    uint64_t rank_0 = 0xFF00000000000000;
-    uint64_t rank_1 = 0x00FF000000000000;
-    uint64_t rank_2 = 0x0000FF0000000000;
-    uint64_t rank_3 = 0x000000FF00000000;
-    uint64_t rank_4 = 0x00000000FF000000;
-    uint64_t rank_5 = 0x0000000000FF0000;
-    uint64_t rank_6 = 0x000000000000FF00;
-    uint64_t rank_7 = 0x00000000000000FF;
-    // perhaps we can use i here actually???
-    // to get the correct rank, dont think so acc.
-
-    // divide bit by 8 with integer div gives the rank above hehe. <---------------
-    // index into vector of rank masks hehehe.
+    // TODO:
+    // pass in piece->bit in parent function.                                   <-------------------
+    // divide bit by 8 with integer div gives the rank above hehe.              <-------------------
+    // index into vector of rank masks held hopefully in bbhelper hehehe.       <-------------------
 
     // these mask names mean nothing ill be real.
     for (uint8_t i = 0; i < GRID_SZ; i++) {
@@ -117,7 +116,8 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
         if (b_bb & west_attacks) return (west_attacks & ~rank_0);
         if (!(piece << (west_offset*i))) return (west_attacks & ~rank_0);
 
-        // these masks are fucked from the other person pov, might not be actually. east will handle this for black and vice versa i believe.
+        // these masks are fucked from the other person pov, might not be actually. 
+        // east will handle west for black and vice versa i believe.
 
 
     }
