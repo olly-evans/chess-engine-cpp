@@ -105,7 +105,7 @@ void Board::init() {
 
     // What needs to happen if fen string is invalid.
 
-    std::string fen = "q3q2q/8/2q5/8/8/5Q2/8/Q2Q3Q w - - 0 1";
+    std::string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
     init_position_from_fen(fen);
 }
 
@@ -245,6 +245,8 @@ void Board::render_bitboard_window() {
 
 void Board::run() {
     while (main_window.isOpen()) {
+        std::cout << is_whites_turn << "\n";
+        break;
         handle_events();
         render();
     }
@@ -312,7 +314,7 @@ void Board::on_left_mouse_press() {
     /* This doesn't really use Player class yet. Perhaps it doesn't need to
     *  but may be useful later.
     */
-
+    std::cout << is_whites_turn << "\n";
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
@@ -354,6 +356,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // bool can_black_move()
 
     // If not your turn you can't select a piece.
+    
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 

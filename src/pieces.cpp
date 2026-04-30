@@ -54,7 +54,23 @@ void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleSha
 
 /* PAWN */
 
-uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+
+    // if we havnt moved. can move 8*2.
+
+    uint64_t pawn = 1ULL << this->bit;
+    uint64_t attacks = 0ULL;
+
+    // get_pawn_north_attacks();
+        // are we on the start rank. tricksy.
+    // get_pawn_diagonal_attacks();
+
+    attacks |= (pawn << 8);
+
+    // return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE) ? w_bb : b_bb);
+
+    return attacks;
+};
 
 /* KNIGHT */
 
