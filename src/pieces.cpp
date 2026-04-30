@@ -89,16 +89,10 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t rook = (1ULL << this->bit);
     uint64_t attacks = 0ULL;
 
-    // There is only trial and error behind these masks I'll be real.
-
-    // condition into bitboardhelper func for sure.
-
-    // while attacks not including other pieces.
-
-    uint64_t north_attacks = BitboardHelper::get_viable_north_attacks(rook, w_bb, b_bb);
-    uint64_t south_attacks = BitboardHelper::get_viable_south_attacks(rook, w_bb, b_bb);
-    uint64_t west_attacks = BitboardHelper::get_viable_west_attacks(rook, w_bb, b_bb);
-    uint64_t east_attacks = BitboardHelper::get_viable_east_attacks(rook, w_bb, b_bb);
+    uint64_t north_attacks = get_viable_north_attacks(rook, w_bb, b_bb);
+    uint64_t south_attacks = get_viable_south_attacks(rook, w_bb, b_bb);
+    uint64_t west_attacks = get_viable_west_attacks(rook, w_bb, b_bb);
+    uint64_t east_attacks = get_viable_east_attacks(rook, w_bb, b_bb);
 
     attacks |= north_attacks;
     attacks |= south_attacks;
@@ -106,31 +100,80 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     attacks |= east_attacks;
 
     return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE ? w_bb : b_bb));
-
-//     // condition stops all directions when we see a piece.
-
-
-//     while (!(w_bb & attacks) | !(b_bb & attacks)) {
-//         // condition isn't met for a while, number doesnt change after first iteration.
-
-
-//         // need to stop individually when condition met.
-//         // and stop in direction when friendly piece hit too, not at the end.
-
-//         // some mix of ifs and continue to stop directions at pieces i think.
-        
-    // get_viable_north_attacks(); // returns a bitboard then or with attacks.
-    // get_viable_south_offsets(); 
-
-
-//         // attacks |= (rook & NOT_H_FILE) << (hor_offset + i);
-//         // attacks |= (rook << (vert_offset + (vert_offset*i)));
-
-//         // attacks |= (rook & NOT_A_FILE) >> hor_offset + i;
-//         // attacks |= (rook >> (vert_offset + (vert_offset*i)));
-//    }
-
 };
+
+uint64_t Piece::get_viable_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t north_attacks = 0ULL;
+    uint8_t north_offset = 8;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+        if (w_bb & north_attacks) break;
+        if (b_bb & north_attacks) break;
+        if (!(piece << (north_offset*i))) break;
+
+        north_attacks |= (piece << (north_offset + (north_offset*i)));
+
+    }
+    return north_attacks;
+}
+
+uint64_t Piece::get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t south_attacks = 0ULL;
+    uint8_t south_offset = 8;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+        if (w_bb & south_attacks) break;
+        if (b_bb & south_attacks) break;
+        if (!(piece >> (south_offset*i))) break;
+
+        south_attacks |= (piece >> (south_offset + (south_offset*i)));
+
+    }
+
+    return south_attacks;
+}
+
+uint64_t Piece::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t west_attacks = 0ULL;
+    uint8_t west_offset = 1;
+    
+    // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
+    uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
+    uint8_t mask_index = (piece_bit / GRID_SZ) + 1;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+        if (w_bb & west_attacks) break;
+        if (b_bb & west_attacks) break;
+        if (!(piece << (west_offset*i))) break; // Can we continue shifting? If not then off the board.
+
+        west_attacks |= (piece << (west_offset + (west_offset*i)));
+    }
+    
+    return (west_attacks & ~(BitboardHelper::rank_masks[mask_index]));
+}
+
+uint64_t Piece::get_viable_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t east_attacks = 0ULL;
+    uint8_t east_offset = 1;
+    
+    // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
+    uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
+    uint8_t mask_index = (piece_bit / GRID_SZ) - 1;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+        if (w_bb & east_attacks) break;
+        if (b_bb & east_attacks) break;
+        if (!(piece >> (east_offset*i))) break; // Can we continue shifting? If not then off the board.
+
+        east_attacks |= (piece >> (east_offset + (east_offset*i)));
+    }
+    
+    return (east_attacks & ~(BitboardHelper::rank_masks[mask_index]));
+}
 
 /* QUEEN */
 uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};

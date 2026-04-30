@@ -42,10 +42,10 @@ public:
     
     /* MOVE GENERATION */
 
-    static uint64_t get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy);
-    static uint64_t get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    static uint64_t get_viable_west_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
-    static uint64_t get_viable_east_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
+    // static uint64_t get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy);
+    // static uint64_t get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    // static uint64_t get_viable_west_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
+    // static uint64_t get_viable_east_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
 
 
 };
