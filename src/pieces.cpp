@@ -61,11 +61,34 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t pawn = 1ULL << this->bit;
     uint64_t attacks = 0ULL;
 
+    // pawn isn't always gunna be on the first rank.
+    bool moving_north = (pawn & BitboardHelper::rank_masks[1]) ? true : false;
+
+    // two constant fen strings of start position.
+
+    // going to have to map the square names to bits/squares and match them???
+    // bitboard needs to not change regardless of black/white, white always at bottom, black always at top or vice-versa.
+
+    // don't have an idea to decipher which way the pawns can move yet.
+    if (moving_north) {
+        // shift <<
+        // get_pawn_north_attacks()
+        attacks |= (pawn << 8);
+
+    } else if (!moving_north) {
+        // shift >>
+        attacks |= (pawn >> 8);
+        // get_pawn_south_attacks();
+
+    }
+        
+
+    // which way can i move/which way do i shift?
+
     // get_pawn_north_attacks();
         // are we on the start rank. tricksy.
     // get_pawn_diagonal_attacks();
 
-    attacks |= (pawn << 8);
 
     // return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE) ? w_bb : b_bb);
 

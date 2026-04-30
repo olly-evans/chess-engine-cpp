@@ -245,8 +245,6 @@ void Board::render_bitboard_window() {
 
 void Board::run() {
     while (main_window.isOpen()) {
-        std::cout << is_whites_turn << "\n";
-        break;
         handle_events();
         render();
     }
