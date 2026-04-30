@@ -50,11 +50,7 @@ uint64_t BitboardHelper::remove_friendly_pieces(uint64_t attacks, uint64_t frien
 
 /* PIECE MOVEMENT */
 
-// Maybe this will be useful, condition for north square valid attack.
-
-// bool BitboardHelper::north_square_valid(uint64_t piece, uint64_t north_attacks, uint64_t w_bb, uint64_t b_bb) {
-//     return (!(w_bb & north_attacks) | !(b_bb & north_attacks)) && (piece << (8*i);
-// }
+/* MAKE ALL THIS PART OF PIECE */
 
 uint64_t BitboardHelper::get_viable_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
@@ -107,4 +103,24 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
     }
     
     return (west_attacks & ~(BitboardHelper::rank_masks[mask_index]));
+}
+
+uint64_t BitboardHelper::get_viable_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t east_attacks = 0ULL;
+    uint8_t east_offset = 1;
+    
+    // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
+    uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
+    uint8_t mask_index = (piece_bit / GRID_SZ) - 1;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+        if (w_bb & east_attacks) break;
+        if (b_bb & east_attacks) break;
+        if (!(piece >> (east_offset*i))) break; // Can we continue shifting? If not then off the board.
+
+        east_attacks |= (piece >> (east_offset + (east_offset*i)));
+    }
+    
+    return (east_attacks & ~(BitboardHelper::rank_masks[mask_index]));
 }

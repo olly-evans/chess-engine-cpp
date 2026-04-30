@@ -98,11 +98,12 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t north_attacks = BitboardHelper::get_viable_north_attacks(rook, w_bb, b_bb);
     uint64_t south_attacks = BitboardHelper::get_viable_south_attacks(rook, w_bb, b_bb);
     uint64_t west_attacks = BitboardHelper::get_viable_west_attacks(rook, w_bb, b_bb);
-
+    uint64_t east_attacks = BitboardHelper::get_viable_east_attacks(rook, w_bb, b_bb);
 
     attacks |= north_attacks;
     attacks |= south_attacks;
     attacks |= west_attacks;
+    attacks |= east_attacks;
 
     return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE ? w_bb : b_bb));
 
