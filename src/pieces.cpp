@@ -80,7 +80,56 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
 /* BISHOP */
 
-uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+    uint64_t rook = (1ULL << this->bit);
+    uint64_t attacks = 0ULL;
+
+    uint64_t north_west_attacks = get_north_west_attacks(rook, w_bb, b_bb);
+    // uint64_t north_east_attacks = get_viable_north_east_attacks(rook, w_bb, b_bb);
+
+    // uint64_t south_west_attacks = get_viable_south_west_attacks(rook, w_bb, b_bb);
+    // uint64_t south_east_attacks = get_viable_south_east_attacks(rook, w_bb, b_bb);
+
+    attacks |= north_west_attacks;
+    // attacks |= north_east_attacks;
+    // attacks |= south_west_attacks;
+    // attacks |= south_east_attacks;
+
+    return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE) ? w_bb : b_bb);
+};
+
+uint64_t Piece::get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t north_west_attacks = 0ULL;
+    const uint8_t north_west_offset = 9;
+
+
+    uint8_t piece_file;
+    uint8_t attack_file;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+
+        // this will be until we hit the end of the board, always 7 if no pieces in the way.
+        piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+        attack_file = piece_file - i; // i goes too high.
+
+        if (w_bb & north_west_attacks) break;
+        if (b_bb & north_west_attacks) break;
+        if (!(piece << (north_west_offset*i))) break;
+
+        if (attack_file == 0) break;
+
+        north_west_attacks |= (piece << (north_west_offset + (north_west_offset*i)));
+    }
+
+    
+    // while (mask_file < GRID_SZ - 1) {
+    //     north_west_attacks &= ~BitboardHelper::file_masks[mask_file];
+    //     mask_file++;
+    // }
+
+    return north_west_attacks;
+}
 
 /* ROOK */
 
@@ -89,10 +138,10 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t rook = (1ULL << this->bit);
     uint64_t attacks = 0ULL;
 
-    uint64_t north_attacks = get_viable_north_attacks(rook, w_bb, b_bb);
-    uint64_t south_attacks = get_viable_south_attacks(rook, w_bb, b_bb);
-    uint64_t west_attacks = get_viable_west_attacks(rook, w_bb, b_bb);
-    uint64_t east_attacks = get_viable_east_attacks(rook, w_bb, b_bb);
+    uint64_t north_attacks = get_north_attacks(rook, w_bb, b_bb);
+    uint64_t south_attacks = get_south_attacks(rook, w_bb, b_bb);
+    uint64_t west_attacks = get_west_attacks(rook, w_bb, b_bb);
+    uint64_t east_attacks = get_east_attacks(rook, w_bb, b_bb);
 
     attacks |= north_attacks;
     attacks |= south_attacks;
@@ -102,7 +151,7 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE ? w_bb : b_bb));
 };
 
-uint64_t Piece::get_viable_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_attacks = 0ULL;
     uint8_t north_offset = 8;
@@ -118,7 +167,7 @@ uint64_t Piece::get_viable_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t
     return north_attacks;
 }
 
-uint64_t Piece::get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t south_attacks = 0ULL;
     uint8_t south_offset = 8;
@@ -131,11 +180,10 @@ uint64_t Piece::get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t
         south_attacks |= (piece >> (south_offset + (south_offset*i)));
 
     }
-
     return south_attacks;
 }
 
-uint64_t Piece::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t west_attacks = 0ULL;
     uint8_t west_offset = 1;
@@ -155,14 +203,14 @@ uint64_t Piece::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t 
     return (west_attacks & ~(BitboardHelper::rank_masks[mask_index]));
 }
 
-uint64_t Piece::get_viable_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t east_attacks = 0ULL;
     uint8_t east_offset = 1;
     
     // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
     uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
-    uint8_t mask_index = (piece_bit / GRID_SZ) - 1;
+    uint8_t mask_index = (piece_bit / GRID_SZ) - 1; // Minus for east.
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
         if (w_bb & east_attacks) break;

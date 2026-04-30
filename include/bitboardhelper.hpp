@@ -13,16 +13,28 @@ public:
 
     // Rank masks.
     inline static std::vector<uint64_t> rank_masks = {
-        0x00000000000000FF, // top, 7
+        0x00000000000000FF, // bottom, 0, 1 rank
         0x000000000000FF00,
         0x0000000000FF0000,
         0x00000000FF000000,
         0x000000FF00000000,
         0x0000FF0000000000,
         0x00FF000000000000,
-        0xFF00000000000000 // bottom, 0
+        0xFF00000000000000 // top, 7, 8th rank. white pov. ik im sorry.
 
     };
+
+    inline static std::vector<uint64_t> file_masks = {
+        0x0101010101010101ULL, // File A
+        0x0202020202020202ULL, // File B
+        0x0404040404040404ULL, // File C
+        0x0808080808080808ULL, // File D
+        0x1010101010101010ULL, // File E
+        0x2020202020202020ULL, // File F
+        0x4040404040404040ULL, // File G
+        0x8080808080808080ULL  // File H
+    };
+ 
 
     static int square_to_bit(int square);
     static int bit_to_square(int bit);
@@ -36,16 +48,6 @@ public:
 
 
     /* CHECKS */
-    static bool has_friendly_piece(uint64_t friendly_bb, int square);
+    static bool has_friendly_piece(uint64_t friendly_bb, int bit);
     static uint64_t remove_friendly_pieces(uint64_t attacks, uint64_t friendly);
-
-    
-    /* MOVE GENERATION */
-
-    // static uint64_t get_viable_north_attacks(uint64_t piece, uint64_t white_occupancy, uint64_t black_occupancy);
-    // static uint64_t get_viable_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    // static uint64_t get_viable_west_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
-    // static uint64_t get_viable_east_attacks(uint64_t rook, uint64_t w_bb, uint64_t b_bb);
-
-
 };
