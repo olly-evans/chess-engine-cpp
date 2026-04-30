@@ -96,16 +96,15 @@ uint64_t BitboardHelper::get_viable_west_attacks(uint64_t piece, uint64_t w_bb, 
     
     // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
     uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
-    float rank_to_mask = float(piece_bit) / float(GRID_SZ);
-    uint8_t index = std::ceil(rank_to_mask);
+    uint8_t mask_index = (piece_bit / GRID_SZ) + 1;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
         if (w_bb & west_attacks) break;
         if (b_bb & west_attacks) break;
-        if (!(piece << (west_offset*i))) break;
+        if (!(piece << (west_offset*i))) break; // Can we continue shifting? If not then off the board.
 
         west_attacks |= (piece << (west_offset + (west_offset*i)));
     }
     
-    return (west_attacks & ~(BitboardHelper::rank_masks[index]));
+    return (west_attacks & ~(BitboardHelper::rank_masks[mask_index]));
 }
