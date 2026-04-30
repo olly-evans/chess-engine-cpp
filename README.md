@@ -35,9 +35,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - perhaps draw circles for attacks instead of the fillcolors, will mean i dont have to fuck with squares.
 
-- finish turn implementations.
-- players color determines who can move.
-
 - need global position to load fen.
 
 - is_white_turn in moves bit.
@@ -53,3 +50,7 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
 
 - highlights shouldnt be full square, don't touch squares vector, make temp one whilst highlighting.
+  then can just render the squares once but use same logic for highlight vector.
+
+- change fenparser to load black from top and white from bottom regardless. // lord.
+

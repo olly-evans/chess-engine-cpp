@@ -173,6 +173,11 @@ void Board::init_position_from_fen(std::string fen) {
 
             // Convert fen to piece type bitboards.
             uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
+
+            // so for white we just init as is.
+            // black we need to init to 64 - bit
+
+            // gunna be interesting to see how this affects this piece movement.
             BitboardHelper::set_bit_by_ref(bitboard, bit);
         }
     }
@@ -312,7 +317,6 @@ void Board::on_left_mouse_press() {
     /* This doesn't really use Player class yet. Perhaps it doesn't need to
     *  but may be useful later.
     */
-    std::cout << is_whites_turn << "\n";
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
