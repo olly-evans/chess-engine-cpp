@@ -298,7 +298,34 @@ uint64_t Piece::get_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 }
 
 /* QUEEN */
-uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {};
+
+uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t queen = (1ULL << this->bit);
+    uint64_t attacks = 0ULL;
+
+    uint64_t north_attacks = get_north_attacks(queen, w_bb, b_bb);
+    uint64_t south_attacks = get_south_attacks(queen, w_bb, b_bb);
+    uint64_t west_attacks = get_west_attacks(queen, w_bb, b_bb);
+    uint64_t east_attacks = get_east_attacks(queen, w_bb, b_bb);
+
+    uint64_t north_west_attacks = get_north_west_attacks(queen, w_bb, b_bb);
+    uint64_t north_east_attacks = get_north_east_attacks(queen, w_bb, b_bb);
+    uint64_t south_west_attacks = get_south_west_attacks(queen, w_bb, b_bb);
+    uint64_t south_east_attacks = get_south_east_attacks(queen, w_bb, b_bb);
+
+    attacks |= north_attacks;
+    attacks |= south_attacks;
+    attacks |= west_attacks;
+    attacks |= east_attacks;
+
+    attacks |= north_west_attacks;
+    attacks |= north_east_attacks;
+    attacks |= south_west_attacks;
+    attacks |= south_east_attacks;
+
+    return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE ? w_bb : b_bb));
+};
 
 /* KING */
 
