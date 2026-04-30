@@ -105,7 +105,7 @@ void Board::init() {
 
     // What needs to happen if fen string is invalid.
 
-    std::string fen = "8/8/4k3/4b3/4P3/3K4/2B5/8 w - - 0 1";
+    std::string fen = "b2b2b1/1b2b2b/8/8/8/8/B2B2B1/1B2B2B w - - 0 1";
     init_position_from_fen(fen);
 }
 

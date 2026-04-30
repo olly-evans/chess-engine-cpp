@@ -85,13 +85,13 @@ uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t attacks = 0ULL;
 
     uint64_t north_west_attacks = get_north_west_attacks(rook, w_bb, b_bb);
-    // uint64_t north_east_attacks = get_viable_north_east_attacks(rook, w_bb, b_bb);
+    uint64_t north_east_attacks = get_north_east_attacks(rook, w_bb, b_bb);
 
     // uint64_t south_west_attacks = get_viable_south_west_attacks(rook, w_bb, b_bb);
     // uint64_t south_east_attacks = get_viable_south_east_attacks(rook, w_bb, b_bb);
 
     attacks |= north_west_attacks;
-    // attacks |= north_east_attacks;
+    attacks |= north_east_attacks;
     // attacks |= south_west_attacks;
     // attacks |= south_east_attacks;
 
@@ -103,7 +103,6 @@ uint64_t Piece::get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
     uint64_t north_west_attacks = 0ULL;
     const uint8_t north_west_offset = 9;
 
-
     uint8_t piece_file;
     uint8_t attack_file;
 
@@ -111,24 +110,44 @@ uint64_t Piece::get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
 
         // this will be until we hit the end of the board, always 7 if no pieces in the way.
         piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
-        attack_file = piece_file - i; // i goes too high.
+        attack_file = piece_file - i;
 
         if (w_bb & north_west_attacks) break;
         if (b_bb & north_west_attacks) break;
         if (!(piece << (north_west_offset*i))) break;
 
+         // Stop generating attacks if we get to the far left file.
         if (attack_file == 0) break;
 
         north_west_attacks |= (piece << (north_west_offset + (north_west_offset*i)));
     }
-
-    
-    // while (mask_file < GRID_SZ - 1) {
-    //     north_west_attacks &= ~BitboardHelper::file_masks[mask_file];
-    //     mask_file++;
-    // }
-
     return north_west_attacks;
+}
+
+uint64_t Piece::get_north_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t north_east_attacks = 0ULL;
+    const uint8_t north_east_offset = 7;
+
+    uint8_t piece_file;
+    uint8_t attack_file;
+    
+    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+
+    for (uint8_t i = 0; i < GRID_SZ; i++) {
+
+        attack_file = piece_file + i;
+
+        if (w_bb & north_east_attacks) break;
+        if (b_bb & north_east_attacks) break;
+        if (!(piece << (north_east_offset*i))) break;
+
+         // Stop generating attacks if we get to the far right file.
+        if (attack_file == GRID_SZ - 1) break;
+
+        north_east_attacks |= (piece << (north_east_offset + (north_east_offset*i)));
+    }
+    return north_east_attacks;
 }
 
 /* ROOK */
