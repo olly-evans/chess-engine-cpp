@@ -391,11 +391,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
 
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
-    // piece->highlight_legal_moves(piece->attacks, squares);
 
-
-
-    //perhaps could index into squares with the generated attacks and draw a circle there?
     return piece;
 }
 

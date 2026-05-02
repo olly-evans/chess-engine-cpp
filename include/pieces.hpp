@@ -39,10 +39,6 @@ public:
     void draw(sf::RenderWindow& window);
 
     virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
-    void highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squareuint64_t);
-
-
-
 
     uint64_t get_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);

@@ -43,15 +43,6 @@ void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-void Piece::highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squares) {
-    
-    for (int bit = 0; bit < GRID_NUM_SQUARES; bit++) {
-        if (attacks & (1ULL << bit)) {
-            squares[bit].setFillColor(TURQOISE);
-        }
-    }
-}
-
 /* PAWN */
 
 uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
