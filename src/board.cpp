@@ -78,7 +78,8 @@ void Board::init() {
     // this kinda doesn't matter right now.
     Board::init_players();
 
-    
+    // okey so in here somehwere we can find the players and see if we need to flip the board
+    // graphically. bitboards const.
 
     // Board::init_bitboards_from_fen(fen);
     bitboards = {
@@ -365,6 +366,8 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
     piece->highlight_legal_moves(piece->attacks, squares);
+
+    //perhaps could index into squares with the generated attacks and draw a circle there?
     return piece;
 }
 

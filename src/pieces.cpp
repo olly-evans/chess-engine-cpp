@@ -64,28 +64,64 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     
     if (this->color == Color::WHITE) {
         // shift <<
-        // get_pawn_north_attacks()
-        attacks |= (pawn << 8);
-
+        // get_white_pawn_attacks.
+        attacks = get_white_pawn_attacks(pawn, b_bb);
+        // enpassant
+        // promotions.
+        return BitboardHelper::remove_friendly_pieces(attacks, w_bb);
     } else {
         // shift >>
-        attacks |= (pawn >> 8);
-        // get_pawn_south_attacks();
 
+        // get_black_pawn_attacks.
+        attacks = get_black_pawn_attacks(pawn , w_bb);
+        return BitboardHelper::remove_friendly_pieces(attacks, b_bb);
     }
-        
+    
+};
 
-    // which way can i move/which way do i shift?
+uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb) {
+    
+    /* White pawns as of right now will always march in the northern direction. */
 
-    // get_pawn_north_attacks();
-        // are we on the start rank. tricksy.
-    // get_pawn_diagonal_attacks();
+    uint64_t attacks = 0ULL;
+    uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[1];
 
+    attacks |= (pawn << 8);
 
-    // return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE) ? w_bb : b_bb);
+    if (pawn & (white_pawn_start_rank)) {
+        attacks |= (pawn << 16);
+    }
+
+    // if black piece on 9 or 7, we can attacks these squares.
+
+    if (b_bb & (pawn << 9)) attacks |= (pawn << 9);
+    if (b_bb & (pawn << 7)) attacks |= (pawn << 7);
+
 
     return attacks;
-};
+}
+
+uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb) {
+    
+    /* White pawns as of right now will always march in the northern direction. */
+
+    uint64_t attacks = 0ULL;
+    uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[6];
+
+    attacks |= (pawn >> 8);
+
+    if (pawn & (white_pawn_start_rank)) {
+        attacks |= (pawn >> 16);
+    }
+
+    // if black piece on 9 or 7, we can attacks these squares.
+
+    if (w_bb & (pawn >> 9)) attacks |= (pawn >> 9);
+    if (w_bb & (pawn >> 7)) attacks |= (pawn >> 7);
+
+
+    return attacks;
+}
 
 /* KNIGHT */
 

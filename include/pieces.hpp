@@ -42,7 +42,7 @@ public:
     void highlight_legal_moves(uint64_t attacks, std::vector<sf::RectangleShape>& squareuint64_t);
 
 
-    // This is here I guess, needed for rooks and queens so eh.
+
 
     uint64_t get_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
@@ -64,8 +64,11 @@ public:
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
     }
+
     uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
+    uint64_t get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb);
+    uint64_t get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb);
 };
 
 class Knight : public Piece {
