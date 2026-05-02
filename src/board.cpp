@@ -227,17 +227,42 @@ void Board::create_piece(const FenCharInfo& info, uint8_t bit) {
 
 void Board::render() {
     render_main_window();
-    if (Debug::enabled) render_bitboard_window(); // dodge.
+    if (Debug::enabled) render_bitboard_window();
 }
 
 void Board::render_main_window() {
     main_window.clear();
+
+
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
+    if (selected_piece) render_attack_highlights();
 
     // render_board_coords();
 
     for (auto& piece : pieces) {piece->draw(main_window);}
     main_window.display();
+}
+
+void Board::render_attack_highlights() {
+
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (!BitboardHelper::get_bit(selected_piece->attacks, i)) continue;
+        uint8_t square = GRID_NUM_SQUARES - i - 1;
+
+        sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
+        sf::Vector2f pos = normalised_pos * (float)board_square_size;
+
+        pos.x += (float)board_square_size / 4;
+        pos.y += (float)board_square_size / 4;
+        std::cout << pos.x <<  ", " << pos.y << "\n";
+
+        sf::CircleShape circle;
+        circle.setPosition(pos);
+        circle.setRadius(board_square_size/4.f);
+        circle.setFillColor(TURQOISE);
+
+        main_window.draw(circle);
+    }
 }
 
 void Board::render_bitboard_window() {
@@ -363,9 +388,12 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 
+
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
-    piece->highlight_legal_moves(piece->attacks, squares);
+    // piece->highlight_legal_moves(piece->attacks, squares);
+
+
 
     //perhaps could index into squares with the generated attacks and draw a circle there?
     return piece;

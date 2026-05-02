@@ -50,4 +50,6 @@ public:
     /* CHECKS */
     static bool has_friendly_piece(uint64_t friendly_bb, int bit);
     static uint64_t remove_friendly_pieces(uint64_t attacks, uint64_t friendly);
+
+    static uint8_t get_total_active_bits(uint64_t b);
 };

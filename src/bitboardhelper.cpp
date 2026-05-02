@@ -48,6 +48,15 @@ uint64_t BitboardHelper::remove_friendly_pieces(uint64_t attacks, uint64_t frien
     return attacks &= ~friendly;
 }
 
+uint8_t BitboardHelper::get_total_active_bits(uint64_t b) {
+
+        uint8_t count = 0;
+        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+            if (b & (1ULL << i)) count++;
+        }
+        return count;
+    }
+    
 /* PIECE MOVEMENT */
 
 /* MAKE ALL THIS PART OF PIECE */
