@@ -49,8 +49,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
 
-- highlights shouldnt be full square, don't touch squares vector, make temp one whilst highlighting.
-  then can just render the squares once but use same logic for highlight vector.
-
-- change fenparser to load black from top and white from bottom regardless. // lord.
+ - make attacks on other pieces highlight full square. have this capability.
 

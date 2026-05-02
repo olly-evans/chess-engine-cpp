@@ -57,6 +57,8 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
         // shift <<
         // get_white_pawn_attacks.
         attacks = get_white_pawn_attacks(pawn, b_bb);
+        this->captures = attacks & b_bb;
+
         // enpassant
         // promotions.
         return BitboardHelper::remove_friendly_pieces(attacks, w_bb);
@@ -65,8 +67,12 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
         // get_black_pawn_attacks.
         attacks = get_black_pawn_attacks(pawn , w_bb);
+        this->captures = attacks & w_bb;
+
         return BitboardHelper::remove_friendly_pieces(attacks, b_bb);
     }
+
+    
     
 };
 

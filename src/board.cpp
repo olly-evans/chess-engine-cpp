@@ -243,21 +243,26 @@ void Board::render_main_window() {
     main_window.display();
 }
 
+// selected piece highlights.
 void Board::render_attack_highlights() {
 
-    float radius_percent_of_squares = 0.25;
+    float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
     float radius = board_square_size * radius_percent_of_squares;
     
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+
         if (!BitboardHelper::get_bit(selected_piece->attacks, i)) continue;
+
         uint8_t square = GRID_NUM_SQUARES - i - 1;
+
+        if (BitboardHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
 
-        // Should think about 
-        pos.x += (float)board_square_size * 0.25;
-        pos.y += (float)board_square_size * 0.25;
+        // Offset to centre circle in square. Top left placed at pos.
+        pos.x += ((float)board_square_size / 2) - radius;
+        pos.y += ((float)board_square_size / 2) - radius;
 
         sf::CircleShape circle;
         circle.setPosition(pos);
@@ -353,9 +358,6 @@ void Board::on_left_mouse_press() {
         return;
     }
 
-    // Save this bit so we can reset the color later in deselect_piece().
-    // could call the square init function if this gets hairy.
-
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit)) {
         squares[selected_piece->bit].setFillColor(is_square_black(selected_piece->bit) ? MEDIUM_BROWN : WARM_CREAM);
@@ -373,8 +375,14 @@ void Board::on_left_mouse_press() {
     uint8_t old_bit = selected_piece->bit;
 
     handle_piece_move(clicked_bit);
-    squares[old_bit].setFillColor(is_square_black(old_bit) ? MEDIUM_BROWN : WARM_CREAM);
 
+    squares[old_bit].setFillColor(is_square_black(old_bit) ? MEDIUM_BROWN : WARM_CREAM);
+    
+    for (int i = 0; i< GRID_NUM_SQUARES; i++) {
+        if (BitboardHelper::get_bit(selected_piece->captures, i))
+            squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+    }
+    
     selected_piece = nullptr;
     is_whites_turn = !is_whites_turn;
 }
