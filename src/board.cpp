@@ -363,22 +363,19 @@ void Board::on_left_mouse_press() {
 
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
-        std::cout << "click but not an attack, resetting..." << "\n";
         reset_move_and_capture_highlights(selected_piece->bit);
         return;
     }
 
-    // Will be executed if we have a selected piece and click on a valid attack square.
-
-    // if not your turn, dont show higlights.
 
     if (!is_whites_turn && selected_piece->color == Color::WHITE) return;
     if (is_whites_turn && selected_piece->color == Color::BLACK) return;
 
+    // Below be executed if we have a selected piece and click on a valid attack square.
+
     uint8_t old_bit = selected_piece->bit;
 
     handle_piece_move(clicked_bit);
-
     reset_move_and_capture_highlights(old_bit);
 
     is_whites_turn = !is_whites_turn;
@@ -393,8 +390,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // Works fine but will eventually be a dependancy nightmare, perhaps move checks to gamestate class.
     // bool can_white_move()
     // bool can_black_move()
-
-    // If not your turn you can't select a piece.
     
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
