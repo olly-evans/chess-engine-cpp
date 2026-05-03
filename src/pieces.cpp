@@ -57,7 +57,13 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
         // shift <<
         // get_white_pawn_attacks.
         attacks = get_white_pawn_attacks(pawn, b_bb);
-        this->captures = attacks & b_bb;
+
+        // all possible moves. can extract captures maybe.
+
+
+
+        // this is effectively moves not captures.
+        // this->captures = attacks & b_bb;
 
         // enpassant
         // promotions.
@@ -67,13 +73,9 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
         // get_black_pawn_attacks.
         attacks = get_black_pawn_attacks(pawn , w_bb);
-        this->captures = attacks & w_bb;
 
         return BitboardHelper::remove_friendly_pieces(attacks, b_bb);
     }
-
-    
-    
 };
 
 uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb) {
@@ -103,19 +105,22 @@ uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb) {
     /* White pawns as of right now will always march in the northern direction. */
 
     uint64_t attacks = 0ULL;
-    uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[6];
+    uint64_t black_pawn_start_rank = BitboardHelper::rank_masks[6];
 
-    attacks |= (pawn >> 8);
-
-    if (pawn & (white_pawn_start_rank)) {
-        attacks |= (pawn >> 16);
-    }
-
+    if (!(w_bb & (pawn >> 8))) {
+        attacks |= (pawn >> 8);
+        if (pawn & (black_pawn_start_rank) && !(w_bb & (pawn >> 16))) {
+            attacks |= (pawn >> 16);
+        }
+    } // moves equal zero.
+    
     // if black piece on 9 or 7, we can attacks these squares.
 
-    if (w_bb & (pawn >> 9)) attacks |= (pawn >> 9);
-    if (w_bb & (pawn >> 7)) attacks |= (pawn >> 7);
-
+    if (w_bb & (pawn >> 9)) {
+        this->captures |= (pawn >> 9);}
+    if (w_bb & (pawn >> 7)) {
+        this->captures |= (pawn >> 7);
+    }
 
     return attacks;
 }
