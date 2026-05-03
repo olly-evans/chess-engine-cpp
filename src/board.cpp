@@ -364,17 +364,7 @@ void Board::on_left_mouse_press() {
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
         std::cout << "click but not an attack, resetting..." << "\n";
-        squares[selected_piece->bit].setFillColor(is_square_black(selected_piece->bit) ? MEDIUM_BROWN : WARM_CREAM);
-        
-        // reset_capture_highlights.
-
-        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-            if (!BitboardHelper::get_bit(selected_piece->captures, i)) continue;
-
-            squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-        }
-
-        selected_piece = nullptr;
+        reset_move_and_capture_highlights(selected_piece->bit);
         return;
     }
 
@@ -389,15 +379,8 @@ void Board::on_left_mouse_press() {
 
     handle_piece_move(clicked_bit);
 
-    ////// 
-    squares[old_bit].setFillColor(is_square_black(old_bit) ? MEDIUM_BROWN : WARM_CREAM);
-    
-    for (int i = 0; i< GRID_NUM_SQUARES; i++) {
-        if (!BitboardHelper::get_bit(selected_piece->captures, i)) continue;
-        squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-    }
-    
-    selected_piece = nullptr;
+    reset_move_and_capture_highlights(old_bit);
+
     is_whites_turn = !is_whites_turn;
 }
 
@@ -423,10 +406,14 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     return piece;
 }
 
-void Board::deselect_piece(uint8_t old_bit) {
+void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
+    squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
+        
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (!BitboardHelper::get_bit(selected_piece->captures, i)) continue;
 
-    // Old bit is bit of piece we clicked on.
-    reset_square_color(old_bit);
+        squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+    }
     selected_piece = nullptr;
 }
 
