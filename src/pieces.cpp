@@ -83,13 +83,13 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb) {
     /* White pawns as of right now will always march in the northern direction. */
 
     uint64_t attacks = 0ULL;
+    this->captures = 0ULL;
+
     uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[1];
 
     // sometimes not updating captures or something. really dodgy on edges.
-    std::cout << this->bit << "\n";
-    if (b_bb & (pawn << 9)) this->captures |= (pawn << 9);
-    if (b_bb & (pawn << 7)) this->captures |= (pawn << 7);
-    
+    if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BitboardHelper::file_masks[7])<< 9);
+    if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BitboardHelper::file_masks[0])<< 7);
 
     if (b_bb & (pawn << 8)) return attacks;
     attacks |= (pawn << 8);
@@ -106,6 +106,8 @@ uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb) {
     /* White pawns as of right now will always march in the northern direction. */
 
     uint64_t attacks = 0ULL;
+    this->captures = 0ULL;
+
     uint64_t black_pawn_start_rank = BitboardHelper::rank_masks[6];
 
     if (w_bb & (pawn >> 9)) this->captures |= (pawn & ~BitboardHelper::file_masks[0]) >> 9;
