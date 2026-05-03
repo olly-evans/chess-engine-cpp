@@ -64,8 +64,8 @@ public:
 
     uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
-    uint64_t get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb);
-    uint64_t get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb);
+    uint64_t get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
 };
 
 class Knight : public Piece {

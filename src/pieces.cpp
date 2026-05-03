@@ -47,38 +47,26 @@ void Piece::draw(sf::RenderWindow& window) {
 
 uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
-    // if we havnt moved. can move 8*2.
 
     uint64_t pawn = 1ULL << this->bit;
     uint64_t attacks = 0ULL;
 
     
     if (this->color == Color::WHITE) {
-        // shift <<
-        // get_white_pawn_attacks.
-        attacks = get_white_pawn_attacks(pawn, b_bb);
-
-        // all possible moves. can extract captures maybe.
-
-
-
-        // this is effectively moves not captures.
-        // this->captures = attacks & b_bb;
+        attacks = get_white_pawn_attacks(pawn, w_bb, b_bb);
 
         // enpassant
         // promotions.
         return BitboardHelper::remove_friendly_pieces(attacks, w_bb);
     } else {
-        // shift >>
 
-        // get_black_pawn_attacks.
-        attacks = get_black_pawn_attacks(pawn , w_bb);
+        attacks = get_black_pawn_attacks(pawn , w_bb, b_bb);
 
         return BitboardHelper::remove_friendly_pieces(attacks, b_bb);
     }
 };
 
-uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb) {
+uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
     
     /* White pawns as of right now will always march in the northern direction. */
 
@@ -91,17 +79,17 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb) {
     if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BitboardHelper::file_masks[7])<< 9);
     if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BitboardHelper::file_masks[0])<< 7);
 
-    if (b_bb & (pawn << 8)) return attacks;
+    if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) return attacks;
     attacks |= (pawn << 8);
 
     // Or doesn't seem right but works so eh.
-    if (!(pawn & (white_pawn_start_rank)) | (b_bb & (pawn << 16))) return attacks;
+    if (!(pawn & (white_pawn_start_rank)) && (b_bb & (pawn << 16))) return attacks;
     attacks |= (pawn << 16);
 
     return attacks;
 }
 
-uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb) {
+uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
     
     /* White pawns as of right now will always march in the northern direction. */
 
@@ -110,11 +98,11 @@ uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb) {
 
     uint64_t black_pawn_start_rank = BitboardHelper::rank_masks[6];
 
+    // Find the captures, mask out ones that overlap to next file.
     if (w_bb & (pawn >> 9)) this->captures |= (pawn & ~BitboardHelper::file_masks[0]) >> 9;
     if (w_bb & (pawn >> 7)) this->captures |= (pawn & ~BitboardHelper::file_masks[7]) >> 7;
     
-
-    if (w_bb & (pawn >> 8)) return attacks;
+    if (w_bb & (pawn >> 8) | b_bb & (pawn >> 8)) return attacks;
     attacks |= (pawn >> 8);
 
     // Or doesn't seem right but works so eh.
