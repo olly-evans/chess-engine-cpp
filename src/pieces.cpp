@@ -85,18 +85,18 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t b_bb) {
     uint64_t attacks = 0ULL;
     uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[1];
 
-    if (!(b_bb & (pawn << 8))) {
-        attacks |= (pawn << 8);
-        if (pawn & (white_pawn_start_rank) && !(b_bb & (pawn << 16))) {
-            attacks |= (pawn << 16);
-        }
-    }
+    // sometimes not updating captures or something. really dodgy on edges.
+    std::cout << this->bit << "\n";
+    if (b_bb & (pawn << 9)) this->captures |= (pawn << 9);
+    if (b_bb & (pawn << 7)) this->captures |= (pawn << 7);
+    
 
-    // if black piece on 9 or 7, we can attacks these squares.
+    if (b_bb & (pawn << 8)) return attacks;
+    attacks |= (pawn << 8);
 
-    if (b_bb & (pawn << 9)) attacks |= (pawn << 9);
-    if (b_bb & (pawn << 7)) attacks |= (pawn << 7);
-
+    // Or doesn't seem right but works so eh.
+    if (!(pawn & (white_pawn_start_rank)) | (b_bb & (pawn << 16))) return attacks;
+    attacks |= (pawn << 16);
 
     return attacks;
 }
@@ -108,13 +108,14 @@ uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb) {
     uint64_t attacks = 0ULL;
     uint64_t black_pawn_start_rank = BitboardHelper::rank_masks[6];
 
-    if (w_bb & (pawn >> 9)) this->captures |= (pawn >> 9);
-    if (w_bb & (pawn >> 7)) this->captures |= (pawn >> 7);
+    if (w_bb & (pawn >> 9)) this->captures |= (pawn & ~BitboardHelper::file_masks[0]) >> 9;
+    if (w_bb & (pawn >> 7)) this->captures |= (pawn & ~BitboardHelper::file_masks[7]) >> 7;
     
 
     if (w_bb & (pawn >> 8)) return attacks;
     attacks |= (pawn >> 8);
 
+    // Or doesn't seem right but works so eh.
     if (!(pawn & (black_pawn_start_rank)) | (w_bb & (pawn >> 16))) return attacks;
     attacks |= (pawn >> 16);
 
