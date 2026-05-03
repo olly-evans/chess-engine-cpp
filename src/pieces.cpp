@@ -153,6 +153,9 @@ uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     attacks |= south_west_attacks;
     attacks |= south_east_attacks;
 
+    uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    this->captures = (attacks & enemy);
+
     return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE) ? w_bb : b_bb);
 };
 
@@ -280,6 +283,9 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     attacks |= west_attacks;
     attacks |= east_attacks;
 
+    uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    this->captures = (attacks & enemy);
+    
     return BitboardHelper::remove_friendly_pieces(attacks, (this->color == Color::WHITE ? w_bb : b_bb));
 };
 
