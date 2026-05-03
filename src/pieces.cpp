@@ -75,7 +75,6 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_b
 
     uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[1];
 
-    // sometimes not updating captures or something. really dodgy on edges.
     if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BitboardHelper::file_masks[7])<< 9);
     if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BitboardHelper::file_masks[0])<< 7);
 
@@ -83,7 +82,7 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_b
     attacks |= (pawn << 8);
 
     // Or doesn't seem right but works so eh.
-    if (!(pawn & (white_pawn_start_rank)) && (b_bb & (pawn << 16))) return attacks;
+    if (!(pawn & (white_pawn_start_rank)) | (b_bb & (pawn << 16))) return attacks;
     attacks |= (pawn << 16);
 
     return attacks;
@@ -91,10 +90,10 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_b
 
 uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
     
-    /* White pawns as of right now will always march in the northern direction. */
+    /* Black pawns as of right now will always march in the southern direction. */
 
     uint64_t attacks = 0ULL;
-    this->captures = 0ULL;
+    this->captures = 0ULL; // Reset so previous highlights not rendered.
 
     uint64_t black_pawn_start_rank = BitboardHelper::rank_masks[6];
 
@@ -130,6 +129,9 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     attacks |= (knight & BitboardHelper::NOT_H_FILE)  >> 15;  
     attacks |= (knight & BitboardHelper::NOT_A_FILE)  >> 17; 
     attacks |= (knight & BitboardHelper::NOT_AB_FILE) >> 10; 
+
+    uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    this->captures = (attacks & enemy);
 
     return BitboardHelper::remove_friendly_pieces(attacks, this->color == Color::WHITE ? w_bb : b_bb);
 }
