@@ -14,7 +14,7 @@ enum class Color {BLACK, WHITE};
 class Piece {
 
 protected:
-    int board_square_size;
+    uint8_t board_square_size;
 
     sf::Texture texture;
     sf::Sprite sprite;
@@ -66,6 +66,9 @@ public:
 
     uint64_t get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
+
+    uint64_t get_enpassant(uint64_t w_bb, uint64_t b_bb);
+
 };
 
 class Knight : public Piece {

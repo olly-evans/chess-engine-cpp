@@ -360,7 +360,10 @@ void Board::on_left_mouse_press() {
 
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->moves, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
+
         reset_move_and_capture_highlights(selected_piece->bit);
+        selected_piece = select_piece(clicked_bit);
+
         return;
     }
 

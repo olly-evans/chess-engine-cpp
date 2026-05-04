@@ -114,6 +114,10 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     return moves;
 }
 
+uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
+    return moves;
+}
+
 /* KNIGHT */
 
 uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
