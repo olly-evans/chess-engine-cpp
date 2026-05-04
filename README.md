@@ -2,7 +2,7 @@
 
 ### Intro
 
-So turns out to write a chess engine you first have to write the game of chess, I know right who would of thought. Writing chess the game so far has been much harder than I thought it would be, but has  also been very rewarding.
+So turns out to write a chess engine you first have to write the game of chess, I know right who would of thought. Writing chess the game so far has been much harder than I thought it would be, but has  also been very rewarding. I'm particularly proud of my `on_left_mouse_press()` function :)
 
 If you're asking why I didn't use a prebuilt chess GUI its because of my limited Object-Oriented programming experience. And Chess is for sure a great way to practise this with its board and piece hierarchies. But also because Dear Imgui and others in Visual Studio scares me to my core, so here I am.
 
@@ -10,7 +10,7 @@ For anyone cloning, I would recommend playing on the default 1280x1280 window wi
 
 ### Goals
 
-The goal for this project is to document my progress and learn more about C++, CMake and SFML. And also to become more familiar with common software design patterns.
+The goal for this project is to learn more about C++, CMake and SFML. And also to become more familiar with common software design patterns.
 
 I'll put the rest of my goals in a more formal list below, for readability:
 
@@ -36,8 +36,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - record/log moves potentially, to record a move perhaps just store a bitboard of the end and start square. need to think about captures though will need piece previously on end square.
 
 - for castling, occupancy call and & all bitboards.
-
-
 
 - extract fen token code to functions in fenparser. create_piece() can be part of something else perhaps.
 
