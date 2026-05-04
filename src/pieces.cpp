@@ -167,11 +167,9 @@ uint64_t Piece::get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint64_t north_west_moves = 0ULL;
     const uint8_t north_west_offset = 9;
 
-    uint8_t piece_file;
+    uint8_t piece_file = BitboardHelper::get_piece_file(piece);
     uint8_t attack_file;
         
-    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
-
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
         // this will be until we hit the end of the board, always 7 if no pieces in the way.
@@ -406,9 +404,6 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t king = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 
-    // uint8_t file_mask_index = (this->color == Color::WHITE) ? ;
-
-    // will need masks.
     moves |= (king << 1);
     moves |= (king << 7);
     moves |= (king << 8);
@@ -419,16 +414,13 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     moves |= (king >> 8);
     moves |= (king >> 9);
 
-    
-
     uint8_t kings_file = BitboardHelper::get_piece_file(king);
-    std::cout << kings_file << "\n";
     if (kings_file == 7) moves &= ~BitboardHelper::file_masks[kings_file];
     if (kings_file == 0) moves &= ~BitboardHelper::file_masks[kings_file];
 
     uint64_t enemy_occupancy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
-    
+
     moves = BitboardHelper::remove_friendly_pieces(moves, this->color == Color::WHITE ? w_bb : b_bb);
     return BitboardHelper::remove_enemy_pieces(moves, this->color == Color::WHITE ? b_bb : w_bb);
 };
