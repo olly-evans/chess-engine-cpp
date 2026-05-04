@@ -44,3 +44,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - only for pawns were resetting captures to zero at the start of the function, perhaps a future issue not sure, not sure why its working for other pieces.
 
 - sort king moves, captures and highlights out.
+
+- need a move logger

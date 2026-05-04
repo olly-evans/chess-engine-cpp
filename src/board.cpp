@@ -8,6 +8,7 @@
 #include "player.hpp"
 #include "board.hpp"
 #include "gamestate.hpp"
+#include "movelogger.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -73,8 +74,9 @@ uint64_t Board::black_occupancy() {
 
 void Board::init() {
 
-    // Selection window with empty colored squares to choose white/black.
 
+    // Selection window with empty colored squares to choose white/black.
+    
     // this kinda doesn't matter right now.
     Board::init_players();
 
@@ -392,6 +394,14 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
 
+    // make move.
+    // how we know theres a capture chief.
+
+    if (piece->captures == 0ULL) return piece;
+    // get_piece() on clicked bit and get pointer to the piece_id bosh. not doing now tho.
+    Move move = {selected_piece->bit, clicked_bit, "N", Color::WHITE};
+
+    MoveLogger::move_history.push_back(move);
     return piece;
 }
 
