@@ -284,7 +284,7 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     moves |= east_moves;
 
     uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
-    this->moves =  (moves & enemy);
+    this->captures =  (moves & enemy);
 
     return BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb));
 };
