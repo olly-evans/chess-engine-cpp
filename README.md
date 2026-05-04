@@ -42,9 +42,7 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - extract fen token code to functions in fenparser. create_piece() can be part of something else perhaps.
 
-- add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
-
-- so ive added the square highlighting for most captures think it may be drawing the circles underneath though is my intuition. looks like its okay. 
+- add global bitboard viewer to debug, overhaul piece cycle to be more dynamic. Wanna init a window and use it to print debug shit.
 
 - only for pawns were resetting captures to zero at the start of the function.
 
