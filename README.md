@@ -44,8 +44,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
 
-- Replace all attack instances with moves. Add this->captures for all piece types in their get_legal_moves().
-
 - so ive added the square highlighting for most captures think it may be drawing the circles underneath though is my intuition. looks like its okay.
 
 - sort king moves, captures and highlights out.

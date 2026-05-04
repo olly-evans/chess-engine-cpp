@@ -53,20 +53,20 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     
     if (this->color == Color::WHITE) {
-        moves = get_white_pawn_attacks(pawn, w_bb, b_bb);
+        moves = get_white_pawn_moves(pawn, w_bb, b_bb);
 
         // enpassant
         // promotions.
         return BitboardHelper::remove_friendly_pieces(moves, w_bb);
     } else {
 
-        moves = get_black_pawn_attacks(pawn , w_bb, b_bb);
+        moves = get_black_pawn_moves(pawn , w_bb, b_bb);
 
         return BitboardHelper::remove_friendly_pieces(moves, b_bb);
     }
 };
 
-uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
     
     /* White pawns as of right now will always march in the northern direction. */
 
@@ -88,7 +88,7 @@ uint64_t Pawn::get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_b
     return moves;
 }
 
-uint64_t Pawn::get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
     
     /* Black pawns as of right now will always march in the southern direction. */
 
@@ -142,11 +142,11 @@ uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t rook = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 
-    uint64_t north_west_moves = get_north_west_attacks(rook, w_bb, b_bb);
-    uint64_t north_east_moves = get_north_east_attacks(rook, w_bb, b_bb);
+    uint64_t north_west_moves = get_north_west_moves(rook, w_bb, b_bb);
+    uint64_t north_east_moves = get_north_east_moves(rook, w_bb, b_bb);
 
-    uint64_t south_west_moves = get_south_west_attacks(rook, w_bb, b_bb);
-    uint64_t south_east_moves = get_south_east_attacks(rook, w_bb, b_bb);
+    uint64_t south_west_moves = get_south_west_moves(rook, w_bb, b_bb);
+    uint64_t south_east_moves = get_south_east_moves(rook, w_bb, b_bb);
 
     moves |= north_west_moves;
     moves |= north_east_moves;
@@ -159,7 +159,7 @@ uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     return BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE) ? w_bb : b_bb);
 };
 
-uint64_t Piece::get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_west_moves = 0ULL;
     const uint8_t north_west_offset = 9;
@@ -186,7 +186,7 @@ uint64_t Piece::get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
     return north_west_moves;
 }
 
-uint64_t Piece::get_north_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_north_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_east_moves = 0ULL;
     const uint8_t north_east_offset = 7;
@@ -212,7 +212,7 @@ uint64_t Piece::get_north_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
     return north_east_moves;
 }
 
-uint64_t Piece::get_south_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_south_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_west_moves = 0ULL;
     const uint8_t north_west_offset = 7;
@@ -240,7 +240,7 @@ uint64_t Piece::get_south_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b
     return north_west_moves;
 }
 
-uint64_t Piece::get_south_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_east_moves = 0ULL;
     const uint8_t north_east_offset = 9;
@@ -273,10 +273,10 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t rook = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 
-    uint64_t north_moves = get_north_attacks(rook, w_bb, b_bb);
-    uint64_t south_moves = get_south_attacks(rook, w_bb, b_bb);
-    uint64_t west_moves = get_west_attacks(rook, w_bb, b_bb);
-    uint64_t east_moves = get_east_attacks(rook, w_bb, b_bb);
+    uint64_t north_moves = get_north_moves(rook, w_bb, b_bb);
+    uint64_t south_moves = get_south_moves(rook, w_bb, b_bb);
+    uint64_t west_moves = get_west_moves(rook, w_bb, b_bb);
+    uint64_t east_moves = get_east_moves(rook, w_bb, b_bb);
 
     moves |= north_moves;
     moves |= south_moves;
@@ -289,7 +289,7 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     return BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb));
 };
 
-uint64_t Piece::get_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t north_moves = 0ULL;
     uint8_t north_offset = 8;
@@ -305,7 +305,7 @@ uint64_t Piece::get_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) 
     return north_moves;
 }
 
-uint64_t Piece::get_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t south_moves = 0ULL;
     uint8_t south_offset = 8;
@@ -321,7 +321,7 @@ uint64_t Piece::get_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) 
     return south_moves;
 }
 
-uint64_t Piece::get_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t west_moves = 0ULL;
     uint8_t west_offset = 1;
@@ -341,7 +341,7 @@ uint64_t Piece::get_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
     return (west_moves & ~(BitboardHelper::rank_masks[mask_index]));
 }
 
-uint64_t Piece::get_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
+uint64_t Piece::get_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t east_moves = 0ULL;
     uint8_t east_offset = 1;
@@ -368,15 +368,15 @@ uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t queen = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 
-    uint64_t north_moves = get_north_attacks(queen, w_bb, b_bb);
-    uint64_t south_moves = get_south_attacks(queen, w_bb, b_bb);
-    uint64_t west_moves = get_west_attacks(queen, w_bb, b_bb);
-    uint64_t east_moves = get_east_attacks(queen, w_bb, b_bb);
+    uint64_t north_moves = get_north_moves(queen, w_bb, b_bb);
+    uint64_t south_moves = get_south_moves(queen, w_bb, b_bb);
+    uint64_t west_moves = get_west_moves(queen, w_bb, b_bb);
+    uint64_t east_moves = get_east_moves(queen, w_bb, b_bb);
 
-    uint64_t north_west_moves = get_north_west_attacks(queen, w_bb, b_bb);
-    uint64_t north_east_moves = get_north_east_attacks(queen, w_bb, b_bb);
-    uint64_t south_west_moves = get_south_west_attacks(queen, w_bb, b_bb);
-    uint64_t south_east_moves = get_south_east_attacks(queen, w_bb, b_bb);
+    uint64_t north_west_moves = get_north_west_moves(queen, w_bb, b_bb);
+    uint64_t north_east_moves = get_north_east_moves(queen, w_bb, b_bb);
+    uint64_t south_west_moves = get_south_west_moves(queen, w_bb, b_bb);
+    uint64_t south_east_moves = get_south_east_moves(queen, w_bb, b_bb);
 
     moves |= north_moves;
     moves |= south_moves;

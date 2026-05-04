@@ -41,15 +41,15 @@ public:
 
     virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
 
-    uint64_t get_north_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_south_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
 
-    uint64_t get_north_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_north_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_south_west_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_south_east_attacks(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_north_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_south_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
 
 };
 
@@ -64,8 +64,8 @@ public:
 
     uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
-    uint64_t get_white_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
-    uint64_t get_black_pawn_attacks(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
+    uint64_t get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
 };
 
 class Knight : public Piece {
