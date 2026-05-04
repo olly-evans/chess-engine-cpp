@@ -31,7 +31,7 @@ public:
 
     Color color;
 
-    uint64_t attacks = 0ULL;
+    uint64_t moves = 0ULL;
     uint64_t captures = 0ULL;
     uint64_t bit = 0ULL;
     

@@ -258,7 +258,7 @@ void Board::render_attack_highlights() {
             squares[i].setFillColor(TURQOISE);
         }
 
-        if (!BitboardHelper::get_bit(selected_piece->attacks, i)) continue;
+        if (!BitboardHelper::get_bit(selected_piece->moves, i)) continue;
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
@@ -362,7 +362,7 @@ void Board::on_left_mouse_press() {
     }
 
     // If our click is not an attack then go again/reset.
-    if (!BitboardHelper::get_bit(selected_piece->attacks, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
+    if (!BitboardHelper::get_bit(selected_piece->moves, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
         reset_move_and_capture_highlights(selected_piece->bit);
         return;
     }
@@ -394,9 +394,8 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 
-
     squares[clicked_bit].setFillColor(TURQOISE);
-    piece->attacks = piece->get_legal_moves(white_occupancy(), black_occupancy());
+    piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
 
     return piece;
 }

@@ -28,18 +28,13 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 ## TODO List (I'm forgetful)
 
-- Linux unsigned long is 64 bit.
-- Should replace all int with uint_t.
+- also now need some idea of a turn/team turn, gamestate class.
 
-- also now need some idea of a turn/team turn.
 
-- perhaps draw circles for attacks instead of the fillcolors, will mean i dont have to fuck with squares.
-
-- need global position to load fen.
 
 - is_white_turn in moves bit.
 
-- record/log moves potentially.
+- record/log moves potentially, to record a move perhaps just store a bitboard of the end and start square. need to think about captures though will need piece previously on end square.
 
 - for castling, occupancy call and & all bitboards.
 
@@ -49,9 +44,8 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
 
-TODO:
 - Replace all attack instances with moves. Add this->captures for all piece types in their get_legal_moves().
-- Capture highlights only works with pawns rn.
 
-- make a function for code at bottom of on_left_mouse_press().
-- we arent deselecting our captures when !selected_piece
+- so ive added the square highlighting for most captures think it may be drawing the circles underneath though is my intuition. looks like its okay.
+
+- sort king moves, captures and highlights out.
