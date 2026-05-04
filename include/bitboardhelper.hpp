@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-class BitboardHelper {
+class BBHelper {
 public:
     // File masks.
     static const uint64_t NOT_A_FILE  = 0xFEFEFEFEFEFEFEFEULL;

@@ -36,7 +36,7 @@ std::string Piece::get_texture_path() {
 
 void Piece::draw(sf::RenderWindow& window) {
 
-    uint8_t square = BitboardHelper::bit_to_square(this->bit);
+    uint8_t square = BBHelper::bit_to_square(this->bit);
     sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
     sf::Vector2f pos = normalised_pos * (float)board_square_size;
     sprite.setPosition(pos.x, pos.y);
@@ -58,14 +58,14 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
         // enpassant
         // promotions.
 
-        moves = BitboardHelper::remove_friendly_pieces(moves, w_bb);
-        return BitboardHelper::remove_enemy_pieces(moves, b_bb);
+        moves = BBHelper::remove_friendly_pieces(moves, w_bb);
+        return BBHelper::remove_enemy_pieces(moves, b_bb);
     } else {
 
         moves = get_black_pawn_moves(pawn , w_bb, b_bb);
 
-        moves = BitboardHelper::remove_friendly_pieces(moves, b_bb);
-        return BitboardHelper::remove_enemy_pieces(moves, w_bb);
+        moves = BBHelper::remove_friendly_pieces(moves, b_bb);
+        return BBHelper::remove_enemy_pieces(moves, w_bb);
     }
 };
 
@@ -76,10 +76,10 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     uint64_t moves = 0ULL;
     this->captures = 0ULL;
 
-    uint64_t white_pawn_start_rank = BitboardHelper::rank_masks[1];
+    uint64_t white_pawn_start_rank = BBHelper::rank_masks[1];
 
-    if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BitboardHelper::file_masks[7])<< 9);
-    if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BitboardHelper::file_masks[0])<< 7);
+    if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BBHelper::file_masks[7])<< 9);
+    if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BBHelper::file_masks[0])<< 7);
 
     if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) return moves;
     moves |= (pawn << 8);
@@ -98,11 +98,11 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     uint64_t moves = 0ULL;
     this->captures = 0ULL; // Reset so previous highlights not rendered.
 
-    uint64_t black_pawn_start_rank = BitboardHelper::rank_masks[6];
+    uint64_t black_pawn_start_rank = BBHelper::rank_masks[6];
 
     // Find the captures, mask out ones that overlap to next file.
-    if (w_bb & (pawn >> 9)) this->captures |= (pawn & ~BitboardHelper::file_masks[0]) >> 9;
-    if (w_bb & (pawn >> 7)) this->captures |= (pawn & ~BitboardHelper::file_masks[7]) >> 7;
+    if (w_bb & (pawn >> 9)) this->captures |= (pawn & ~BBHelper::file_masks[0]) >> 9;
+    if (w_bb & (pawn >> 7)) this->captures |= (pawn & ~BBHelper::file_masks[7]) >> 7;
     
     if (w_bb & (pawn >> 8) | b_bb & (pawn >> 8)) return moves;
     moves |= (pawn >> 8);
@@ -125,21 +125,21 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t knight = 1ULL << this->bit;
     uint64_t moves = 0ULL;
 
-    moves |= (knight & BitboardHelper::NOT_AB_FILE) << 6;
-    moves |= (knight & BitboardHelper::NOT_A_FILE)  << 15; 
-    moves |= (knight & BitboardHelper::NOT_H_FILE)  << 17;
-    moves |= (knight & BitboardHelper::NOT_GH_FILE) << 10;
+    moves |= (knight & BBHelper::NOT_AB_FILE) << 6;
+    moves |= (knight & BBHelper::NOT_A_FILE)  << 15; 
+    moves |= (knight & BBHelper::NOT_H_FILE)  << 17;
+    moves |= (knight & BBHelper::NOT_GH_FILE) << 10;
     
-    moves |= (knight & BitboardHelper::NOT_GH_FILE) >> 6;   
-    moves |= (knight & BitboardHelper::NOT_H_FILE)  >> 15;  
-    moves |= (knight & BitboardHelper::NOT_A_FILE)  >> 17; 
-    moves |= (knight & BitboardHelper::NOT_AB_FILE) >> 10; 
+    moves |= (knight & BBHelper::NOT_GH_FILE) >> 6;   
+    moves |= (knight & BBHelper::NOT_H_FILE)  >> 15;  
+    moves |= (knight & BBHelper::NOT_A_FILE)  >> 17; 
+    moves |= (knight & BBHelper::NOT_AB_FILE) >> 10; 
 
     uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
 
-    moves = BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    return BitboardHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
+    return BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
 }
 
 /* BISHOP */
@@ -162,8 +162,8 @@ uint64_t Bishop::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
 
-    moves = BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    return BitboardHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
+    return BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
 };
 
 uint64_t Piece::get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
@@ -171,7 +171,7 @@ uint64_t Piece::get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint64_t north_west_moves = 0ULL;
     const uint8_t north_west_offset = 9;
 
-    uint8_t piece_file = BitboardHelper::get_piece_file(piece);
+    uint8_t piece_file = BBHelper::get_piece_file(piece);
     uint8_t attack_file;
         
     for (uint8_t i = 0; i < GRID_SZ; i++) {
@@ -199,7 +199,7 @@ uint64_t Piece::get_north_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint8_t piece_file;
     uint8_t attack_file;
     
-    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+    piece_file = GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
@@ -226,7 +226,7 @@ uint64_t Piece::get_south_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint8_t attack_file;
 
     // Perhaps a bitboard function.
-    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+    piece_file = GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
@@ -253,7 +253,7 @@ uint64_t Piece::get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint8_t piece_file;
     uint8_t attack_file;
     
-    piece_file = GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+    piece_file = GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
@@ -291,8 +291,8 @@ uint64_t Rook::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures =  (moves & enemy);
 
-    moves = BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    return BitboardHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);;
+    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
+    return BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);;
 };
 
 uint64_t Piece::get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
@@ -333,7 +333,7 @@ uint64_t Piece::get_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
     uint8_t west_offset = 1;
     
     // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
-    uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
+    uint8_t piece_bit = BBHelper::get_first_bit(piece);
     uint8_t mask_index = (piece_bit / GRID_SZ) + 1;
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
@@ -344,7 +344,7 @@ uint64_t Piece::get_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
         west_moves |= (piece << (west_offset + (west_offset*i)));
     }
     
-    return (west_moves & ~(BitboardHelper::rank_masks[mask_index]));
+    return (west_moves & ~(BBHelper::rank_masks[mask_index]));
 }
 
 uint64_t Piece::get_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
@@ -353,7 +353,7 @@ uint64_t Piece::get_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
     uint8_t east_offset = 1;
     
     // Gets the index into rank_masks of the rank above the piece so we can mask it when shifting <<.
-    uint8_t piece_bit = BitboardHelper::get_first_bit(piece);
+    uint8_t piece_bit = BBHelper::get_first_bit(piece);
     uint8_t mask_index = (piece_bit / GRID_SZ) - 1; // Minus for east.
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
@@ -364,7 +364,7 @@ uint64_t Piece::get_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
         east_moves |= (piece >> (east_offset + (east_offset*i)));
     }
 
-    return (east_moves & ~(BitboardHelper::rank_masks[mask_index]));
+    return (east_moves & ~(BBHelper::rank_masks[mask_index]));
 }
 
 /* QUEEN */
@@ -397,8 +397,8 @@ uint64_t Queen::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     uint64_t enemy_occupancy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
     
-    moves = BitboardHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    return BitboardHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
+    return BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
 };
 
 /* KING */
@@ -418,13 +418,13 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     moves |= (king >> 8);
     moves |= (king >> 9);
 
-    uint8_t kings_file = BitboardHelper::get_piece_file(king);
-    if (kings_file == 7) moves &= ~BitboardHelper::file_masks[kings_file];
-    if (kings_file == 0) moves &= ~BitboardHelper::file_masks[kings_file];
+    uint8_t kings_file = BBHelper::get_piece_file(king);
+    if (kings_file == 7) moves &= ~BBHelper::file_masks[kings_file];
+    if (kings_file == 0) moves &= ~BBHelper::file_masks[kings_file];
 
     uint64_t enemy_occupancy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
 
-    moves = BitboardHelper::remove_friendly_pieces(moves, this->color == Color::WHITE ? w_bb : b_bb);
-    return BitboardHelper::remove_enemy_pieces(moves, this->color == Color::WHITE ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, this->color == Color::WHITE ? w_bb : b_bb);
+    return BBHelper::remove_enemy_pieces(moves, this->color == Color::WHITE ? b_bb : w_bb);
 };

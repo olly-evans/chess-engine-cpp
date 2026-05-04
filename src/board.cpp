@@ -50,7 +50,7 @@ int Board::mouse_win_pos_to_bit() {
     sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
                                     (mouse_window_pos.y / board_square_size));
     int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
-    return BitboardHelper::square_to_bit(square);
+    return BBHelper::square_to_bit(square);
 }
 
 void Board::reset_square_color(int bit) {
@@ -180,7 +180,7 @@ void Board::init_position_from_fen(std::string fen) {
             // black we need to init to 64 - bit
 
             // gunna be interesting to see how this affects this piece movement.
-            BitboardHelper::set_bit_by_ref(bitboard, bit);
+            BBHelper::set_bit_by_ref(bitboard, bit);
         }
     }
 
@@ -254,8 +254,8 @@ void Board::render_attack_highlights() {
         
         uint8_t square = GRID_NUM_SQUARES - i - 1;
 
-        if (BitboardHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
-        if (!BitboardHelper::get_bit(selected_piece->moves, i)) continue;
+        if (BBHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
+        if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
@@ -348,9 +348,6 @@ void Board::on_mouse_press(sf::Event &event) {
 
 void Board::on_left_mouse_press() {
 
-    /* This doesn't really use Player class yet. Perhaps it doesn't need to
-    *  but may be useful later.
-    */
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
@@ -359,7 +356,7 @@ void Board::on_left_mouse_press() {
     }
 
     // If our click is not an attack then go again/reset.
-    if (!BitboardHelper::get_bit(selected_piece->moves, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
+    if (!BBHelper::get_bit(selected_piece->moves, clicked_bit) && !BBHelper::get_bit(selected_piece->captures, clicked_bit)) {
 
         // Let user select a new piece without clicking to reset.
         reset_move_and_capture_highlights(selected_piece->bit);
@@ -367,8 +364,7 @@ void Board::on_left_mouse_press() {
         return;
     }
 
-    // Below be executed if we have a selected piece and click on a valid attack square.
-
+    // Below be executed if we have a selected piece and click on a valid move/capture square.
     uint8_t old_bit = selected_piece->bit;
 
     handle_piece_move(clicked_bit);
@@ -400,7 +396,7 @@ void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
     squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
         
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (!BitboardHelper::get_bit(selected_piece->captures, i)) continue;
+        if (!BBHelper::get_bit(selected_piece->captures, i)) continue;
 
         squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
     }
@@ -438,12 +434,12 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         // TODO: Log the move into a move class.
         // TODO: Allow moves to be undone.
 
-        if (BitboardHelper::get_bit(bitboard, selected_piece->bit)){
-            bitboard = BitboardHelper::clear_bit(bitboard, selected_piece->bit);
-            bitboard = BitboardHelper::set_bit(bitboard, clicked_bit);
+        if (BBHelper::get_bit(bitboard, selected_piece->bit)){
+            bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
+            bitboard = BBHelper::set_bit(bitboard, clicked_bit);
 
-        } else if (BitboardHelper::get_bit(bitboard, clicked_bit)) {
-            bitboard = BitboardHelper::clear_bit(bitboard, clicked_bit);
+        } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
+            bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
 
             // Find piece and remove piece from pieces vector.
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
