@@ -361,15 +361,11 @@ void Board::on_left_mouse_press() {
     // If our click is not an attack then go again/reset.
     if (!BitboardHelper::get_bit(selected_piece->moves, clicked_bit) && !BitboardHelper::get_bit(selected_piece->captures, clicked_bit)) {
 
+        // Let user select a new piece without clicking to reset.
         reset_move_and_capture_highlights(selected_piece->bit);
         selected_piece = select_piece(clicked_bit);
-
         return;
     }
-
-
-    if (!is_whites_turn && selected_piece->color == Color::WHITE) return;
-    if (is_whites_turn && selected_piece->color == Color::BLACK) return;
 
     // Below be executed if we have a selected piece and click on a valid attack square.
 

@@ -47,5 +47,3 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - only for pawns were resetting captures to zero at the start of the function.
 
 - sort king moves, captures and highlights out.
-
-- if our reset click is on a piece then select_piece() perhaps. just annoying to click twice.
