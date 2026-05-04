@@ -419,14 +419,15 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     moves |= (king >> 8);
     moves |= (king >> 9);
 
+    
+
+    uint8_t kings_file = BitboardHelper::get_piece_file(king);
+    std::cout << kings_file << "\n";
+    if (kings_file == 7) moves &= ~BitboardHelper::file_masks[kings_file];
+    if (kings_file == 0) moves &= ~BitboardHelper::file_masks[kings_file];
+
     uint64_t enemy_occupancy = (this->color == Color::WHITE) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
-
-    // kings file.
-    uint8_t kings_file = GRID_SZ - ((BitboardHelper::get_first_bit(king)) % GRID_SZ) - 1;
-
-    if (kings_file == 7) moves &= ~BitboardHelper::file_masks[7];
-    if (kings_file == 0) moves &= ~BitboardHelper::file_masks[0];
     
     moves = BitboardHelper::remove_friendly_pieces(moves, this->color == Color::WHITE ? w_bb : b_bb);
     return BitboardHelper::remove_enemy_pieces(moves, this->color == Color::WHITE ? b_bb : w_bb);

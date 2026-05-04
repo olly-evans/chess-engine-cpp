@@ -38,6 +38,10 @@ uint8_t BitboardHelper::get_first_bit(uint64_t b) {
     }
 }
 
+uint8_t BitboardHelper::get_piece_file(uint64_t piece) {
+    return GRID_SZ - ((BitboardHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+}
+
 /* CHECKS */
 
 bool BitboardHelper::has_friendly_piece(uint64_t friendly_bb, int bit) {
