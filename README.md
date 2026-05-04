@@ -29,8 +29,7 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 ## TODO List (I'm forgetful)
 
 - also now need some idea of a turn/team turn, gamestate class.
-
-
+- perhaps need some sort of gamestate class that holds whos turn, and game state like checkmate stalemate etc..
 
 - is_white_turn in moves bit.
 
@@ -38,12 +37,12 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - for castling, occupancy call and & all bitboards.
 
-- perhaps need some sort of gamestate class that holds whos turn, and game state like checkmate stalemate etc..
+
 
 - extract fen token code to functions in fenparser. create_piece() can be part of something else perhaps.
 
 - add global bitboard viewer to debug, overhaul piece cycle to be more dynamic. Wanna init a window and use it to print debug shit.
 
-- only for pawns were resetting captures to zero at the start of the function.
+- only for pawns were resetting captures to zero at the start of the function, perhaps a future issue not sure, not sure why its working for other pieces.
 
 - sort king moves, captures and highlights out.
