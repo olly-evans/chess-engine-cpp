@@ -44,6 +44,8 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - add global bitboard viewer to debug, overhaul piece cycle too to be more dynamic. Wanna init a window and use it to print debug shit.
 
-- so ive added the square highlighting for most captures think it may be drawing the circles underneath though is my intuition. looks like its okay.
+- so ive added the square highlighting for most captures think it may be drawing the circles underneath though is my intuition. looks like its okay. 
+
+- only for pawns were resetting captures to zero at the start of the function.
 
 - sort king moves, captures and highlights out.

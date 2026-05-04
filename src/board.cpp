@@ -253,11 +253,7 @@ void Board::render_attack_highlights() {
         
         uint8_t square = GRID_NUM_SQUARES - i - 1;
 
-        if (BitboardHelper::get_bit(selected_piece->captures, i)) {
-            
-            squares[i].setFillColor(TURQOISE);
-        }
-
+        if (BitboardHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
         if (!BitboardHelper::get_bit(selected_piece->moves, i)) continue;
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);

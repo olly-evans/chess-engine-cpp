@@ -48,6 +48,10 @@ uint64_t BitboardHelper::remove_friendly_pieces(uint64_t attacks, uint64_t frien
     return attacks &= ~friendly;
 }
 
+uint64_t BitboardHelper::remove_enemy_pieces(uint64_t moves, uint64_t enemy) {
+    return moves &= ~enemy;
+}
+
 uint8_t BitboardHelper::get_total_active_bits(uint64_t b) {
 
         uint8_t count = 0;
