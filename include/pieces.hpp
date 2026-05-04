@@ -39,6 +39,7 @@ public:
 
     void draw(sf::RenderWindow& window);
 
+    // All instances return the moves and assign this->captures.
     virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
 
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);

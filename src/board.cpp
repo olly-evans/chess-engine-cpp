@@ -156,7 +156,7 @@ void Board::init_position_from_fen(std::string fen) {
     std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
 
-    // i want these hardcoded tokens to have seperate functions,
+    // I want these hardcoded tokens to have seperate functions.
     std::string board = fen_tokens[0];
     int rank = 7, file = 0;
     for (char ch : board) {
@@ -173,13 +173,9 @@ void Board::init_position_from_fen(std::string fen) {
             create_piece(info, bit);
             file++;
 
-            // Convert fen to piece type bitboards.
+            // Convert fen to piece type bitboard.
             uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
 
-            // so for white we just init as is.
-            // black we need to init to 64 - bit
-
-            // gunna be interesting to see how this affects this piece movement.
             BBHelper::set_bit_by_ref(bitboard, bit);
         }
     }
@@ -348,6 +344,13 @@ void Board::on_mouse_press(sf::Event &event) {
 
 void Board::on_left_mouse_press() {
 
+    /* 
+     * Handles left mouse presses wowza!
+     *
+     * when we return in this function it essentially just means wait until next left mouse press. 
+     * 
+     */
+
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!selected_piece) {
@@ -355,12 +358,12 @@ void Board::on_left_mouse_press() {
         return;
     }
 
-    // If our click is not an attack then go again/reset.
+    // If our click is not an move/capture then go again/reset.
     if (!BBHelper::get_bit(selected_piece->moves, clicked_bit) && !BBHelper::get_bit(selected_piece->captures, clicked_bit)) {
 
         // Let user select a new piece without clicking to reset.
         reset_move_and_capture_highlights(selected_piece->bit);
-        selected_piece = select_piece(clicked_bit);
+        selected_piece = select_piece(clicked_bit); // Can be null.
         return;
     }
 
