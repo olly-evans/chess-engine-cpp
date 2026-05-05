@@ -398,7 +398,7 @@ void Board::on_left_mouse_press() {
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
-    MoveLogger::show_moves(); // tmp perhaps
+    MoveLogger::show_algebraic_move_history(); // tmp perhaps
 
 
     is_whites_turn = !is_whites_turn;

@@ -28,7 +28,7 @@ public:
     // not necessary i think but get the idea.
     // lets add the moves for one piece and print them.
     static void append_move(Move move);
-    static void show_moves();
+    static void show_algebraic_move_history();
 
     // void show_moves() {
     //     for (auto& move : game_moves) {

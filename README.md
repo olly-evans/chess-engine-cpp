@@ -46,3 +46,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - sort king moves, captures and highlights out.
 
 - need a move logger
+
+- make create_piece() use only 6 object instanciations.
