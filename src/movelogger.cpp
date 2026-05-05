@@ -15,8 +15,12 @@ void MoveLogger::show_algebraic_move_history()  {
         BBHelper::set_bit(selected_piece, move_history[i].m_start_bit);
         uint8_t selected_piece_file = BBHelper::get_piece_file(selected_piece);
 
+        // selected_piece_rank = 0,1,2,3 -> a,b,c,d whatever.
+
+        // same for captured piece
+
         char capture = 'x';
-        
+
         if (move_history[i].captured_piece) {
             std::cout << move_history[i].piece_id << capture << "square" << "\n";
         } else {

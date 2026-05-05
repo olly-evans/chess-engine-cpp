@@ -48,3 +48,9 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - need a move logger
 
 - make create_piece() use only 6 object instanciations.
+
+- continue with algebraic move logging.
+
+- finish undoing moves etc. in handle_piece_moves().
+
+- perhaps is piece->bit changes we just auto calc the file/rank.
