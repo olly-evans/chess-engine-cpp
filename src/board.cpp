@@ -453,13 +453,22 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         need for that logic.
 
     */
+    /* Move logging logic */
+    // MoveLogger::log_move {}
+    Piece* captured_piece = get_piece(clicked_bit);
+
+    // we may need components as values as will be removed init.
+    Move move = {selected_piece->bit, clicked_bit, captured_piece};
+    MoveLogger::move_history.push_back(move);
+
+    /* ------------------------------------------------------------ */
 
     for (auto& bitboard: bitboards) {
 
         // TODO: Log the move into a move class.
         // TODO: Allow moves to be undone.
 
-        // clear selected_piece bitboard.
+        // clear bitboard of the piece we chose.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)){
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
@@ -467,17 +476,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
 
-            /* Move logging logic */
-
-            Piece* captured_piece = get_piece(clicked_bit);
-
-            // we may need components as values as will be removed init.
-            Move move = {selected_piece->bit, clicked_bit, captured_piece};
-            MoveLogger::move_history.push_back(move);
-
-            /* ------------------------------------------------------------ */
-
-
+            
             // Find piece and remove piece from pieces vector.
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
                 return p->bit == clicked_bit;
@@ -490,14 +489,5 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         }
     }
     
-    
-    // cant have pointer to it will have been removed from pieces i imagine by now.
-    // or just no selected piece, which is possible.
-    
-    
-
     selected_piece->bit = clicked_bit;
-
-    
- 
 }
