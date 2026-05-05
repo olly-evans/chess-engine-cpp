@@ -7,8 +7,11 @@
 #include <string>
 
 struct Move {
-
+    
+    char piece_id;
     uint64_t m_start_bit;
+    Color color;
+
     uint64_t m_end_bit;
 
     // if clicked_bit in selected_piece->captures

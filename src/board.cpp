@@ -189,24 +189,45 @@ void Board::init_position_from_fen(std::string fen) {
 
 void Board::create_piece(const FenCharInfo& info, uint8_t bit) {
 
+    // if islower() color black else white
+    // make 6 objects.
     switch (info.piece_id) {
+        case 'p':
+            pieces.emplace_back(new Pawn('p', Color::BLACK, main_window, bit, board_square_size));
+            break;
+        case 'n':
+            pieces.emplace_back(new Knight('n', Color::BLACK, main_window, bit, board_square_size));
+            break;
+        case 'b':
+            pieces.emplace_back(new Bishop('b', Color::BLACK, main_window, bit, board_square_size));
+            break;
+        case 'r':
+            pieces.emplace_back(new Rook('r', Color::BLACK, main_window, bit, board_square_size));
+            break;
+        case 'q':
+            pieces.emplace_back(new Queen('q', Color::BLACK, main_window, bit, board_square_size));
+            break;
+        case 'k':
+            pieces.emplace_back(new King('k', Color::BLACK, main_window, bit, board_square_size));
+            break;
+
         case 'P':
-            pieces.emplace_back(new Pawn("P", info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn('P', info.color, main_window, bit, board_square_size));
             break;
         case 'N':
-            pieces.emplace_back(new Knight("N", info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight('N', info.color, main_window, bit, board_square_size));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop("B", info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop('B', info.color, main_window, bit, board_square_size));
             break;
         case 'R':
-            pieces.emplace_back(new Rook("R", info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook('R', info.color, main_window, bit, board_square_size));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen("Q", info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen('Q', info.color, main_window, bit, board_square_size));
             break;
         case 'K':
-            pieces.emplace_back(new King("K", info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new King('K', info.color, main_window, bit, board_square_size));
             break;
         default: break;
     }
@@ -460,7 +481,15 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     Piece* captured_piece = get_piece(clicked_bit);
 
     // we may need components as values as will be removed init.
-    Move move = {selected_piece->bit, clicked_bit, captured_piece};
+
+    // do at instantiation.
+    // if (selected_piece->color == Color::WHITE) {
+    //     toupper(selected_piece->piece_id);
+    // } else {
+    //     tolower(selected_piece->piece_id);
+    // }
+    
+    Move move = {selected_piece->piece_id, selected_piece->bit, selected_piece->color, clicked_bit, captured_piece};
     MoveLogger::move_history.push_back(move);
 
     // imagine if we try and access move.captured piece it will be null, which is a problem.
@@ -468,11 +497,11 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     // not getting segfault
     // accessible too.
 
-    if (MoveLogger::move_history.size() > 3) {
-        std::cout << "move 0 start: " << MoveLogger::move_history[0].m_start_bit << "\n";
-        std::cout << "move 0 end: " << MoveLogger::move_history[0].m_end_bit << "\n";
-        std::cout << "move 0 captured_piece: " << MoveLogger::move_history[0].captured_piece << "\n";
-    }
+    // if (MoveLogger::move_history.size() > 3) {
+    //     std::cout << "move 0 start: " << MoveLogger::move_history[0].m_start_bit << "\n";
+    //     std::cout << "move 0 end: " << MoveLogger::move_history[0].m_end_bit << "\n";
+    //     std::cout << "move 0 captured_piece: " << MoveLogger::move_history[0].captured_piece << "\n";
+    // }
 
     /* ------------------------------------------------------------ */
 

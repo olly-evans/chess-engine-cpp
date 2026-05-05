@@ -5,7 +5,7 @@
 FenCharInfo FenParser::get_fen_char_info(const char ch) {
     FenCharInfo info;
     info.color = isupper(ch) ? Color::WHITE : Color::BLACK;
-    info.piece_id = toupper(ch);
+    info.piece_id = ch;
     return info; 
 }
 

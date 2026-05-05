@@ -6,15 +6,17 @@
 #include <iostream>
 #include <filesystem>
 #include <cstdint>
+#include <string>
 
 std::string Piece::resolve_texture_path() {
     std::filesystem::path path = std::filesystem::current_path();
     std::string color_prefix = (color == Color::WHITE ? "w" : "b");
-    return path.string() + "/assets/" + color_prefix + piece_id + ".png";
+    char tmp_id = toupper(piece_id);
+    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
-Piece::Piece(std::string id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-    piece_id(std::move(id)), 
+Piece::Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+    piece_id(id), 
     color(col),
     window(w), 
     bit(b),
