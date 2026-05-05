@@ -4,7 +4,7 @@
 
 std::vector<Move> MoveLogger::move_history;
 
-void MoveLogger::show_moves()  {
+void MoveLogger::show_moves() {
 
     std::cout << "New Move History: \n";
     for (int i = 0; i < move_history.size(); i++) {

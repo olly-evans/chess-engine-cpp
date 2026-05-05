@@ -454,12 +454,25 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     */
     /* Move logging logic */
+
     // MoveLogger::log_move {}
+
     Piece* captured_piece = get_piece(clicked_bit);
 
     // we may need components as values as will be removed init.
     Move move = {selected_piece->bit, clicked_bit, captured_piece};
     MoveLogger::move_history.push_back(move);
+
+    // imagine if we try and access move.captured piece it will be null, which is a problem.
+    
+    // not getting segfault
+    // accessible too.
+
+    if (MoveLogger::move_history.size() > 3) {
+        std::cout << "move 0 start: " << MoveLogger::move_history[0].m_start_bit << "\n";
+        std::cout << "move 0 end: " << MoveLogger::move_history[0].m_end_bit << "\n";
+        std::cout << "move 0 captured_piece: " << MoveLogger::move_history[0].captured_piece << "\n";
+    }
 
     /* ------------------------------------------------------------ */
 
