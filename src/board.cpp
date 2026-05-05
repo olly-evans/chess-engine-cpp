@@ -282,6 +282,7 @@ void Board::render_bitboard_window() {
 
 void Board::run() {
     while (main_window.isOpen()) {
+
         handle_events();
         render();
     }
@@ -306,6 +307,7 @@ void Board::handle_events() {
 }
 
 void Board::on_main_window_event(sf::Event &event) {
+
 
     if (event.type == sf::Event::Closed) main_window.close();
     if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
@@ -374,6 +376,9 @@ void Board::on_left_mouse_press() {
 
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
+    
+    MoveLogger::show_moves(); // tmp perhaps
+
 
     is_whites_turn = !is_whites_turn;
 }
@@ -395,13 +400,20 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
 
     // make move.
-    // how we know theres a capture chief.
 
-    if (piece->captures == 0ULL) return piece;
-    // get_piece() on clicked bit and get pointer to the piece_id bosh. not doing now tho.
-    Move move = {selected_piece->bit, clicked_bit, "N", Color::WHITE};
+    // all below needs testing.
+    // we still need to log the move g.
+       
+    // do we have a selected piece here?
 
-    MoveLogger::move_history.push_back(move);
+    
+    // std::cout << "color: " << move.captured_col << "\n";
+
+
+    // has potential this, think this would have everything to undo a move.
+    // maybe captured piece bitboard actually.
+
+    
     return piece;
 }
 
@@ -447,12 +459,24 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         // TODO: Log the move into a move class.
         // TODO: Allow moves to be undone.
 
+        // clear selected_piece bitboard.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)){
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
 
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
+
+            /* Move logging logic */
+
+            Piece* captured_piece = get_piece(clicked_bit);
+
+            // we may need components as values as will be removed init.
+            Move move = {selected_piece->bit, clicked_bit, captured_piece};
+            MoveLogger::move_history.push_back(move);
+
+            /* ------------------------------------------------------------ */
+
 
             // Find piece and remove piece from pieces vector.
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
@@ -465,5 +489,15 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             }
         }
     }
+    
+    
+    // cant have pointer to it will have been removed from pieces i imagine by now.
+    // or just no selected piece, which is possible.
+    
+    
+
     selected_piece->bit = clicked_bit;
+
+    
+ 
 }

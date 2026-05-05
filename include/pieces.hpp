@@ -23,7 +23,6 @@ protected:
     
     sf::RenderWindow& window;
 
-    std::string piece_id;
 
     std::string resolve_texture_path();
 
@@ -32,6 +31,8 @@ public:
     Piece(std::string id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
 
     Color color;
+
+    std::string piece_id;
 
     uint64_t moves = 0ULL;
     uint64_t captures = 0ULL;
