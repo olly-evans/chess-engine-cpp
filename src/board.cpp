@@ -187,52 +187,28 @@ void Board::init_position_from_fen(std::string fen) {
 
 void Board::create_piece(const char id, uint8_t bit) {
 
-    // if islower() color black else white
-
     enum Color color = (isupper(id)) ? Color::WHITE : Color::BLACK;
-    
-    // make 6 objects.
-    switch (id) {
-        /* BLACK */
+    const char norm_id = toupper(id);
 
-        case 'p':
-            pieces.emplace_back(new Pawn('p', color, main_window, bit, board_square_size));
-            break;
-        case 'n':
-            pieces.emplace_back(new Knight('n', color, main_window, bit, board_square_size));
-            break;
-        case 'b':
-            pieces.emplace_back(new Bishop('b', color, main_window, bit, board_square_size));
-            break;
-        case 'r':
-            pieces.emplace_back(new Rook('r', color, main_window, bit, board_square_size));
-            break;
-        case 'q':
-            pieces.emplace_back(new Queen('q', color, main_window, bit, board_square_size));
-            break;
-        case 'k':
-            pieces.emplace_back(new King('k', color, main_window, bit, board_square_size));
-            break;
-
-            /* WHITE */
+    switch (norm_id) {
 
         case 'P':
-            pieces.emplace_back(new Pawn('P', color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn(id, color, main_window, bit, board_square_size));
             break;
         case 'N':
-            pieces.emplace_back(new Knight('N', color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight(id, color, main_window, bit, board_square_size));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop('B', color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop(id, color, main_window, bit, board_square_size));
             break;
         case 'R':
-            pieces.emplace_back(new Rook('R', color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook(id, color, main_window, bit, board_square_size));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen('Q', color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen(id, color, main_window, bit, board_square_size));
             break;
         case 'K':
-            pieces.emplace_back(new King('K', color, main_window, bit, board_square_size));
+            pieces.emplace_back(new King(id, color, main_window, bit, board_square_size));
             break;
         default: break;
     }
