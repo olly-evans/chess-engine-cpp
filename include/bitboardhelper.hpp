@@ -43,6 +43,8 @@ public:
 
     // manipulation
     static void set_bit_by_ref(uint64_t& b, int bit);
+    static void clear_bit_by_ref(uint64_t& b, int bit);
+ 
     static uint64_t set_bit(uint64_t b, int bit);
     static uint64_t clear_bit(uint64_t b, int bit);
     static bool get_bit(uint64_t b, int square);

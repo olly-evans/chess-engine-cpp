@@ -339,17 +339,26 @@ void Board::on_key_pressed(sf::Event &event) {
 
             Move& last_move = MoveLogger::move_history.back();
 
-            if (last_move.captured_piece) create_piece(last_move.captured_piece->piece_id, last_move.end_bit);
+            if (last_move.captured_piece) {
+                create_piece(last_move.captured_piece->piece_id, last_move.end_bit);
+                uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_piece->piece_id, bitboards);
+                BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
+            }
 
+            // need seperate logic for a capture and not.
             Piece* moved_piece = get_piece(last_move.end_bit);
             moved_piece->bit = last_move.start_bit;
 
             // bitboard shit.
+            uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.piece_id, bitboards);
 
-            // need to find the piece we need to re-add if capture
-            is_whites_turn = !is_whites_turn;
+            BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
+            BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
+            
+            MoveLogger::move_history.pop_back();
+            is_whites_turn = !is_whites_turn; // flips when we handle piece move, flipping back here for now.
 
-    }
+    }   
 }
 
 /* MOUSE PRESSES */
