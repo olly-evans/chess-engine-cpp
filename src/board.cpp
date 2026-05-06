@@ -339,9 +339,9 @@ void Board::on_key_pressed(sf::Event &event) {
 
             Move& last_move = MoveLogger::move_history.back();
 
-            if (last_move.captured_piece) {
-                create_piece(last_move.captured_piece->piece_id, last_move.end_bit);
-                uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_piece->piece_id, bitboards);
+            if (last_move.has_capture) {
+                create_piece(last_move.captured_id, last_move.end_bit);
+                uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
                 BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
             }
 
@@ -350,7 +350,7 @@ void Board::on_key_pressed(sf::Event &event) {
             moved_piece->bit = last_move.start_bit;
 
             // bitboard shit.
-            uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.piece_id, bitboards);
+            uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.move_id, bitboards);
 
             BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
             BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
@@ -485,12 +485,15 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     // MoveLogger::log_move {}
 
-    Piece* captured_piece = get_piece(clicked_bit); // ptr will point to nothing once we handle the capture.    
+    Piece* captured_piece = get_piece(clicked_bit); // ptr will point to nothing once we handle the capture.  
+    bool has_capture = (captured_piece) ? true : false;
+    char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
+
     Move move = {selected_piece->piece_id, 
                  selected_piece->bit, 
-                 selected_piece->color, 
-                 clicked_bit, 
-                 captured_piece};
+                 clicked_bit,
+                 has_capture, 
+                 capture_id};
 
     MoveLogger::move_history.push_back(move);
 

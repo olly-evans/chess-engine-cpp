@@ -25,10 +25,10 @@ void MoveLogger::show_algebraic_move_history()  {
 
         char capture = 'x';
 
-        if (move_history[i].captured_piece) {
-            std::cout << move_history[i].piece_id << capture << move_square << "\n";
+        if (move_history[i].has_capture) {
+            std::cout << move_history[i].move_id << capture << move_square << "\n";
         } else {
-            std::cout << move_history[i].piece_id << move_square << "\n";
+            std::cout << move_history[i].move_id << move_square << "\n";
         }
     }
 }
