@@ -174,9 +174,8 @@ void Board::init_position_from_fen(std::string fen) {
             create_piece(ch, bit);
             file++;
 
-            // Convert fen to piece type bitboard.
+            // Get correct piece type bitboard from ch.
             uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
-
             BBHelper::set_bit_by_ref(bitboard, bit);
         }
     }
@@ -189,48 +188,51 @@ void Board::init_position_from_fen(std::string fen) {
 void Board::create_piece(const char id, uint8_t bit) {
 
     // if islower() color black else white
+
+    enum Color color = (isupper(id)) ? Color::WHITE : Color::BLACK;
+    
     // make 6 objects.
     switch (id) {
         /* BLACK */
 
         case 'p':
-            pieces.emplace_back(new Pawn('p', Color::BLACK, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn('p', color, main_window, bit, board_square_size));
             break;
         case 'n':
-            pieces.emplace_back(new Knight('n', Color::BLACK, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight('n', color, main_window, bit, board_square_size));
             break;
         case 'b':
-            pieces.emplace_back(new Bishop('b', Color::BLACK, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop('b', color, main_window, bit, board_square_size));
             break;
         case 'r':
-            pieces.emplace_back(new Rook('r', Color::BLACK, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook('r', color, main_window, bit, board_square_size));
             break;
         case 'q':
-            pieces.emplace_back(new Queen('q', Color::BLACK, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen('q', color, main_window, bit, board_square_size));
             break;
         case 'k':
-            pieces.emplace_back(new King('k', Color::BLACK, main_window, bit, board_square_size));
+            pieces.emplace_back(new King('k', color, main_window, bit, board_square_size));
             break;
 
             /* WHITE */
 
         case 'P':
-            pieces.emplace_back(new Pawn('P', Color::WHITE, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn('P', color, main_window, bit, board_square_size));
             break;
         case 'N':
-            pieces.emplace_back(new Knight('N', Color::WHITE, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight('N', color, main_window, bit, board_square_size));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop('B', Color::WHITE, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop('B', color, main_window, bit, board_square_size));
             break;
         case 'R':
-            pieces.emplace_back(new Rook('R', Color::WHITE, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook('R', color, main_window, bit, board_square_size));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen('Q', Color::WHITE, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen('Q', color, main_window, bit, board_square_size));
             break;
         case 'K':
-            pieces.emplace_back(new King('K', Color::WHITE, main_window, bit, board_square_size));
+            pieces.emplace_back(new King('K', color, main_window, bit, board_square_size));
             break;
         default: break;
     }
