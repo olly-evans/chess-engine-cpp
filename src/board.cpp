@@ -352,6 +352,19 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
+        case sf::Keyboard::Z:
+            // MoveLogger::undo_move();
+            if (MoveLogger::move_history.empty()) return;
+
+            Move& last_move = MoveLogger::move_history.back();
+
+            if (last_move.captured_piece) create_piece();
+
+            Piece* moved_piece = get_piece(last_move.m_end_bit);
+            moved_piece->bit = last_move.m_start_bit;
+
+            // need to find the piece we need to re-add if capture
+
     }
 }
 
@@ -485,7 +498,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
                  selected_piece->color, 
                  clicked_bit, 
                  captured_piece};
-                 
+
     MoveLogger::move_history.push_back(move);
 
     // if (MoveLogger::move_history.size() > 5) {
