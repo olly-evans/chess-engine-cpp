@@ -307,6 +307,7 @@ void Board::run() {
         handle_events();
         render();
     }
+    free_pieces(); 
 }
 
 /* RUN -> EVENT HANDLING */
@@ -400,7 +401,6 @@ void Board::on_left_mouse_press() {
     
     MoveLogger::show_algebraic_move_history(); // tmp perhaps
 
-
     is_whites_turn = !is_whites_turn;
 }
 
@@ -474,33 +474,24 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         need for that logic.
 
     */
+
     /* Move logging logic */
 
     // MoveLogger::log_move {}
 
-    Piece* captured_piece = get_piece(clicked_bit);
-
-    // we may need components as values as will be removed init.
-
-    // do at instantiation.
-    // if (selected_piece->color == Color::WHITE) {
-    //     toupper(selected_piece->piece_id);
-    // } else {
-    //     tolower(selected_piece->piece_id);
-    // }
-    
-    Move move = {selected_piece->piece_id, selected_piece->bit, selected_piece->color, clicked_bit, captured_piece};
+    Piece* captured_piece = get_piece(clicked_bit); // ptr will point to nothing once we handle the capture.    
+    Move move = {selected_piece->piece_id, 
+                 selected_piece->bit, 
+                 selected_piece->color, 
+                 clicked_bit, 
+                 captured_piece};
+                 
     MoveLogger::move_history.push_back(move);
 
-    // imagine if we try and access move.captured piece it will be null, which is a problem.
-    
-    // not getting segfault
-    // accessible too.
-
-    // if (MoveLogger::move_history.size() > 3) {
-    //     std::cout << "move 0 start: " << MoveLogger::move_history[0].m_start_bit << "\n";
-    //     std::cout << "move 0 end: " << MoveLogger::move_history[0].m_end_bit << "\n";
-    //     std::cout << "move 0 captured_piece: " << MoveLogger::move_history[0].captured_piece << "\n";
+    // if (MoveLogger::move_history.size() > 5) {
+    //     std::cout << "move 4 start: " << MoveLogger::move_history[4].m_start_bit << "\n";
+    //     std::cout << "move 4 end: " << MoveLogger::move_history[4].m_end_bit << "\n";
+    //     std::cout << "move 4 captured_piece: " << MoveLogger::move_history[4].captured_piece->bit << "\n";
     // }
 
     /* ------------------------------------------------------------ */
@@ -532,4 +523,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     }
     
     selected_piece->bit = clicked_bit;
+}
+
+/* FREES */
+
+void Board::free_pieces() {
+    for (auto& piece : pieces) {delete piece;}
 }

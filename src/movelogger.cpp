@@ -8,7 +8,8 @@ std::vector<Move> MoveLogger::move_history;
 
 void MoveLogger::show_algebraic_move_history()  {
 
-    std::cout << "Updated Move History: \n";
+    // std::cout << "\033[2J\033[1;1H";
+
     for (int i = 0; i < move_history.size(); i++) {
         
         uint64_t selected_piece = 0ULL;
