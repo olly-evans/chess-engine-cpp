@@ -333,18 +333,21 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
-        // case sf::Keyboard::Z:
-        //     // MoveLogger::undo_move();
-        //     if (MoveLogger::move_history.empty()) return;
+        case sf::Keyboard::Z:
+            // MoveLogger::undo_move();
+            if (MoveLogger::move_history.empty()) return;
 
-        //     Move& last_move = MoveLogger::move_history.back();
+            Move& last_move = MoveLogger::move_history.back();
 
-        //     if (last_move.captured_piece) create_piece();
+            if (last_move.captured_piece) create_piece(last_move.captured_piece->piece_id, last_move.end_bit);
 
-        //     Piece* moved_piece = get_piece(last_move.m_end_bit);
-        //     moved_piece->bit = last_move.m_start_bit;
+            Piece* moved_piece = get_piece(last_move.end_bit);
+            moved_piece->bit = last_move.start_bit;
+
+            // bitboard shit.
 
             // need to find the piece we need to re-add if capture
+            is_whites_turn = !is_whites_turn;
 
     }
 }
@@ -383,7 +386,7 @@ void Board::on_left_mouse_press() {
 
         // Let user select a new piece without clicking to reset.
         reset_move_and_capture_highlights(selected_piece->bit);
-        selected_piece = select_piece(clicked_bit); // Can be null.
+        selected_piece = select_piece(clicked_bit); // Can be null which is fine ofc.
         return;
     }
 
@@ -393,7 +396,7 @@ void Board::on_left_mouse_press() {
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
-    MoveLogger::show_algebraic_move_history(); // tmp perhaps
+    MoveLogger::show_algebraic_move_history();
 
     is_whites_turn = !is_whites_turn;
 }
