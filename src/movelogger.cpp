@@ -18,10 +18,9 @@ void MoveLogger::show_algebraic_move_history()  {
 
 
         // TODO: if we have two kinds of this piece on the same rank/file use the other.
-
+        std::cout << move_history[i].end_bit << "\n";
         // selected_piece_rank = 0,1,2,3 -> a,b,c,d whatever.
         std::string move_square = BBHelper::bit_to_square_name[move_history[i].end_bit];
-        // same for captured piece
 
         char capture = 'x';
 

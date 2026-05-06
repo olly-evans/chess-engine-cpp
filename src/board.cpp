@@ -425,21 +425,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
 
     squares[clicked_bit].setFillColor(TURQOISE);
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
-
-    // make move.
-
-    // all below needs testing.
-    // we still need to log the move g.
-       
-    // do we have a selected piece here?
-
-    
-    // std::cout << "color: " << move.captured_col << "\n";
-
-
-    // has potential this, think this would have everything to undo a move.
-    // maybe captured piece bitboard actually.
-
     
     return piece;
 }
