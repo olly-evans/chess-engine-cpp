@@ -1,14 +1,6 @@
 
 #include "fenparser.hpp"
 
-
-FenCharInfo FenParser::get_fen_char_info(const char ch) {
-    FenCharInfo info;
-    info.color = isupper(ch) ? Color::WHITE : Color::BLACK;
-    info.piece_id = ch;
-    return info; 
-}
-
 std::vector<std::string> FenParser::split(const std::string& str) {
     std::vector<std::string> tokens;
     std::istringstream iss(str);

@@ -171,8 +171,7 @@ void Board::init_position_from_fen(std::string fen) {
         } else if (isalpha(ch)) {
             int bit = rank * 8 + (7 - file);
 
-            FenCharInfo info = FenParser::get_fen_char_info(ch);
-            create_piece(info, bit);
+            create_piece(ch, bit);
             file++;
 
             // Convert fen to piece type bitboard.
@@ -187,11 +186,13 @@ void Board::init_position_from_fen(std::string fen) {
     // Parse more tokens later if we want to.
 }
 
-void Board::create_piece(const FenCharInfo& info, uint8_t bit) {
+void Board::create_piece(const char id, uint8_t bit) {
 
     // if islower() color black else white
     // make 6 objects.
-    switch (info.piece_id) {
+    switch (id) {
+        /* BLACK */
+
         case 'p':
             pieces.emplace_back(new Pawn('p', Color::BLACK, main_window, bit, board_square_size));
             break;
@@ -211,23 +212,25 @@ void Board::create_piece(const FenCharInfo& info, uint8_t bit) {
             pieces.emplace_back(new King('k', Color::BLACK, main_window, bit, board_square_size));
             break;
 
+            /* WHITE */
+
         case 'P':
-            pieces.emplace_back(new Pawn('P', info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn('P', Color::WHITE, main_window, bit, board_square_size));
             break;
         case 'N':
-            pieces.emplace_back(new Knight('N', info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight('N', Color::WHITE, main_window, bit, board_square_size));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop('B', info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop('B', Color::WHITE, main_window, bit, board_square_size));
             break;
         case 'R':
-            pieces.emplace_back(new Rook('R', info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook('R', Color::WHITE, main_window, bit, board_square_size));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen('Q', info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen('Q', Color::WHITE, main_window, bit, board_square_size));
             break;
         case 'K':
-            pieces.emplace_back(new King('K', info.color, main_window, bit, board_square_size));
+            pieces.emplace_back(new King('K', Color::WHITE, main_window, bit, board_square_size));
             break;
         default: break;
     }
@@ -352,16 +355,16 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
-        case sf::Keyboard::Z:
-            // MoveLogger::undo_move();
-            if (MoveLogger::move_history.empty()) return;
+        // case sf::Keyboard::Z:
+        //     // MoveLogger::undo_move();
+        //     if (MoveLogger::move_history.empty()) return;
 
-            Move& last_move = MoveLogger::move_history.back();
+        //     Move& last_move = MoveLogger::move_history.back();
 
-            if (last_move.captured_piece) create_piece();
+        //     if (last_move.captured_piece) create_piece();
 
-            Piece* moved_piece = get_piece(last_move.m_end_bit);
-            moved_piece->bit = last_move.m_start_bit;
+        //     Piece* moved_piece = get_piece(last_move.m_end_bit);
+        //     moved_piece->bit = last_move.m_start_bit;
 
             // need to find the piece we need to re-add if capture
 
