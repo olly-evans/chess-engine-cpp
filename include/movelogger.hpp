@@ -23,7 +23,6 @@ class MoveLogger {
 public:
 
     static std::vector<Move> move_history;
-    static std::vector<Piece*> captured_pieces;
 
     // not necessary i think but get the idea.
     // lets add the moves for one piece and print them.
