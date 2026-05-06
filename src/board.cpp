@@ -345,19 +345,24 @@ void Board::on_key_pressed(sf::Event &event) {
                 BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
             }
 
-            // need seperate logic for a capture and not.
-            Piece* moved_piece = get_piece(last_move.end_bit);
-            moved_piece->bit = last_move.start_bit;
-
-            // bitboard shit.
+            // get moved_piece bitboard.
             uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.move_id, bitboards);
 
+            // reset bit on the moved pieces bitboard
             BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
+
+            // clear the bit we moved to.
             BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
+            
+            // need seperate logic for a capture and not.
+            Piece* moved_piece = get_piece(last_move.end_bit); // get moved piece
+            moved_piece->bit = last_move.start_bit; // move piece back
+
             
             MoveLogger::move_history.pop_back();
             is_whites_turn = !is_whites_turn; // flips when we handle piece move, flipping back here for now.
 
+            // we are wiping the bitboard of the capturing piece.
     }   
 }
 

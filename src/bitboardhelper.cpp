@@ -29,7 +29,7 @@ void BBHelper::set_bit_by_ref(uint64_t& b, int bit) {
 }
 
 void BBHelper::clear_bit_by_ref(uint64_t& b, int bit) {
-    b &= (0ULL << bit);
+    b &= ~(1ULL << bit);
 }
 
 uint64_t BBHelper::set_bit(uint64_t b, int bit) {
