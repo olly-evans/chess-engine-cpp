@@ -335,7 +335,8 @@ void Board::on_key_pressed(sf::Event &event) {
             break;
         case sf::Keyboard::Z:
             undo_move(); 
-        default: return;
+        default: 
+            return;
     }   
 }
 
@@ -389,7 +390,7 @@ void Board::on_left_mouse_press() {
     /* 
      * Handles left mouse presses wowza!
      *
-     * when we return in this function it essentially just means wait until next left mouse press. 
+     * If we return early in this function it essentially just means wait until next left mouse press. 
      * 
      */
 
@@ -452,6 +453,9 @@ void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 }
 
 Piece* Board::get_piece(uint8_t clicked_bit) {
+
+    // Perhaps just use bitboards instead.
+    // Return the bitboard if yes and 0ULL
     for (auto& piece : pieces) {
         if (clicked_bit == piece->bit)
             return piece;
@@ -492,12 +496,6 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
                  capture_id};
 
     MoveLogger::move_history.push_back(move);
-
-    // if (MoveLogger::move_history.size() > 5) {
-    //     std::cout << "move 4 start: " << MoveLogger::move_history[4].m_start_bit << "\n";
-    //     std::cout << "move 4 end: " << MoveLogger::move_history[4].m_end_bit << "\n";
-    //     std::cout << "move 4 captured_piece: " << MoveLogger::move_history[4].captured_piece->bit << "\n";
-    // }
 
     /* ------------------------------------------------------------ */
 

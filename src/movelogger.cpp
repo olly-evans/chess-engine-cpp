@@ -4,6 +4,8 @@
 #include "bitboardhelper.hpp"
 #include "board.hpp"
 
+#include <functional>
+
 std::vector<Move> MoveLogger::move_history;
 
 

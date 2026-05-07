@@ -48,3 +48,4 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - perhaps is piece->bit changes we just auto calc the file/rank.
 
 - check bitboards are equal with temp ones we store before undoing move.
+- get_piece() probably doesnt have to use a pointer to get the piece on a certain bit we can just loop through the bitboards.
