@@ -234,8 +234,11 @@ void Board::render() {
 void Board::render_main_window() {
     main_window.clear();
 
-    /* Captures change the square color, must be rendered before we redraw the
-    *  squares vector to not have any delay when using waitEvent().
+    /* 
+    *   Captures change the square color to stand out more, thus must
+    *   be rendered before we redraw the squares vector to not have any
+    *   delay when using waitEvent().
+    * 
     */
 
     if (selected_piece) render_capture_highlights();
@@ -248,9 +251,10 @@ void Board::render_main_window() {
     main_window.display();
 }
 
-// Selected piece highlights.
 void Board::render_move_highlights() {
 
+    /* Renders turqoise circles to the square the selected piece can move. */
+    
     float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
     float radius = board_square_size * radius_percent_of_squares;
     
@@ -305,11 +309,7 @@ void Board::run() {
 void Board::handle_events() {
 
     sf::Event event;
-    // while (main_window.pollEvent(event)) {
-    //     on_main_window_event(event);
-    // }
 
-    // Experiment with this in future, has delayed capture highlights but worked, no clue why.
     if (main_window.waitEvent(event)) {
         on_main_window_event(event);
     }
@@ -510,11 +510,9 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
                          selected_piece->piece_id, 
                          has_capture);
 
-    /* Move */
+    /* Process click into a move */
 
     for (auto& bitboard: bitboards) {
-
-        // TODO: Log the move into a move class.
 
         // Clear bitboard of the piece we chose.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)){
@@ -522,9 +520,9 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
 
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
+
             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
 
-            
             // Find piece and remove piece from pieces vector.
             auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
                 return p->bit == clicked_bit;
@@ -536,7 +534,6 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             }
         }
     }
-    
     selected_piece->bit = clicked_bit;
 }
 

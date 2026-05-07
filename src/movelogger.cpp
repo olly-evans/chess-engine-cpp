@@ -3,12 +3,13 @@
 #include "bitboardhelper.hpp"
 #include "board.hpp"
 
-#include <functional>
-
 std::vector<Move> MoveLogger::move_history;
 
+void MoveLogger::show_algebraic_move_history() {
 
-void MoveLogger::show_algebraic_move_history()  {
+    if (move_history.size() < 1) return;
+
+    std::cout << "Updated Move History:\n";
 
     // std::cout << "\033[2J\033[1;1H";
 
@@ -39,7 +40,7 @@ void MoveLogger::log_move(std::vector<uint64_t> bitboards, std::vector<char> bb_
     // bool has_capture = (captured_piece) ? true : false;
     // char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
     
-    int i;
+    uint8_t i;
     for (i = 0; i < bb_names.size(); i++) {
         if (bitboards[i] & (1ULL << clicked_bit)) break;
     }
@@ -54,3 +55,7 @@ void MoveLogger::log_move(std::vector<uint64_t> bitboards, std::vector<char> bb_
 
     MoveLogger::move_history.push_back(move);
 }
+
+// bool MoveLogger::check_draw_by_threefold_repetition() {
+
+// }
