@@ -30,4 +30,9 @@ public:
     static void append_move(Move move);
     static void show_algebraic_move_history();
 
+    static void log_move(std::vector<uint64_t> bitboards, 
+                         std::vector<char> bb_names, 
+                         uint8_t clicked_bit, uint8_t moved_bit, 
+                         char moved_id, 
+                         bool has_capture);
 };  

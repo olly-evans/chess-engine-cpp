@@ -11,4 +11,5 @@ public:
     static std::vector<std::string> split_with_delimiter(std::string s, const std::string& delimiter);
 
     static uint64_t& get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitboards);
+    static char get_bitboards_fen_char(uint8_t index);
 };

@@ -104,7 +104,7 @@ private:
 
     // Vector of all bitboards.
     std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
-    std::vector<std::string> bitboard_names; // Names of the bitboards for debugging.
+    std::vector<char> bitboard_names; // Names of the bitboards for debugging.
     int bitboard_vec_index = 0;
     
     uint64_t w_pawns = 0ULL;
@@ -191,6 +191,9 @@ public:
 
     Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
+    bool bit_has_piece(uint8_t clicked_bit);
+
+
     void handle_piece_move(uint8_t clicked_bit);
 
     /* FREES */

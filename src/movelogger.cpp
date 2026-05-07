@@ -1,4 +1,3 @@
-#pragma once
 
 #include "movelogger.hpp"
 #include "bitboardhelper.hpp"
@@ -33,4 +32,25 @@ void MoveLogger::show_algebraic_move_history()  {
             std::cout << move_history[i].move_id << move_square << "\n";
         }
     }
+}
+
+void MoveLogger::log_move(std::vector<uint64_t> bitboards, std::vector<char> bb_names, uint8_t clicked_bit, uint8_t moved_bit, char moved_id, bool has_capture) {
+    // Piece* captured_piece = get_piece(clicked_bit);
+    // bool has_capture = (captured_piece) ? true : false;
+    // char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
+    
+    int i;
+    for (i = 0; i < bb_names.size(); i++) {
+        if (bitboards[i] & (1ULL << clicked_bit)) break;
+    }
+
+    char captured_id = bb_names[i];
+    // change to char not string in bb_names too.
+    Move move = {moved_id, 
+                 moved_bit, 
+                 clicked_bit,
+                 has_capture, 
+                 captured_id};
+
+    MoveLogger::move_history.push_back(move);
 }

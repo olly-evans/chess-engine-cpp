@@ -2,7 +2,7 @@
 #include "board.hpp"
 #include <iostream>
 
-void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, std::vector<uint64_t> bitboards, std::vector<std::string> bitboard_names, int bitboard_vec_index, std::vector<sf::RectangleShape> &squares) {
+void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, std::vector<uint64_t> bitboards, std::vector<char> bitboard_names, int bitboard_vec_index, std::vector<sf::RectangleShape> &squares) {
     // assert(bitboard.size() == bitboard_names.size())
     
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {

@@ -90,8 +90,8 @@ void Board::init() {
     };
 
     bitboard_names = {
-        "White Pawns Bitboard", "White Knights Bitboard", "White Bishops Bitboard", "White Rooks Bitboard", "White Queen Bitboard", "White King Bitboard",
-        "Black Pawns Bitboard", "Black Knights Bitboard", "Black Bishops Bitboard", "Black Rooks Bitboard", "Black Queen Bitboard", "Black King Bitboard",
+        'P', 'N', 'B', 'R', 'Q', 'K',
+        'p', 'n', 'b', 'r', 'q', 'k',
     };
 
 
@@ -334,7 +334,7 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
         case sf::Keyboard::Z:
-            undo_move(); 
+            if (Debug::enabled) undo_move();
         default: 
             return;
     }   
@@ -457,12 +457,18 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
     // Perhaps just use bitboards instead.
     // Return the bitboard if yes and 0ULL
     for (auto& piece : pieces) {
-        if (clicked_bit == piece->bit)
-            return piece;
+        if (clicked_bit == piece->bit) return piece;
     }
     return nullptr;
 }
 
+bool Board::bit_has_piece(uint8_t clicked_bit) {
+    
+    for (auto& bitboard : bitboards) {
+        if (bitboard & (1ULL << clicked_bit)) return true;
+    }
+    return false;
+}
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /*
@@ -481,30 +487,34 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     */
 
-    /* Move logging logic */
+    /* -----------------Move logging logic -------------------------*/
 
-    // MoveLogger::log_move {}
+    // Before we make the move we need to store the data of the move 
+    // so we can undo it if we need to.
 
-    Piece* captured_piece = get_piece(clicked_bit); // ptr will point to nothing once we handle the capture.  
-    bool has_capture = (captured_piece) ? true : false;
-    char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
+    // Piece* captured_piece = get_piece(clicked_bit);
+    // bool has_capture = (captured_piece) ? true : false;
+    // char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
 
-    Move move = {selected_piece->piece_id, 
-                 selected_piece->bit, 
-                 clicked_bit,
-                 has_capture, 
-                 capture_id};
+    // // log_move()
+    // Move move = {selected_piece->piece_id, 
+    //              selected_piece->bit, 
+    //              clicked_bit,
+    //              has_capture, 
+    //              capture_id};
 
-    MoveLogger::move_history.push_back(move);
+    // MoveLogger::move_history.push_back(move);
+
+    bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
+    MoveLogger::log_move(bitboards, bitboard_names, clicked_bit, selected_piece->bit, selected_piece->piece_id, has_capture);
 
     /* ------------------------------------------------------------ */
 
     for (auto& bitboard: bitboards) {
 
         // TODO: Log the move into a move class.
-        // TODO: Allow moves to be undone.
 
-        // clear bitboard of the piece we chose.
+        // Clear bitboard of the piece we chose.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)){
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
