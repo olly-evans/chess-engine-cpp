@@ -37,20 +37,14 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - for castling, occupancy call and & all bitboards.
 
-- extract fen token code to functions in fenparser. create_piece() can be part of something else perhaps.
+- extract fen token code to functions in fenparser. 
 
 - add global bitboard viewer to debug, overhaul piece cycle to be more dynamic. Wanna init a window and use it to print debug shit.
 
-- only for pawns were resetting captures to zero at the start of the function, perhaps a future issue not sure, not sure why its working for other pieces.
-
-- sort king moves, captures and highlights out.
-
-- need a move logger
-
-- make create_piece() use only 6 object instanciations.
+- only for pawns we're resetting captures to zero at the start of the function, perhaps a future issue not sure, not sure why its working for other pieces.
 
 - continue with algebraic move logging.
 
-- finish undoing moves etc. in handle_piece_moves().
-
 - perhaps is piece->bit changes we just auto calc the file/rank.
+
+- check bitboards are equal with temp ones we store before undoing move.

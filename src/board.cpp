@@ -334,15 +334,12 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
         case sf::Keyboard::Z:
-            // MoveLogger::undo_move();
-            if (MoveLogger::move_history.empty()) return;
 
+            if (MoveLogger::move_history.empty()) return;
             Move& last_move = MoveLogger::move_history.back();
 
-            if (last_move.has_capture) {
-                create_piece(last_move.captured_id, last_move.end_bit);
-                uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
-                BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
+            if (selected_piece) {
+                reset_move_and_capture_highlights(selected_piece->bit);
             }
 
             uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.move_id, bitboards);
@@ -353,10 +350,18 @@ void Board::on_key_pressed(sf::Event &event) {
             Piece* moved_piece = get_piece(last_move.end_bit);
             moved_piece->bit = last_move.start_bit; 
 
-            
-            MoveLogger::move_history.pop_back();
-            is_whites_turn = !is_whites_turn; // flips when we handle piece move, flipping back here for now.
+            if (!last_move.has_capture) {
+                MoveLogger::move_history.pop_back(); // cant do this until the end, but not 
+                is_whites_turn = !is_whites_turn;
+                return;
+            }
 
+            create_piece(last_move.captured_id, last_move.end_bit);
+            uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
+            BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
+
+            MoveLogger::move_history.pop_back(); // cant do this until the end, but not 
+            is_whites_turn = !is_whites_turn; // flips when we handle piece move, flipping back here for now.
     }   
 }
 
@@ -404,7 +409,7 @@ void Board::on_left_mouse_press() {
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
-    MoveLogger::show_algebraic_move_history();
+    // MoveLogger::show_algebraic_move_history();
 
     is_whites_turn = !is_whites_turn;
 }
@@ -429,11 +434,12 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
 }
 
 void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
+
+    // std::cout << selected_bit << "\n";
     squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
-        
+    
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         if (!BBHelper::get_bit(selected_piece->captures, i)) continue;
-
         squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
     }
     selected_piece = nullptr;

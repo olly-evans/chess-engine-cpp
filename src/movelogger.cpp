@@ -2,6 +2,7 @@
 
 #include "movelogger.hpp"
 #include "bitboardhelper.hpp"
+#include "board.hpp"
 
 std::vector<Move> MoveLogger::move_history;
 

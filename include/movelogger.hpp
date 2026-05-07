@@ -28,4 +28,5 @@ public:
 
     static void append_move(Move move);
     static void show_algebraic_move_history();
+
 };  
