@@ -430,3 +430,13 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     moves = BBHelper::remove_friendly_pieces(moves, this->color == Color::WHITE ? w_bb : b_bb);
     return BBHelper::remove_enemy_pieces(moves, this->color == Color::WHITE ? b_bb : w_bb);
 };
+
+// bool King::can_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
+
+//     uint64_t king = (1ULL << this->bit);
+
+//     if (this->color == Color::WHITE) {
+        
+//         if (king & (1ULL << 3))
+//     }   
+// }

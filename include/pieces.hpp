@@ -142,5 +142,6 @@ public:
     }
 
     uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    bool can_queenside_castle(uint64_t w_bb, uint64_t b_bb);
 
 };
