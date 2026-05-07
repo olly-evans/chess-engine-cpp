@@ -43,9 +43,9 @@ void MoveLogger::log_move(std::vector<uint64_t> bitboards, std::vector<char> bb_
     for (i = 0; i < bb_names.size(); i++) {
         if (bitboards[i] & (1ULL << clicked_bit)) break;
     }
-
     char captured_id = bb_names[i];
-    // change to char not string in bb_names too.
+
+    // Fill out move data.
     Move move = {moved_id, 
                  moved_bit, 
                  clicked_bit,

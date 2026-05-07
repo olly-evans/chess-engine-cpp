@@ -49,3 +49,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - check bitboards are equal with temp ones we store before undoing move.
 - get_piece() probably doesnt have to use a pointer to get the piece on a certain bit we can just loop through the bitboards.
+
+- try and get waitEvent() working not pollEvents its very expensive, now know why it delays rendering capture squares, because we redraw squares before we render the highlights so render() isn't run again until an event occurs. Solution is to move them into two functions render_captures and render_moves
+render captures before drawing squares and moves after.

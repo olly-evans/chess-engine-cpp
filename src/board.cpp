@@ -234,9 +234,8 @@ void Board::render() {
 void Board::render_main_window() {
     main_window.clear();
 
-
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
     if (selected_piece) render_attack_highlights();
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
 
     // render_board_coords();
 
@@ -244,7 +243,7 @@ void Board::render_main_window() {
     main_window.display();
 }
 
-// selected piece highlights.
+// Selected piece highlights.
 void Board::render_attack_highlights() {
 
     float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
@@ -284,7 +283,7 @@ void Board::render_bitboard_window() {
 
 void Board::run() {
     while (main_window.isOpen()) {
-
+        
         handle_events();
         render();
     }
@@ -296,8 +295,12 @@ void Board::run() {
 void Board::handle_events() {
 
     sf::Event event;
+    // while (main_window.pollEvent(event)) {
+    //     on_main_window_event(event);
+    // }
 
-    while (main_window.pollEvent(event)) {
+    // Experiment with this in future, has delayed capture highlights but worked, no clue why.
+    if (main_window.waitEvent(event)) {
         on_main_window_event(event);
     }
 
@@ -454,8 +457,6 @@ void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 
 Piece* Board::get_piece(uint8_t clicked_bit) {
 
-    // Perhaps just use bitboards instead.
-    // Return the bitboard if yes and 0ULL
     for (auto& piece : pieces) {
         if (clicked_bit == piece->bit) return piece;
     }
@@ -469,6 +470,7 @@ bool Board::bit_has_piece(uint8_t clicked_bit) {
     }
     return false;
 }
+
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /*
@@ -487,7 +489,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     */
 
-    /* -----------------Move logging ----- -------------------------*/
+    /* Log Move */
 
     bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
 
@@ -498,7 +500,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
                          selected_piece->piece_id, 
                          has_capture);
 
-    /* ------------------------------------------------------------ */
+    /* Move */
 
     for (auto& bitboard: bitboards) {
 
