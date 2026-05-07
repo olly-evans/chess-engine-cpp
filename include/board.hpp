@@ -183,6 +183,7 @@ public:
     void on_bitboard_window_event(sf::Event &event);
 
     void on_key_pressed(sf::Event &event);
+    void undo_move();
 
     void on_mouse_press(sf::Event &event);
     void on_left_mouse_press();
