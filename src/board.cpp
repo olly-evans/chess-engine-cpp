@@ -234,8 +234,13 @@ void Board::render() {
 void Board::render_main_window() {
     main_window.clear();
 
-    if (selected_piece) render_attack_highlights();
+    /* Captures change the square color, must be rendered before we redraw the
+    *  squares vector to not have any delay when using waitEvent().
+    */
+
+    if (selected_piece) render_capture_highlights();
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
+    if (selected_piece) render_move_highlights();
 
     // render_board_coords();
 
@@ -244,7 +249,7 @@ void Board::render_main_window() {
 }
 
 // Selected piece highlights.
-void Board::render_attack_highlights() {
+void Board::render_move_highlights() {
 
     float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
     float radius = board_square_size * radius_percent_of_squares;
@@ -253,7 +258,6 @@ void Board::render_attack_highlights() {
         
         uint8_t square = GRID_NUM_SQUARES - i - 1;
 
-        if (BBHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
         if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
@@ -269,6 +273,12 @@ void Board::render_attack_highlights() {
         circle.setFillColor(TURQOISE);
 
         main_window.draw(circle);
+    }
+}
+
+void Board::render_capture_highlights() {
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (BBHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
     }
 }
 

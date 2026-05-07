@@ -168,7 +168,8 @@ public:
 
     void render();
     void render_main_window();
-    void render_attack_highlights();
+    void render_move_highlights();
+    void render_capture_highlights();
 
     void render_bitboard_window();
 
