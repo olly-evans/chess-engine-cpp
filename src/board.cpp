@@ -334,14 +334,17 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
         case sf::Keyboard::Z:
-            undo_move(); // flips when we handle piece move, flipping back here for now.
+            undo_move(); 
+        default: return;
     }   
 }
 
 void Board::undo_move() {
+
     if (MoveLogger::move_history.empty()) return;
     Move& last_move = MoveLogger::move_history.back();
 
+    // Just so if we undo a move whilst user has piece selected we don't get funny business.
     if (selected_piece) reset_move_and_capture_highlights(selected_piece->bit);
 
     uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.move_id, bitboards);
@@ -352,12 +355,14 @@ void Board::undo_move() {
     Piece* moved_piece = get_piece(last_move.end_bit);
     moved_piece->bit = last_move.start_bit; 
 
+    // If the move didn't involve a capture we can clean up and return early.
     if (!last_move.has_capture) {
         MoveLogger::move_history.pop_back(); 
         is_whites_turn = !is_whites_turn;
         return;
     }
 
+    // If it did involve a capture we need to recreate the captured piece and reset its bitboard.
     create_piece(last_move.captured_id, last_move.end_bit);
     uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
