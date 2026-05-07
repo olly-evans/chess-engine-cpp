@@ -487,26 +487,16 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     */
 
-    /* -----------------Move logging logic -------------------------*/
-
-    // Before we make the move we need to store the data of the move 
-    // so we can undo it if we need to.
-
-    // Piece* captured_piece = get_piece(clicked_bit);
-    // bool has_capture = (captured_piece) ? true : false;
-    // char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
-
-    // // log_move()
-    // Move move = {selected_piece->piece_id, 
-    //              selected_piece->bit, 
-    //              clicked_bit,
-    //              has_capture, 
-    //              capture_id};
-
-    // MoveLogger::move_history.push_back(move);
+    /* -----------------Move logging ----- -------------------------*/
 
     bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
-    MoveLogger::log_move(bitboards, bitboard_names, clicked_bit, selected_piece->bit, selected_piece->piece_id, has_capture);
+
+    MoveLogger::log_move(bitboards, 
+                         bitboard_names, 
+                         clicked_bit, 
+                         selected_piece->bit, 
+                         selected_piece->piece_id, 
+                         has_capture);
 
     /* ------------------------------------------------------------ */
 
