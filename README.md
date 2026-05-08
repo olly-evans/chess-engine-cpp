@@ -59,3 +59,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - then insantiate it perhaps in an app class where we have run()
 
 - en passant should be fairly trivial now.
+
+-- CLEAN UP ENPASSANT LOGIC.
