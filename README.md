@@ -52,3 +52,10 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - draw by fifty move rule, draw by threefold repitition.
 
 - may have to extract run logic from board. would make sense.
+
+- shared pointer to vector elements.
+
+- isolate event handling to an instantiated class.
+- then insantiate it perhaps in an app class where we have run()
+
+- en passant should be fairly trivial now.

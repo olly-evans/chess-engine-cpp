@@ -2,6 +2,7 @@
 #include "pieces.hpp"
 #include "board.hpp"
 #include "bitboardhelper.hpp"
+#include "movelogger.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -58,6 +59,9 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
         moves = get_white_pawn_moves(pawn, w_bb, b_bb);
 
         // enpassant
+        uint64_t enpassant_captures = get_enpassant(w_bb, b_bb);
+        this->captures |= enpassant_captures;
+        
         // promotions.
 
         moves = BBHelper::remove_friendly_pieces(moves, w_bb);
@@ -65,6 +69,9 @@ uint64_t Pawn::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     } else {
 
         moves = get_black_pawn_moves(pawn , w_bb, b_bb);
+
+        uint64_t enpassant_captures = get_enpassant(w_bb, b_bb);
+        this->captures |= enpassant_captures;
 
         moves = BBHelper::remove_friendly_pieces(moves, b_bb);
         return BBHelper::remove_enemy_pieces(moves, w_bb);
@@ -80,8 +87,8 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 
     uint64_t white_pawn_start_rank = BBHelper::rank_masks[1];
 
-    if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BBHelper::file_masks[7])<< 9);
-    if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BBHelper::file_masks[0])<< 7);
+    if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BBHelper::file_masks[7]) << 9);
+    if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BBHelper::file_masks[0]) << 7);
 
     if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) return moves;
     moves |= (pawn << 8);
@@ -117,7 +124,51 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 }
 
 uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
-    return moves;
+
+    const uint64_t no_enpassant = 0ULL;
+    uint64_t en_passant_captures = 0ULL;
+
+    uint64_t pawn = (1ULL << this->bit);
+
+    bool pawn_is_white = (this->color == Color::WHITE);
+
+    uint64_t enemy_pawns = pawn_is_white ? Board::bitboards[B_PAWNS] : Board::bitboards[W_PAWNS];
+
+    uint64_t west = (pawn << 1);
+    uint64_t east = (pawn >> 1);
+
+    if (!(enemy_pawns & west) && !(enemy_pawns & east))
+        return no_enpassant;
+
+    if (MoveLogger::move_history.empty())
+        return no_enpassant;
+
+    Move& last_move = MoveLogger::move_history.back();
+
+    // condition wrong.
+    bool east_moved_two = (abs(last_move.end_bit - last_move.start_bit) == 16) 
+                    && (east == (1ULL << last_move.end_bit)) ? true : false;
+
+    bool west_moved_two = (abs(last_move.end_bit - last_move.start_bit) == 16) 
+                    && (west == (1ULL << last_move.end_bit)) ? true : false;
+
+    if (enemy_pawns & (west) && west_moved_two && pawn_is_white)
+        en_passant_captures |= (west << 8);
+
+    if (enemy_pawns & (east) && east_moved_two && pawn_is_white)
+        en_passant_captures |= (east << 8);
+
+    if (enemy_pawns & (west) && west_moved_two && !pawn_is_white)
+        en_passant_captures |= (west >> 8);
+
+    if (enemy_pawns & (east) && east_moved_two && !pawn_is_white)
+        en_passant_captures |= (east >> 8);
+
+    return en_passant_captures;
+
+    // moves to capture bit, remove piece west/east. not in here but needed.
+    // Board::handle_enpassant_move();
+
 }
 
 /* KNIGHT */
@@ -438,5 +489,7 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 //     if (this->color == Color::WHITE) {
         
 //         if (king & (1ULL << 3))
+
+// how do we know a rook is queenside/kingside.
 //     }   
 // }

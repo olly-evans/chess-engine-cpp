@@ -103,7 +103,6 @@ private:
     */
 
     // Vector of all bitboards.
-    std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
     std::vector<char> bitboard_names; // Names of the bitboards for debugging.
     int bitboard_vec_index = 0;
     
@@ -131,6 +130,7 @@ public:
     Board(const unsigned int ww, const unsigned int wh, const std::string wn);
 
     unsigned int board_square_size;
+    static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
 
     /* UTIL METHODS */
 

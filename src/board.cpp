@@ -22,6 +22,9 @@
 //     .
 // };
 
+
+std::vector<uint64_t> Board::bitboards;
+
 Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) :
 win_w(ww),
 win_h(wh),
@@ -356,11 +359,14 @@ void Board::on_key_pressed(sf::Event &event) {
 
 void Board::undo_move() {
 
-    if (MoveLogger::move_history.empty()) return;
+    if (MoveLogger::move_history.empty()) 
+        return;
+
     Move& last_move = MoveLogger::move_history.back();
 
     // Just so if we undo a move whilst user has piece selected we don't get funny business.
-    if (selected_piece) reset_move_and_capture_highlights(selected_piece->bit);
+    if (selected_piece) 
+        reset_move_and_capture_highlights(selected_piece->bit);
 
     uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.move_id, bitboards);
 
