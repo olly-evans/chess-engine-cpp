@@ -126,7 +126,7 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     const uint64_t no_enpassant = 0ULL;
-    uint64_t en_passant_captures = 0ULL;
+    uint64_t en_passant_moves = 0ULL;
 
     uint64_t pawn = (1ULL << this->bit);
 
@@ -145,26 +145,38 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     Move& last_move = MoveLogger::move_history.back();
 
-    // condition wrong.
-    bool east_moved_two = (abs(last_move.end_bit - last_move.start_bit) == 16) 
-                    && (east == (1ULL << last_move.end_bit)) ? true : false;
+    bool moved_two = (abs(last_move.end_bit - last_move.start_bit) == 16);
 
-    bool west_moved_two = (abs(last_move.end_bit - last_move.start_bit) == 16) 
-                    && (west == (1ULL << last_move.end_bit)) ? true : false;
+    bool east_moved_two = moved_two && (east == (1ULL << last_move.end_bit));
+    bool west_moved_two = moved_two && (west == (1ULL << last_move.end_bit));
 
-    if (enemy_pawns & (west) && west_moved_two && pawn_is_white)
-        en_passant_captures |= (west << 8);
+    // this->enpassant_captures, shows the capture square
+    // move to clicked bit, remove clicked_bit << 8, clicked_bit >> 8. in board.
 
-    if (enemy_pawns & (east) && east_moved_two && pawn_is_white)
-        en_passant_captures |= (east << 8);
+    uint64_t en_passant_captures = 0ULL;
 
-    if (enemy_pawns & (west) && west_moved_two && !pawn_is_white)
-        en_passant_captures |= (west >> 8);
+    if (enemy_pawns & (west) && west_moved_two && pawn_is_white) {
+        en_passant_moves |= (west << 8);
+        en_passant_moves |= west;
+    }
+        
 
-    if (enemy_pawns & (east) && east_moved_two && !pawn_is_white)
-        en_passant_captures |= (east >> 8);
+    if (enemy_pawns & (east) && east_moved_two && pawn_is_white) {
+        en_passant_moves |= (east << 8);
+        en_passant_moves |= east;
+    }
 
-    return en_passant_captures;
+    if (enemy_pawns & (west) && west_moved_two && !pawn_is_white) {
+        en_passant_moves |= (west >> 8);
+        en_passant_moves |= west;
+    }
+
+    if (enemy_pawns & (east) && east_moved_two && !pawn_is_white) {
+        en_passant_moves |= (east >> 8);
+        en_passant_moves |= east;
+    }
+    
+    return en_passant_moves;
 
     // moves to capture bit, remove piece west/east. not in here but needed.
     // Board::handle_enpassant_move();
