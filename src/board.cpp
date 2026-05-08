@@ -433,6 +433,15 @@ void Board::on_left_mouse_press() {
     // Below be executed if we have a selected piece and click on a valid move/capture square.
     uint8_t old_bit = selected_piece->bit;
 
+    // essentially checks if pawn.
+    if(selected_piece->get_special_captures() != 0ULL) {
+        handle_enpassant_move(clicked_bit, selected_piece->get_special_captures());
+        reset_move_and_capture_highlights(old_bit);
+        MoveLogger::show_algebraic_move_history();
+        is_whites_turn = !is_whites_turn;
+        return;
+    }
+
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
@@ -544,8 +553,53 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     selected_piece->bit = clicked_bit;
 }
 
+void Board::handle_enpassant_move(uint8_t clicked_bit, uint64_t captures) {
+    
+    // captures will not be 0ULL.
+
+    // convert captures to bits 
+    
+    // bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
+
+    // MoveLogger::log_move(bitboards, 
+    //                      bitboard_names, 
+    //                      clicked_bit, 
+    //                      selected_piece->bit, 
+    //                      selected_piece->piece_id, 
+    //                      has_capture);
+    
+    uint64_t capture = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
+    // find the piece on the captures squares
+
+    for (auto& bitboard : bitboards) {
+        // Clear bitboard of the piece we chose.
+        if (BBHelper::get_bit(bitboard, selected_piece->bit)) {
+            bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
+            bitboard = BBHelper::set_bit(bitboard, clicked_bit);
+        }
+        
+        if (BBHelper::get_bit(bitboard, capture)) {
+            BBHelper::clear_bit(bitboard, capture);
+            // Find piece and remove piece from pieces vector.
+            auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
+                return p->bit == clicked_bit;
+            });
+
+            if (it != pieces.end()) {
+                delete *it;        // free the memory
+                pieces.erase(it);  // remove from vector
+            }
+        }
+    }
+    // remove appropriate piece/pieces from pieces vector.
+    // move selected_piece to clicked_bit
+    selected_piece->bit = clicked_bit;
+    
+}
+
 /* FREES */
 
 void Board::free_pieces() {
     for (auto& piece : pieces) {delete piece;}
 }
+

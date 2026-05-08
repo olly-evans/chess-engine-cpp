@@ -153,35 +153,36 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     // this->enpassant_captures, shows the capture square
     // move to clicked bit, remove clicked_bit << 8, clicked_bit >> 8. in board.
 
-    uint64_t en_passant_captures = 0ULL;
-
     if (enemy_pawns & (west) && west_moved_two && pawn_is_white) {
         en_passant_moves |= (west << 8);
-        en_passant_moves |= west;
+        this->en_passant_captures |= west;
     }
         
 
     if (enemy_pawns & (east) && east_moved_two && pawn_is_white) {
         en_passant_moves |= (east << 8);
-        en_passant_moves |= east;
+        this->en_passant_captures |= east;
     }
 
     if (enemy_pawns & (west) && west_moved_two && !pawn_is_white) {
         en_passant_moves |= (west >> 8);
-        en_passant_moves |= west;
+        this->en_passant_captures |= west;
     }
 
     if (enemy_pawns & (east) && east_moved_two && !pawn_is_white) {
         en_passant_moves |= (east >> 8);
-        en_passant_moves |= east;
+        this->en_passant_captures |= east;
     }
-    
+
     return en_passant_moves;
 
     // moves to capture bit, remove piece west/east. not in here but needed.
     // Board::handle_enpassant_move();
 
 }
+
+uint64_t Pawn::get_special_captures() {return this->en_passant_captures;}
+
 
 /* KNIGHT */
 
