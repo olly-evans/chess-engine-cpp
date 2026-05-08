@@ -433,24 +433,20 @@ void Board::on_left_mouse_press() {
     // Below be executed if we have a selected piece and click on a valid move/capture square.
     uint8_t old_bit = selected_piece->bit;
 
-    // essentially checks if pawn.
 
-    // need an enpassant bool in pawn i think but same problem lol.
-    // maybe just Piece::enpassant_eligible.
+    // TODO:
 
     // need to know clicked move is an enpassant capture.
+    // enpassant move if, en_passant_captures & (1ULL << clicked_bit - 8) or +8 vomit.
     
-    // if (Pawn* pawn = dynamic_cast<Pawn*>(selected_piece)) {
+    if (is_enpassant_capture(clicked_bit)) {
 
-    //     if (pawn->en_passant_captures == 0ULL) 
+        handle_enpassant_move(clicked_bit);
+        reset_move_and_capture_highlights(old_bit);
+        is_whites_turn = !is_whites_turn;
+        return;
+    }
 
-    //     handle_enpassant_move(clicked_bit);
-
-    //     reset_move_and_capture_highlights(old_bit);
-    //     // MoveLogger::show_algebraic_move_history();
-    //     is_whites_turn = !is_whites_turn;
-    //     return;
-    // }
 
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
@@ -545,6 +541,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
 
+
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
 
             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
@@ -581,18 +578,18 @@ void Board::handle_enpassant_move(uint8_t clicked_bit) {
     uint64_t capture = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
     // find the piece on the captures squares
 
+    std::cout << capture << "\n";
     for (auto& bitboard : bitboards) {
         // Clear bitboard of the piece we chose.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)) {
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
-        }
-        
-        if (BBHelper::get_bit(bitboard, capture)) {
+        } else if (BBHelper::get_bit(bitboard, capture)) {
             BBHelper::clear_bit(bitboard, capture);
             // Find piece and remove piece from pieces vector.
-            auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
-                return p->bit == clicked_bit;
+
+            auto it = std::find_if(pieces.begin(), pieces.end(), [capture](Piece* p) {
+                return p->bit == capture;
             });
 
             if (it != pieces.end()) {
@@ -601,10 +598,29 @@ void Board::handle_enpassant_move(uint8_t clicked_bit) {
             }
         }
     }
-    // remove appropriate piece/pieces from pieces vector.
-    // move selected_piece to clicked_bit
     selected_piece->bit = clicked_bit;
     
+}
+
+bool Board::is_enpassant_capture(uint8_t clicked_bit) {
+
+    // if not pawn, cannot be an enpassant capture.
+    Pawn* pawn = dynamic_cast<Pawn*>(selected_piece);
+
+    if (!pawn) 
+        return false;
+
+    uint8_t col_offset = (pawn->color == Color::WHITE) ? -8 : 8;
+
+    if (bit_has_piece(clicked_bit))
+        return false;
+
+    if (!(pawn->en_passant_captures & (1ULL << (clicked_bit + col_offset))))
+        return false;
+
+    // we have a pawn, no piece where we clicked to move and clicked bit is a valid enpassant capture.
+
+    return true;  
 }
 
 /* FREES */
