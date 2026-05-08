@@ -196,7 +196,7 @@ public:
 
 
     void handle_piece_move(uint8_t clicked_bit);
-    void handle_enpassant_move(uint8_t clicked_bit, uint64_t captures);
+    void handle_enpassant_move(uint8_t clicked_bit);
 
     /* FREES */
 

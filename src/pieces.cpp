@@ -181,9 +181,6 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
 }
 
-uint64_t Pawn::get_special_captures() {return this->en_passant_captures;}
-
-
 /* KNIGHT */
 
 uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
@@ -207,6 +204,8 @@ uint64_t Knight::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
     return BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
 }
+
+
 
 /* BISHOP */
 

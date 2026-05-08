@@ -45,8 +45,6 @@ public:
     // All instances return the moves and assign this->captures.
     virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
 
-    virtual uint64_t get_special_captures();
-
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
@@ -71,7 +69,6 @@ public:
     }
 
     uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
-    uint64_t get_special_captures() override;
 
     uint64_t get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);

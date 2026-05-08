@@ -434,18 +434,28 @@ void Board::on_left_mouse_press() {
     uint8_t old_bit = selected_piece->bit;
 
     // essentially checks if pawn.
-    if(selected_piece->get_special_captures() != 0ULL) {
-        handle_enpassant_move(clicked_bit, selected_piece->get_special_captures());
-        reset_move_and_capture_highlights(old_bit);
-        MoveLogger::show_algebraic_move_history();
-        is_whites_turn = !is_whites_turn;
-        return;
-    }
+
+    // need an enpassant bool in pawn i think but same problem lol.
+    // maybe just Piece::enpassant_eligible.
+
+    // need to know clicked move is an enpassant capture.
+    
+    // if (Pawn* pawn = dynamic_cast<Pawn*>(selected_piece)) {
+
+    //     if (pawn->en_passant_captures == 0ULL) 
+
+    //     handle_enpassant_move(clicked_bit);
+
+    //     reset_move_and_capture_highlights(old_bit);
+    //     // MoveLogger::show_algebraic_move_history();
+    //     is_whites_turn = !is_whites_turn;
+    //     return;
+    // }
 
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
-    MoveLogger::show_algebraic_move_history();
+    // MoveLogger::show_algebraic_move_history();
 
     is_whites_turn = !is_whites_turn;
 }
@@ -553,12 +563,12 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     selected_piece->bit = clicked_bit;
 }
 
-void Board::handle_enpassant_move(uint8_t clicked_bit, uint64_t captures) {
+void Board::handle_enpassant_move(uint8_t clicked_bit) {
     
     // captures will not be 0ULL.
 
     // convert captures to bits 
-    
+
     // bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
 
     // MoveLogger::log_move(bitboards, 
