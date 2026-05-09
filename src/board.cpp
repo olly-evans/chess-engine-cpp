@@ -364,6 +364,8 @@ void Board::undo_move() {
 
     Move& last_move = MoveLogger::move_history.back();
 
+    
+
     // Just so if we undo a move whilst user has piece selected we don't get funny business.
     if (selected_piece) 
         reset_move_and_capture_highlights(selected_piece->bit);
@@ -534,7 +536,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* Log Move */
 
+    uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
+
     bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
+    has_capture = (bit_has_piece(ep_capture_bit)) ? true : false; // hack, could work.
 
     MoveLogger::log_move(bitboards, 
                          bitboard_names, 
@@ -545,87 +550,43 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* Process click into a move */
     
-    uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
            
     for (auto& bitboard: bitboards) {
 
         // Clear bitboard of the piece we chose.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)){
+
+            // No capture.
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
-
-
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
 
-                bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
-                remove_piece(clicked_bit);
-                return;
+            // Normal capture.
+            bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
+            remove_piece(clicked_bit);
         } else if (BBHelper::get_bit(bitboard, ep_capture_bit)) {
+
+            // En Passant capture.
             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
             remove_piece(ep_capture_bit);
         }
-
     }
     selected_piece->bit = clicked_bit;
-}
-
-void Board::handle_enpassant_move(uint8_t clicked_bit) {
-    
-    // captures will not be 0ULL.
-
-    // convert captures to bits 
-
-    // bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
-
-    // MoveLogger::log_move(bitboards, 
-    //                      bitboard_names, 
-    //                      clicked_bit, 
-    //                      selected_piece->bit, 
-    //                      selected_piece->piece_id, 
-    //                      has_capture);
-    
-    uint64_t capture = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
-    // find the piece on the captures squares
-
-    std::cout << capture << "\n";
-    for (auto& bitboard : bitboards) {
-        // Clear bitboard of the piece we chose.
-        if (BBHelper::get_bit(bitboard, selected_piece->bit)) {
-            bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
-            bitboard = BBHelper::set_bit(bitboard, clicked_bit);
-        } else if (BBHelper::get_bit(bitboard, capture)) {
-            BBHelper::clear_bit(bitboard, capture);
-            // Find piece and remove piece from pieces vector.
-
-            auto it = std::find_if(pieces.begin(), pieces.end(), [capture](Piece* p) {
-                return p->bit == capture;
-            });
-
-            if (it != pieces.end()) {
-                delete *it;        // free the memory
-                pieces.erase(it);  // remove from vector
-            }
-        }
-    }
-    selected_piece->bit = clicked_bit;
-    
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
 
-    // if not pawn, cannot be an enpassant capture.
     Pawn* pawn = dynamic_cast<Pawn*>(selected_piece);
 
     if (!pawn) 
         return false;
 
-
     if (bit_has_piece(clicked_bit))
         return false;
 
-    uint8_t col_offset = (pawn->color == Color::WHITE) ? -8 : 8;
+    uint8_t color_offset = (pawn->color == Color::WHITE) ? -8 : 8;
 
-    if (!(pawn->en_passant_captures & (1ULL << (clicked_bit + col_offset))))
+    if (!(pawn->en_passant_captures & (1ULL << (clicked_bit + color_offset))))
         return false;
 
     // we have a pawn, no piece where we clicked to move and clicked bit is a valid enpassant capture.
