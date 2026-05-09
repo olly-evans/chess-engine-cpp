@@ -193,6 +193,8 @@ public:
     Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
     bool bit_has_piece(uint8_t clicked_bit);
+    void remove_piece(uint8_t piece_to_remove_bit);
+
 
 
     void handle_piece_move(uint8_t clicked_bit);

@@ -61,3 +61,4 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - en passant should be fairly trivial now.
 
 -- CLEAN UP ENPASSANT LOGIC.
+-- HOW TO LOG ENPASSANT MOVE BLODDY HELL YMAN

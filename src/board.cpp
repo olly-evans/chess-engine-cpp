@@ -439,13 +439,13 @@ void Board::on_left_mouse_press() {
     // need to know clicked move is an enpassant capture.
     // enpassant move if, en_passant_captures & (1ULL << clicked_bit - 8) or +8 vomit.
     
-    if (is_enpassant_capture(clicked_bit)) {
+    // if (is_enpassant_capture(clicked_bit)) {
 
-        handle_enpassant_move(clicked_bit);
-        reset_move_and_capture_highlights(old_bit);
-        is_whites_turn = !is_whites_turn;
-        return;
-    }
+    //     handle_enpassant_move(clicked_bit);
+    //     reset_move_and_capture_highlights(old_bit);
+    //     is_whites_turn = !is_whites_turn;
+    //     return;
+    // }
 
 
     handle_piece_move(clicked_bit);
@@ -503,6 +503,17 @@ bool Board::bit_has_piece(uint8_t clicked_bit) {
     return false;
 }
 
+void Board::remove_piece(uint8_t piece_to_remove_bit) {
+    auto it = std::find_if(pieces.begin(), pieces.end(), [piece_to_remove_bit](Piece* p) {
+        return p->bit == piece_to_remove_bit;
+    });
+
+    if (it != pieces.end()) {
+        delete *it;        // free the memory
+        pieces.erase(it);  // remove from vector
+    }
+}
+
 void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /*
@@ -533,7 +544,9 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
                          has_capture);
 
     /* Process click into a move */
-
+    
+    uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
+           
     for (auto& bitboard: bitboards) {
 
         // Clear bitboard of the piece we chose.
@@ -544,18 +557,14 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
 
-            bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
-
-            // Find piece and remove piece from pieces vector.
-            auto it = std::find_if(pieces.begin(), pieces.end(), [clicked_bit](Piece* p) {
-                return p->bit == clicked_bit;
-            });
-
-            if (it != pieces.end()) {
-                delete *it;        // free the memory
-                pieces.erase(it);  // remove from vector
-            }
+                bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
+                remove_piece(clicked_bit);
+                return;
+        } else if (BBHelper::get_bit(bitboard, ep_capture_bit)) {
+            bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
+            remove_piece(ep_capture_bit);
         }
+
     }
     selected_piece->bit = clicked_bit;
 }
@@ -610,10 +619,11 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
-    uint8_t col_offset = (pawn->color == Color::WHITE) ? -8 : 8;
 
     if (bit_has_piece(clicked_bit))
         return false;
+
+    uint8_t col_offset = (pawn->color == Color::WHITE) ? -8 : 8;
 
     if (!(pawn->en_passant_captures & (1ULL << (clicked_bit + col_offset))))
         return false;
