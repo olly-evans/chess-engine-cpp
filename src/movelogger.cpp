@@ -28,21 +28,24 @@ void MoveLogger::show_algebraic_move_history() {
         char capture = 'x';
 
         if (move_history[i].has_capture) {
-            std::cout << move_history[i].move_id << capture << move_square << "\n";
+            std::cout << move_history[i].moved_id << capture << move_square << "\n";
         } else {
-            std::cout << move_history[i].move_id << move_square << "\n";
+            std::cout << move_history[i].moved_id << move_square << "\n";
         }
     }
 }
 
-void MoveLogger::log_move(std::vector<uint64_t> bitboards, std::vector<char> bb_names, uint8_t clicked_bit, uint8_t moved_bit, char moved_id, bool has_capture) {
-    // Piece* captured_piece = get_piece(clicked_bit);
-    // bool has_capture = (captured_piece) ? true : false;
-    // char capture_id = (has_capture) ? captured_piece->piece_id : '\0';
+void MoveLogger::log_move(std::vector<uint64_t> bitboards, 
+                          std::vector<char> bb_names, 
+                          uint8_t clicked_bit, uint8_t moved_bit, 
+                          char moved_id, 
+                          bool has_capture, 
+                          uint8_t capture_bit) {
+
     
     uint8_t i;
     for (i = 0; i < bb_names.size(); i++) {
-        if (bitboards[i] & (1ULL << clicked_bit)) break;
+        if (bitboards[i] & (1ULL << capture_bit)) break;
     }
     char captured_id = bb_names[i];
 
@@ -51,7 +54,8 @@ void MoveLogger::log_move(std::vector<uint64_t> bitboards, std::vector<char> bb_
                  moved_bit, 
                  clicked_bit,
                  has_capture, 
-                 captured_id};
+                 captured_id,
+                 capture_bit};
 
     MoveLogger::move_history.push_back(move);
 }

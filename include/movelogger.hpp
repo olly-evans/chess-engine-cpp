@@ -9,16 +9,15 @@
 
 struct Move {
     
-    char move_id;
-    uint64_t start_bit;
+    char moved_id;
 
+    uint64_t start_bit;
     uint64_t end_bit;
 
-    // if clicked_bit in selected_piece->captures
-    // piece removed from pieces after captured so need board::readd_piece()
 
     bool has_capture;
     char captured_id;
+    uint8_t capture_bit;
     
 };
 
@@ -34,5 +33,6 @@ public:
                          std::vector<char> bb_names, 
                          uint8_t clicked_bit, uint8_t moved_bit, 
                          char moved_id, 
-                         bool has_capture);
+                         bool has_capture,
+                         uint8_t capture_bit);
 };  
