@@ -364,8 +364,6 @@ void Board::undo_move() {
 
     Move& last_move = MoveLogger::move_history.back();
 
-    
-
     // Just so if we undo a move whilst user has piece selected we don't get funny business.
     if (selected_piece) 
         reset_move_and_capture_highlights(selected_piece->bit);
@@ -385,10 +383,23 @@ void Board::undo_move() {
         return;
     }
 
-    // If it did involve a capture we need to recreate the captured piece and reset its bitboard.
-    create_piece(last_move.captured_id, last_move.end_bit);
-    uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
-    BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
+    if (!is_enpassant_capture(last_move.end_bit)) {
+        // normal undo logic.
+        // If it did involve a capture we need to recreate the captured piece and reset its bitboard.
+        create_piece(last_move.captured_id, last_move.end_bit);
+        uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
+        BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
+        MoveLogger::move_history.pop_back();
+        is_whites_turn = !is_whites_turn;
+    }
+
+    // enpassant logic.
+
+    // after we log the captured en passant piece correctly.
+    // uint8_t capture_bit = (isupper(last_move.captured_id)) ? last_move.end_bit - 8 : last_move.end_bit + 8;
+    // create_piece(last_move.captured_id)
+    
+
 
     MoveLogger::move_history.pop_back();
     is_whites_turn = !is_whites_turn;
@@ -539,18 +550,30 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
 
     bool has_capture = (bit_has_piece(clicked_bit)) ? true : false;
-    has_capture = (bit_has_piece(ep_capture_bit)) ? true : false; // hack, could work.
+    has_capture = (bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit)) ? true : false; // hack, could work.
 
+    // clicked bit becomes capture bit
+
+    // must account for capture bit in undo_move().
+    uint8_t capture_bit;
+    if (!is_enpassant_capture(clicked_bit)) {
+        capture_bit = clicked_bit;
+    } else {
+        
+        capture_bit = ep_capture_bit;
+    }
+
+
+    // overwrite clicked_bit as the capture enpassant square.
     MoveLogger::log_move(bitboards, 
                          bitboard_names, 
-                         clicked_bit, 
+                         capture_bit, 
                          selected_piece->bit, 
                          selected_piece->piece_id, 
                          has_capture);
 
     /* Process click into a move */
     
-           
     for (auto& bitboard: bitboards) {
 
         // Clear bitboard of the piece we chose.
