@@ -37,7 +37,8 @@ void MoveLogger::show_algebraic_move_history() {
 
 void MoveLogger::log_move(std::vector<uint64_t> bitboards, 
                           std::vector<char> bb_names, 
-                          uint8_t clicked_bit, uint8_t moved_bit, 
+                          uint8_t clicked_bit, 
+                          uint8_t moved_bit, 
                           char moved_id, 
                           bool has_capture, 
                           uint8_t capture_bit) {

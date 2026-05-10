@@ -383,22 +383,14 @@ void Board::undo_move() {
         return;
     }
 
-    // If it did involve a capture we need to recreate the captured piece and reset its bitboard.
-    if (last_move.capture_bit == last_move.end_bit) {
-        create_piece(last_move.captured_id, last_move.end_bit);
-        uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
-        BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.end_bit);
-        MoveLogger::move_history.pop_back();
-        is_whites_turn = !is_whites_turn;
-        return;
-    }
-
-    // capture id must be set for enpassant.
     create_piece(last_move.captured_id, last_move.capture_bit);
     uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
+
     MoveLogger::move_history.pop_back();
     is_whites_turn = !is_whites_turn;
+    return;
+
     
 }
 /* MOUSE PRESSES */
@@ -543,10 +535,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* Log Move */
 
+    // absolute fogging mess, but it works.
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
 
     bool has_capture = (bit_has_piece(clicked_bit) || ((bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit)))) ? true : false;
-    // has_capture = (bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit)) ? true : false; // hack, could work.
 
     uint8_t capture_bit;
     if (!is_enpassant_capture(clicked_bit)) {
