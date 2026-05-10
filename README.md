@@ -62,3 +62,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 -- CLEAN UP ENPASSANT LOGIC.
 -- HOW TO LOG ENPASSANT MOVE BLODDY HELL YMAN
+
+-- pawn can enpassant capture in both directions when no pawn in one direction needs investigating.

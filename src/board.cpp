@@ -383,16 +383,15 @@ void Board::undo_move() {
         return;
     }
 
+    // capture_bit changes depending on move type in handle_piece_move.
     create_piece(last_move.captured_id, last_move.capture_bit);
     uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
 
     MoveLogger::move_history.pop_back();
     is_whites_turn = !is_whites_turn;
-    return;
-
-    
 }
+
 /* MOUSE PRESSES */
 
 void Board::on_mouse_press(sf::Event &event) {

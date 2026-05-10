@@ -145,8 +145,10 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     Move& last_move = MoveLogger::move_history.back();
 
+    // true in our instance.
     bool moved_two = (abs(last_move.end_bit - last_move.start_bit) == 16);
 
+    
     bool east_moved_two = moved_two && (east == (1ULL << last_move.end_bit));
     bool west_moved_two = moved_two && (west == (1ULL << last_move.end_bit));
 
