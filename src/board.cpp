@@ -236,15 +236,16 @@ void Board::render() {
 }
 
 void Board::render_main_window() {
-    main_window.clear();
 
     /* 
+    *
     *   Captures change the square color to stand out more, thus must
     *   be rendered before we redraw the squares vector to not have any
     *   delay when using waitEvent().
     * 
     */
 
+    main_window.clear();
     if (selected_piece) render_capture_highlights();
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
     if (selected_piece) render_move_highlights();
@@ -264,6 +265,7 @@ void Board::render_move_highlights() {
     
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         
+        // Squares indexed from A8 to H1, forgive me thus.
         uint8_t square = GRID_NUM_SQUARES - i - 1;
 
         if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
@@ -534,20 +536,19 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* Log Move */
 
-    // absolute fogging mess, but it works.
+    uint8_t capture_bit;
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
 
-    bool has_capture = (bit_has_piece(clicked_bit) || ((bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit)))) ? true : false;
+    bool is_ep_capture = bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit);
+    bool has_capture   = bit_has_piece(clicked_bit) || is_ep_capture;
 
-    uint8_t capture_bit;
+    
     if (!is_enpassant_capture(clicked_bit)) {
         capture_bit = clicked_bit;
     } else {
         capture_bit = ep_capture_bit;
     }
 
-
-    // overwrite clicked_bit as the capture enpassant square.
     MoveLogger::log_move(bitboards, 
                          bitboard_names, 
                          clicked_bit, 
