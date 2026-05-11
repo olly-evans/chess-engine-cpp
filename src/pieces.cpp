@@ -177,10 +177,6 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     }
 
     return en_passant_moves;
-
-    // moves to capture bit, remove piece west/east. not in here but needed.
-    // Board::handle_enpassant_move();
-
 }
 
 /* KNIGHT */

@@ -464,7 +464,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
 
 void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 
-    // std::cout << selected_bit << "\n";
     squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
     
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
@@ -557,7 +556,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             // Normal capture.
             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
             remove_piece(clicked_bit);
-        } else if (BBHelper::get_bit(bitboard, ep_capture_bit)) {
+        } else if (BBHelper::get_bit(bitboard, ep_capture_bit) && is_ep_capture) {
 
             // En Passant capture.
             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
@@ -583,7 +582,7 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
         return false;
 
     // we have a pawn, no piece where we clicked to move and clicked bit is a valid enpassant capture.
-    
+
     return true;  
 }
 
