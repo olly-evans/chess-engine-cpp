@@ -55,13 +55,8 @@ void MoveLogger::log_move(Board& board,
 
     bool is_ep_capture = board.is_enpassant_capture(clicked_bit);
     bool has_capture   = board.bit_has_piece(clicked_bit) || is_ep_capture;
-                        
-    // onel ine.
-    if (!is_ep_capture) {
-        capture_bit = clicked_bit;
-    } else {
-        capture_bit = ep_capture_bit;
-    }
+    
+    capture_bit = (!is_ep_capture) ? clicked_bit : ep_capture_bit;
 
     uint8_t i;
     for (i = 0; i < board.bitboard_names.size(); i++) {

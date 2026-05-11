@@ -522,12 +522,8 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
-
-    MoveLogger::log_move(*this,
-                         clicked_bit, 
-                         selected_piece->bit, 
-                         selected_piece->piece_id
-                        );
+    
+    MoveLogger::log_move(*this, clicked_bit, selected_piece->bit, selected_piece->piece_id);
 
     /* Process click into a move */
     
@@ -540,7 +536,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             remove_piece(ep_capture_bit);
         } else if (BBHelper::get_bit(bitboard, selected_piece->bit)){
 
-            // No capture.
+            // No capture, just a move.
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
@@ -550,6 +546,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             remove_piece(clicked_bit);
         } 
     }
+
     selected_piece->bit = clicked_bit;
 }
 
