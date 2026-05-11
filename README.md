@@ -58,9 +58,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - isolate event handling to an instantiated class.
 - then insantiate it perhaps in an app class where we have run()
 
-- en passant should be fairly trivial now.
+- en passant should be fairly trivial now. - olly 9th of may 2026.
 
--- CLEAN UP ENPASSANT LOGIC.
--- HOW TO LOG ENPASSANT MOVE BLODDY HELL YMAN
-
--- pawn can enpassant capture in both directions when no pawn in one direction needs investigating.
+- implement check.

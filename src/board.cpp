@@ -490,6 +490,7 @@ bool Board::bit_has_piece(uint8_t clicked_bit) {
 }
 
 void Board::remove_piece(uint8_t piece_to_remove_bit) {
+
     auto it = std::find_if(pieces.begin(), pieces.end(), [piece_to_remove_bit](Piece* p) {
         return p->bit == piece_to_remove_bit;
     });
@@ -559,12 +560,11 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
-        // because we move the selected_piece before checking enpassant, thinks theres a piece on clicked_bit.
     if (bit_has_piece(clicked_bit))
         return false;
 
-    uint8_t color_offset = (pawn->color == Color::WHITE) ? -8 : 8;
-    uint8_t ep_capture_bit = clicked_bit + color_offset;
+    uint8_t color_ep_offset = (pawn->color == Color::WHITE) ? -8 : 8;
+    uint8_t ep_capture_bit = clicked_bit + color_ep_offset;
 
     if (!bit_has_piece(ep_capture_bit))
         return false;
@@ -572,7 +572,11 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!(pawn->en_passant_captures & (1ULL << (ep_capture_bit))))
         return false;
 
-    // we have a pawn, no piece where we clicked to move and clicked bit is a valid enpassant capture.
+    /* 
+       Get to here and: we have a pawn, there is no piece on clicked_bit, 
+       there is a piece on ep_capture_bit and ep_capture_bit is a 
+       valid en passant capture.
+    */
 
     return true;  
 }

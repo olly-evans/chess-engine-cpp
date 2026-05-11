@@ -14,9 +14,11 @@ std::vector<std::string> FenParser::split(const std::string& str) {
 }
 
 std::vector<std::string> FenParser::split_with_delimiter(std::string s, const std::string& delimiter) {
+
     std::vector<std::string> tokens;
     size_t pos = 0;
     std::string token;
+    
     while ((pos = s.find(delimiter)) != std::string::npos) {
         token = s.substr(0, pos);
         tokens.push_back(token);
@@ -36,19 +38,19 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitbo
     int index = -1;
 
     switch (ch) {
-        case 'P': index = W_PAWNS; break;
+        case 'P': index = W_PAWNS;   break;
         case 'N': index = W_KNIGHTS; break;
         case 'B': index = W_BISHOPS; break;
-        case 'R': index = W_ROOKS; break;
-        case 'Q': index = W_QUEEN; break;
-        case 'K': index = W_KING; break;
+        case 'R': index = W_ROOKS;   break;
+        case 'Q': index = W_QUEEN;   break;
+        case 'K': index = W_KING;    break;
     
-        case 'p':index = B_PAWNS; break;
+        case 'p': index = B_PAWNS;   break;
         case 'n': index = B_KNIGHTS; break;
         case 'b': index = B_BISHOPS; break;
-        case 'r': index = B_ROOKS; break;
-        case 'q': index = B_QUEEN; break;
-        case 'k': index = B_KING; break;
+        case 'r': index = B_ROOKS;   break;
+        case 'q': index = B_QUEEN;   break;
+        case 'k': index = B_KING;    break;
         default: return dummy; 
     }
 
