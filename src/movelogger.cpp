@@ -50,17 +50,23 @@ void MoveLogger::log_move(Board& board,
                           ) {
     
     
+    /* Logs move and calculates has_capture, captured_id and capture_bit for Move struct */
+    
     uint8_t capture_bit;
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
     bool is_ep_capture = board.is_enpassant_capture(clicked_bit);
     bool has_capture   = board.bit_has_piece(clicked_bit) || is_ep_capture;
-    
+
     capture_bit = (!is_ep_capture) ? clicked_bit : ep_capture_bit;
+
+    // find the bitboards name to get id of captured piece.
+    // should prob be a function.
 
     uint8_t i;
     for (i = 0; i < board.bitboard_names.size(); i++) {
-        if (board.bitboards[i] & (1ULL << capture_bit)) break;
+        if (board.bitboards[i] & (1ULL << capture_bit))
+            break;
     }
     char captured_id = board.bitboard_names[i];
 

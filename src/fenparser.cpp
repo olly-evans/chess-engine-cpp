@@ -57,5 +57,3 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitbo
     return bitboards[index];
     
 }
-
-
