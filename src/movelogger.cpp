@@ -35,20 +35,39 @@ void MoveLogger::show_algebraic_move_history() {
     }
 }
 
-void MoveLogger::log_move(std::vector<uint64_t> bitboards, 
-                          std::vector<char> bb_names, 
+// void MoveLogger::log_move(std::vector<uint64_t> bitboards, 
+//                           std::vector<char> bb_names, 
+//                           uint8_t clicked_bit, 
+//                           uint8_t moved_bit, 
+//                           char moved_id, 
+//                           bool has_capture, 
+//                           uint8_t capture_bit) {
+
+void MoveLogger::log_move(Board& board,
                           uint8_t clicked_bit, 
                           uint8_t moved_bit, 
-                          char moved_id, 
-                          bool has_capture, 
-                          uint8_t capture_bit) {
-
+                          char moved_id
+                          ) {
     
-    uint8_t i;
-    for (i = 0; i < bb_names.size(); i++) {
-        if (bitboards[i] & (1ULL << capture_bit)) break;
+    
+    uint8_t capture_bit;
+    uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
+
+    bool is_ep_capture = board.is_enpassant_capture(clicked_bit);
+    bool has_capture   = board.bit_has_piece(clicked_bit) || is_ep_capture;
+                        
+    // onel ine.
+    if (!is_ep_capture) {
+        capture_bit = clicked_bit;
+    } else {
+        capture_bit = ep_capture_bit;
     }
-    char captured_id = bb_names[i];
+
+    uint8_t i;
+    for (i = 0; i < board.bitboard_names.size(); i++) {
+        if (board.bitboards[i] & (1ULL << capture_bit)) break;
+    }
+    char captured_id = board.bitboard_names[i];
 
     // Fill out move data.
     Move move = {moved_id, 

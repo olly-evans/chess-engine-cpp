@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pieces.hpp"
+#include "board.hpp"
 
 #include <cstdint>
 #include <vector>
@@ -29,10 +30,9 @@ public:
     static void append_move(Move move);
     static void show_algebraic_move_history();
 
-    static void log_move(std::vector<uint64_t> bitboards, 
-                         std::vector<char> bb_names, 
-                         uint8_t clicked_bit, uint8_t moved_bit, 
-                         char moved_id, 
-                         bool has_capture,
-                         uint8_t capture_bit);
+    static void log_move(Board& board,
+                          uint8_t clicked_bit, 
+                          uint8_t moved_bit, 
+                          char moved_id
+                        );
 };  

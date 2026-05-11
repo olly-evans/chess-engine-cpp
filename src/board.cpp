@@ -520,33 +520,25 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* Log Move */
 
-    uint8_t capture_bit;
-
     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
 
-    bool is_ep_capture = bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit);
-    bool has_capture   = bit_has_piece(clicked_bit) || is_ep_capture;
-    
-    if (!is_ep_capture) {
-        capture_bit = clicked_bit;
-    } else {
-        capture_bit = ep_capture_bit;
-    }
-
-    MoveLogger::log_move(bitboards, 
-                         bitboard_names, 
+    MoveLogger::log_move(*this,
                          clicked_bit, 
                          selected_piece->bit, 
-                         selected_piece->piece_id, 
-                         has_capture,
-                         capture_bit);
+                         selected_piece->piece_id
+                        );
 
     /* Process click into a move */
     
     for (auto& bitboard: bitboards) {
 
-        if (BBHelper::get_bit(bitboard, selected_piece->bit)){
+        if (is_enpassant_capture(clicked_bit)) {
+
+            // En Passant capture.
+            bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
+            remove_piece(ep_capture_bit);
+        } else if (BBHelper::get_bit(bitboard, selected_piece->bit)){
 
             // No capture.
             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
@@ -556,12 +548,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
             // Normal capture.
             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
             remove_piece(clicked_bit);
-        } else if (BBHelper::get_bit(bitboard, ep_capture_bit) && is_ep_capture) {
-
-            // En Passant capture.
-            bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
-            remove_piece(ep_capture_bit);
-        }
+        } 
     }
     selected_piece->bit = clicked_bit;
 }
@@ -573,11 +560,15 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
+        // because we move the selected_piece before checking enpassant, thinks theres a piece on clicked_bit.
     if (bit_has_piece(clicked_bit))
         return false;
 
-    uint8_t color_offset = (pawn->color == Color::WHITE) ? -8 : 8;
+    uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
+    if (!bit_has_piece(ep_capture_bit))
+        return false;
 
+    uint8_t color_offset = (pawn->color == Color::WHITE) ? -8 : 8;
     if (!(pawn->en_passant_captures & (1ULL << (clicked_bit + color_offset))))
         return false;
 
