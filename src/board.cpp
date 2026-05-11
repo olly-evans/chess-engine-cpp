@@ -183,7 +183,7 @@ void Board::init_position_from_fen(std::string fen) {
         }
     }
 
-    is_whites_turn = (fen_tokens[1] == "w") ? true : false;
+    is_whites_turn = (fen_tokens[1] == "w");
 
     // Parse more tokens later if we want to.
 }
@@ -435,21 +435,6 @@ void Board::on_left_mouse_press() {
     // Below be executed if we have a selected piece and click on a valid move/capture square.
     uint8_t old_bit = selected_piece->bit;
 
-
-    // TODO:
-
-    // need to know clicked move is an enpassant capture.
-    // enpassant move if, en_passant_captures & (1ULL << clicked_bit - 8) or +8 vomit.
-    
-    // if (is_enpassant_capture(clicked_bit)) {
-
-    //     handle_enpassant_move(clicked_bit);
-    //     reset_move_and_capture_highlights(old_bit);
-    //     is_whites_turn = !is_whites_turn;
-    //     return;
-    // }
-
-
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
@@ -537,13 +522,14 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     /* Log Move */
 
     uint8_t capture_bit;
+
+    // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
 
     bool is_ep_capture = bit_has_piece(ep_capture_bit) && is_enpassant_capture(clicked_bit);
     bool has_capture   = bit_has_piece(clicked_bit) || is_ep_capture;
-
     
-    if (!is_enpassant_capture(clicked_bit)) {
+    if (!is_ep_capture) {
         capture_bit = clicked_bit;
     } else {
         capture_bit = ep_capture_bit;
@@ -561,7 +547,6 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     
     for (auto& bitboard: bitboards) {
 
-        // Clear bitboard of the piece we chose.
         if (BBHelper::get_bit(bitboard, selected_piece->bit)){
 
             // No capture.
@@ -598,7 +583,7 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
         return false;
 
     // we have a pawn, no piece where we clicked to move and clicked bit is a valid enpassant capture.
-
+    
     return true;  
 }
 
