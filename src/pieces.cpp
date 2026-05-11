@@ -262,7 +262,7 @@ uint64_t Piece::get_north_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint8_t piece_file;
     uint8_t move_file;
     
-    piece_file = GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+    piece_file = BBHelper::get_piece_file(piece);
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
@@ -289,7 +289,7 @@ uint64_t Piece::get_south_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint8_t move_file;
 
     // Perhaps a bitboard function.
-    piece_file = GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+    piece_file = BBHelper::get_piece_file(piece);
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
@@ -316,7 +316,7 @@ uint64_t Piece::get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint8_t piece_file;
     uint8_t move_file;
     
-    piece_file = GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+    piece_file = BBHelper::get_piece_file(piece);
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
