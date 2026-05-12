@@ -144,10 +144,10 @@ public:
     uint64_t white_occupancy();
     uint64_t black_occupancy();
 
-    uint64_t get_white_captures_bitboard();
-    uint64_t get_black_captures_bitboard();
+    uint64_t white_captures();
+    uint64_t black_captures();
 
-
+    bool is_piece_pinned(Piece* piece);
 
     bool white_king_in_check(uint64_t white, uint64_t black);
     bool black_king_in_check(uint64_t white, uint64_t black);

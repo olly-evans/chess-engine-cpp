@@ -31,7 +31,6 @@ public:
     Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
 
     Color color;
-
     char piece_id;
 
     uint64_t moves = 0ULL;
@@ -44,7 +43,7 @@ public:
 
     // All instances return the moves and assign this->captures.
     virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
-
+    
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);

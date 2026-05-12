@@ -470,6 +470,7 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t king = (1ULL << this->bit);
     uint64_t moves = 0ULL;
+    bool is_white = (isupper(this->piece_id));
 
     moves |= (king << 1);
     moves |= (king << 7);
@@ -485,11 +486,13 @@ uint64_t King::get_legal_moves(uint64_t w_bb, uint64_t b_bb) {
     if (kings_file == 7) moves &= ~BBHelper::file_masks[kings_file];
     if (kings_file == 0) moves &= ~BBHelper::file_masks[kings_file];
 
-    uint64_t enemy_occupancy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    uint64_t enemy_occupancy = (is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
 
-    moves = BBHelper::remove_friendly_pieces(moves, this->color == Color::WHITE ? w_bb : b_bb);
-    return BBHelper::remove_enemy_pieces(moves, this->color == Color::WHITE ? b_bb : w_bb);
+    // uint64_t enemy_captures = (is_white) ? Board::black_captures() : Board::white_captures();
+
+    moves = BBHelper::remove_friendly_pieces(moves, is_white ? w_bb : b_bb);
+    return BBHelper::remove_enemy_pieces(moves, is_white ? b_bb : w_bb);
 };
 
 // bool King::can_queenside_castle(uint64_t w_bb, uint64_t b_bb) {

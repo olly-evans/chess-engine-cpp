@@ -73,14 +73,77 @@ uint64_t Board::black_occupancy() {
            bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
 }
 
-uint64_t Board::get_white_captures_bitboard() {
+uint64_t Board::white_captures() {
     
     uint64_t white_captures = 0ULL;
 
+    // this shouldnt work because captures are only updated upon calling get_legal_moves();
     for (auto& piece : pieces) {
-        // Must update piece->captures.
-        piece->get_legal_moves(white_occupancy(), black_occupancy());
+        if (islower(piece->piece_id))
+            continue;
+        white_captures |= piece->captures;
     } 
+    return white_captures;
+}
+
+uint64_t Board::black_captures() {
+    
+    uint64_t black_captures = 0ULL;
+
+    // this shouldnt work because captures are only updated upon calling get_legal_moves();
+    for (auto& piece : pieces) {
+        if (isupper(piece->piece_id))
+            continue;
+        black_captures |= piece->captures;
+    } 
+    return black_captures;
+}
+
+bool Board::is_piece_pinned(Piece* p) {
+
+    uint64_t piece = (1ULL << p->bit);
+    uint64_t enemy_captures = 0ULL;
+
+    bool is_white = (p->color == Color::WHITE);
+
+    // for every piece of opposite color get their captures.
+
+
+
+    uint64_t white_occ;
+    uint64_t black_occ;
+
+    // passing in white_occ/black_occ without the selected_piece.
+    // either genius or completely retarded.
+    // will definitely fuck move gen. friendly pieces will be able to move to piece
+    // but doesnt matter we only care about enemy.
+
+    if (is_white) {
+        white_occ = white_occupancy() & ~piece;
+        black_occ = black_occupancy();
+    } else {
+        black_occ = black_occupancy() & ~piece;
+        white_occ = white_occupancy();
+    }
+
+    for (auto& piece : pieces) {
+
+        if ((piece->color == p->color))
+            continue;
+        
+        // feels expensive but its not too bad.
+        // must update this->captures.
+
+        piece->get_legal_moves(white_occ, black_occ);
+
+        enemy_captures |= piece->captures;
+    }
+
+    uint64_t friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
+
+    if (friendly_king & enemy_captures)
+        return true;
+    return false;
 }
 
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
@@ -496,15 +559,16 @@ void Board::on_left_mouse_press() {
     reset_move_and_capture_highlights(old_bit);
     
     // works but we dont want to render pseudo-legal moves.
-    // if (is_whites_turn && white_king_in_check(white_occupancy(), black_occupancy())) {
-    //     std::cout << "White has played a move leaving their king in check, undoing move..." << "\n";
-    //     undo_move();
-    //     return;
-    // } else if (!is_whites_turn && black_king_in_check(white_occupancy(), black_occupancy())) {
-    //     std::cout << "Black has played a move leavign their king in check, undoing move..." << "\n";
-    //     undo_move();
-    //     return;
-    // }
+
+    if (is_whites_turn && white_king_in_check(white_occupancy(), black_occupancy())) {
+        std::cout << "White has played a move leaving their king in check, undoing move..." << "\n";
+        undo_move();
+        return;
+    } else if (!is_whites_turn && black_king_in_check(white_occupancy(), black_occupancy())) {
+        std::cout << "Black has played a move leavign their king in check, undoing move..." << "\n";
+        undo_move();
+        return;
+    }
     
     // MoveLogger::show_algebraic_move_history();
 
@@ -527,11 +591,21 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     squares[clicked_bit].setFillColor(TURQOISE);
 
     // get_pseudo_legal_moves()
+
+    // can we calculate here if piece pinned and flag it.
+    
+    // if this piece did not exist. would the friendly king be in check.
+    // if not then return piece early.
+
+    // if pinned, return early.
+    // piece->moves = 0ULL;
+
+    if (is_piece_pinned(piece)) {
+        std::cout << "the piece you selected is pinned, not calculating any moves." << "\n";
+        return nullptr;
+    }
+
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
-
-    // make a load of temporary shit and check if this means king in check.
-
-    // do something here.
     
     return piece;
 }
