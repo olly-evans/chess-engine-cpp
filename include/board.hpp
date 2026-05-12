@@ -130,8 +130,10 @@ public:
     Board(const unsigned int ww, const unsigned int wh, const std::string wn);
 
     unsigned int board_square_size;
+
     static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
     std::vector<char> bitboard_names;
+
     /* UTIL METHODS */
 
     void die(const std::string& err);
@@ -139,13 +141,12 @@ public:
     int mouse_win_pos_to_bit();
     void reset_square_color(int square);
 
-    bool move_square_has_friendly_piece(Color col, sf::Vector2f move);
-
     uint64_t white_occupancy();
     uint64_t black_occupancy();
 
+    void white_king_in_check(uint64_t white, uint64_t black);
+    void black_king_in_check(uint64_t white, uint64_t black);
 
-    int square_index_to_piece_type_index(int square_index);
 
     /* INIT */
 

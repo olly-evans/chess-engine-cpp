@@ -73,6 +73,52 @@ uint64_t Board::black_occupancy() {
            bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
 }
 
+void Board::white_king_in_check(uint64_t white, uint64_t black) {
+
+    uint64_t king = bitboards[W_KING];
+    
+    uint64_t enemy_captures = 0ULL;
+
+
+    for (auto& piece : pieces) {
+
+        if ((piece->color == Color::WHITE))
+            continue;
+        
+        // feels expensive but its not too bad.
+        // must update this->captures.
+        piece->get_legal_moves(white_occupancy(), black_occupancy());
+
+        enemy_captures |= piece->captures;
+    }
+
+    if (enemy_captures & king)
+        std::cout << "white king attacked" << "\n";
+}
+
+void Board::black_king_in_check(uint64_t white, uint64_t black) {
+
+    uint64_t king = bitboards[B_KING];
+    
+    uint64_t enemy_captures = 0ULL;
+
+
+    for (auto& piece : pieces) {
+
+        if ((piece->color == Color::BLACK))
+            continue;
+        
+        // feels expensive but its not too bad.
+        // must update this->captures.
+        piece->get_legal_moves(white_occupancy(), black_occupancy());
+
+        enemy_captures |= piece->captures;
+    }
+
+    if (enemy_captures & king)
+        std::cout << "black king attacked" << "\n";
+}
+
 /* INIT */
 
 void Board::init() {
@@ -216,6 +262,8 @@ void Board::create_piece(const char id, uint8_t bit) {
         default: break;
     }
 }
+
+
 
 // void init_board_coords() {
 //     // only need to place numbers vert and letters hor.
@@ -438,6 +486,9 @@ void Board::on_left_mouse_press() {
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
+    white_king_in_check(white_occupancy(), black_occupancy());
+    black_king_in_check(white_occupancy(), black_occupancy());
+
     // MoveLogger::show_algebraic_move_history();
 
     is_whites_turn = !is_whites_turn;
@@ -476,7 +527,8 @@ void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 Piece* Board::get_piece(uint8_t clicked_bit) {
 
     for (auto& piece : pieces) {
-        if (clicked_bit == piece->bit) return piece;
+        if (clicked_bit == piece->bit) 
+            return piece;
     }
     return nullptr;
 }
