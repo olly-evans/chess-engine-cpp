@@ -144,8 +144,13 @@ public:
     uint64_t white_occupancy();
     uint64_t black_occupancy();
 
-    void white_king_in_check(uint64_t white, uint64_t black);
-    void black_king_in_check(uint64_t white, uint64_t black);
+    uint64_t get_white_captures_bitboard();
+    uint64_t get_black_captures_bitboard();
+
+
+
+    bool white_king_in_check(uint64_t white, uint64_t black);
+    bool black_king_in_check(uint64_t white, uint64_t black);
 
 
     /* INIT */

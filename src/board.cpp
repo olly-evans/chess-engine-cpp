@@ -73,12 +73,20 @@ uint64_t Board::black_occupancy() {
            bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
 }
 
-void Board::white_king_in_check(uint64_t white, uint64_t black) {
+uint64_t Board::get_white_captures_bitboard() {
+    
+    uint64_t white_captures = 0ULL;
+
+    for (auto& piece : pieces) {
+        // Must update piece->captures.
+        piece->get_legal_moves(white_occupancy(), black_occupancy());
+    } 
+}
+
+bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[W_KING];
-    
     uint64_t enemy_captures = 0ULL;
-
 
     for (auto& piece : pieces) {
 
@@ -93,22 +101,21 @@ void Board::white_king_in_check(uint64_t white, uint64_t black) {
     }
 
     if (enemy_captures & king)
-        std::cout << "white king attacked" << "\n";
+        return true;
+
+    return false;
 }
 
-void Board::black_king_in_check(uint64_t white, uint64_t black) {
+bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[B_KING];
-    
     uint64_t enemy_captures = 0ULL;
-
 
     for (auto& piece : pieces) {
 
         if ((piece->color == Color::BLACK))
             continue;
         
-        // feels expensive but its not too bad.
         // must update this->captures.
         piece->get_legal_moves(white_occupancy(), black_occupancy());
 
@@ -116,7 +123,8 @@ void Board::black_king_in_check(uint64_t white, uint64_t black) {
     }
 
     if (enemy_captures & king)
-        std::cout << "black king attacked" << "\n";
+        return true;
+    return false;
 }
 
 /* INIT */
@@ -317,7 +325,7 @@ void Board::render_move_highlights() {
         uint8_t square = GRID_NUM_SQUARES - i - 1;
 
         if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
-
+        
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
 
@@ -401,7 +409,10 @@ void Board::on_key_pressed(sf::Event &event) {
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
             break;
         case sf::Keyboard::Z:
-            if (Debug::enabled) undo_move();
+            if (Debug::enabled) {
+                undo_move();
+                is_whites_turn = !is_whites_turn;
+            }
         default: 
             return;
     }   
@@ -429,7 +440,6 @@ void Board::undo_move() {
     // If the move didn't involve a capture we can clean up and return early.
     if (!last_move.has_capture) {
         MoveLogger::move_history.pop_back(); 
-        is_whites_turn = !is_whites_turn;
         return;
     }
 
@@ -439,7 +449,6 @@ void Board::undo_move() {
     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
 
     MoveLogger::move_history.pop_back();
-    is_whites_turn = !is_whites_turn;
 }
 
 /* MOUSE PRESSES */
@@ -486,9 +495,17 @@ void Board::on_left_mouse_press() {
     handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);
     
-    white_king_in_check(white_occupancy(), black_occupancy());
-    black_king_in_check(white_occupancy(), black_occupancy());
-
+    // works but we dont want to render pseudo-legal moves.
+    // if (is_whites_turn && white_king_in_check(white_occupancy(), black_occupancy())) {
+    //     std::cout << "White has played a move leaving their king in check, undoing move..." << "\n";
+    //     undo_move();
+    //     return;
+    // } else if (!is_whites_turn && black_king_in_check(white_occupancy(), black_occupancy())) {
+    //     std::cout << "Black has played a move leavign their king in check, undoing move..." << "\n";
+    //     undo_move();
+    //     return;
+    // }
+    
     // MoveLogger::show_algebraic_move_history();
 
     is_whites_turn = !is_whites_turn;
@@ -508,7 +525,13 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 
     squares[clicked_bit].setFillColor(TURQOISE);
+
+    // get_pseudo_legal_moves()
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
+
+    // make a load of temporary shit and check if this means king in check.
+
+    // do something here.
     
     return piece;
 }
