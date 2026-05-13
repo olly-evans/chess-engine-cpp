@@ -382,6 +382,7 @@ void Board::render_move_highlights() {
     float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
     float radius = board_square_size * radius_percent_of_squares;
     
+
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         
         // Squares indexed from A8 to H1, forgive me thus.
@@ -560,15 +561,15 @@ void Board::on_left_mouse_press() {
     
     // works but we dont want to render pseudo-legal moves.
 
-    if (is_whites_turn && white_king_in_check(white_occupancy(), black_occupancy())) {
-        std::cout << "White has played a move leaving their king in check, undoing move..." << "\n";
-        undo_move();
-        return;
-    } else if (!is_whites_turn && black_king_in_check(white_occupancy(), black_occupancy())) {
-        std::cout << "Black has played a move leavign their king in check, undoing move..." << "\n";
-        undo_move();
-        return;
-    }
+    // if (is_whites_turn && white_king_in_check(white_occupancy(), black_occupancy())) {
+    //     std::cout << "White has played a move leaving their king in check, undoing move..." << "\n";
+    //     undo_move();
+    //     return;
+    // } else if (!is_whites_turn && black_king_in_check(white_occupancy(), black_occupancy())) {
+    //     std::cout << "Black has played a move leavign their king in check, undoing move..." << "\n";
+    //     undo_move();
+    //     return;
+    // }
     
     // MoveLogger::show_algebraic_move_history();
 
@@ -588,7 +589,8 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 
-    squares[clicked_bit].setFillColor(TURQOISE);
+    // can move this down but we want user to know theres just no legal moves.
+    // squares[clicked_bit].setFillColor(TURQOISE);
 
     // get_pseudo_legal_moves()
 
@@ -600,13 +602,21 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // if pinned, return early.
     // piece->moves = 0ULL;
 
-    if (is_piece_pinned(piece)) {
-        std::cout << "the piece you selected is pinned, not calculating any moves." << "\n";
-        return nullptr;
-    }
+    // perhaps inside get_legal_moves man idk im really stuck.
+
+    // or after get_legal moves, then strip
+    
 
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
-    
+
+    if (is_piece_pinned(piece)) {
+        std::cout << "the piece you selected is pinned, not calculating any moves." << "\n";
+
+        // find direction pinned, dont think it can be multiple.
+        // piece->get_direction_moves(); (west, nw etc..)
+        // piece->moves &= get_direction_moves();
+        
+    }
     return piece;
 }
 
