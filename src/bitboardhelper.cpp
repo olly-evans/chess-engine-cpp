@@ -14,6 +14,7 @@ const std::string BBHelper::bit_to_square_name[] = {
     "h8", "g8", "f8", "e8", "d8", "c7", "b8", "a8"
 };
 
+
 /* MANIPULATION */
 
 int BBHelper::square_to_bit(int square) {
@@ -80,8 +81,18 @@ uint8_t BBHelper::get_total_active_bits(uint64_t b) {
             if (b & (1ULL << i)) count++;
         }
         return count;
+}
+
+std::vector<uint8_t> BBHelper::get_bit_vector(uint64_t bitboard) {
+
+    std::vector<uint8_t> bits;
+    for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (BBHelper::get_bit(bitboard, i))
+            bits.push_back(i);
     }
-    
+    return bits;
+}
+
 /* PIECE MOVEMENT */
 
 /* MAKE ALL THIS PART OF PIECE */

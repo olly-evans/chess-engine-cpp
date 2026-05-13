@@ -99,52 +99,52 @@ uint64_t Board::black_captures() {
     return black_captures;
 }
 
-bool Board::is_piece_pinned(Piece* p) {
+// bool Board::is_piece_pinned(Piece* p) {
 
-    uint64_t piece = (1ULL << p->bit);
-    uint64_t enemy_captures = 0ULL;
+//     uint64_t piece = (1ULL << p->bit);
+//     uint64_t enemy_captures = 0ULL;
 
-    bool is_white = (p->color == Color::WHITE);
+//     bool is_white = (p->color == Color::WHITE);
 
-    // for every piece of opposite color get their captures.
+//     // for every piece of opposite color get their captures.
+//     uint64_t white_occ;
+//     uint64_t black_occ;
 
+//     // passing in white_occ/black_occ without the selected_piece.
+//     // either genius or completely retarded.
 
+//     // okay we do this but for every move including bit.
+//     if (is_white) {
+//         white_occ = white_occupancy() & ~piece;
+//         black_occ = black_occupancy();
+//     } else {
+//         black_occ = black_occupancy() & ~piece;
+//         white_occ = white_occupancy();
+//     }
 
-    uint64_t white_occ;
-    uint64_t black_occ;
+//     update_all_piece_moves_captures();
 
-    // passing in white_occ/black_occ without the selected_piece.
-    // either genius or completely retarded.
-    // will definitely fuck move gen. friendly pieces will be able to move to piece
-    // but doesnt matter we only care about enemy.
+//     // loop through moves and ~move_bit with occupancy, calculate enemy captures if we were on move bit.
+//     for (auto& piece : pieces) {
 
-    if (is_white) {
-        white_occ = white_occupancy() & ~piece;
-        black_occ = black_occupancy();
-    } else {
-        black_occ = black_occupancy() & ~piece;
-        white_occ = white_occupancy();
-    }
-
-    for (auto& piece : pieces) {
-
-        if ((piece->color == p->color))
-            continue;
+//         if ((piece->color == p->color))
+//             continue;
         
-        // feels expensive but its not too bad.
-        // must update this->captures.
+        
+//         // feels expensive but its not too bad.
+//         // must update this->captures.
 
-        piece->get_legal_moves(white_occ, black_occ);
+//         piece->get_legal_moves(white_occ, black_occ);
 
-        enemy_captures |= piece->captures;
-    }
+//         enemy_captures |= piece->captures;
+//     }
 
-    uint64_t friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
+//     uint64_t friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
 
-    if (friendly_king & enemy_captures)
-        return true;
-    return false;
-}
+//     if (friendly_king & enemy_captures)
+//         return true;
+//     return false;
+// }
 
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
@@ -188,6 +188,15 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
     if (enemy_captures & king)
         return true;
     return false;
+}
+
+
+void Board::update_all_piece_moves_captures() {
+
+    for (auto& piece : pieces) {
+        piece->get_legal_moves(white_occupancy(), black_occupancy());
+    }
+
 }
 
 /* INIT */
@@ -571,6 +580,7 @@ void Board::on_left_mouse_press() {
     //     return;
     // }
     
+    
     // MoveLogger::show_algebraic_move_history();
 
     is_whites_turn = !is_whites_turn;
@@ -590,35 +600,99 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 
     // can move this down but we want user to know theres just no legal moves.
-    // squares[clicked_bit].setFillColor(TURQOISE);
-
-    // get_pseudo_legal_moves()
-
-    // can we calculate here if piece pinned and flag it.
-    
-    // if this piece did not exist. would the friendly king be in check.
-    // if not then return piece early.
-
-    // if pinned, return early.
-    // piece->moves = 0ULL;
-
-    // perhaps inside get_legal_moves man idk im really stuck.
+    squares[clicked_bit].setFillColor(TURQOISE);
 
     // or after get_legal moves, then strip
     
 
     piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
+    
 
-    if (is_piece_pinned(piece)) {
-        std::cout << "the piece you selected is pinned, not calculating any moves." << "\n";
+    // if (is_piece_pinned(piece)) {
+    //     std::cout << "the piece you selected is pinned, not calculating any moves." << "\n";
 
-        // find direction pinned, dont think it can be multiple.
-        // piece->get_direction_moves(); (west, nw etc..)
-        // piece->moves &= get_direction_moves();
+    //     // find direction pinned, dont think it can be multiple.
+    //     // piece->get_direction_moves(); (west, nw etc..)
+    //     // piece->moves &= get_direction_moves();
         
+    // }
+
+    // strip piece->moves of moves that result in a king check.
+    // this way we don't need to undo move i think.
+
+    // for bit in moves not this with friendly occupancy and pass to get_legal_moves();
+
+    std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(piece->moves);
+        
+    bool is_white = (isupper(piece->piece_id));
+
+    for (uint8_t bit : move_bits) {
+
+        uint64_t enemy = is_white ? black_occupancy() : white_occupancy();
+
+        // if our piece is now here, is the friendly king under attack.
+
+        uint64_t friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
+
+        uint64_t white_occ;
+        uint64_t black_occ;
+        uint64_t enemy_captures;
+        
+        if (is_white) {
+            white_occ = BBHelper::set_bit(white_occupancy(), bit);
+            white_occ = BBHelper::clear_bit(white_occ, piece->bit);
+
+            black_occ = black_occupancy();
+
+            enemy_captures = get_black_captures(white_occ, black_occ);
+
+        } else {
+            black_occ = BBHelper::set_bit(black_occupancy(), bit);
+            black_occ = BBHelper::clear_bit(black_occ, piece->bit);
+
+            white_occ = white_occupancy();
+
+            enemy_captures = get_white_captures(white_occ, black_occ);
+        }        
+        
+        if (friendly_king & enemy_captures)
+            piece->moves = BBHelper::clear_bit(piece->moves, bit);
     }
+
     return piece;
 }
+
+uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
+
+    uint64_t white_captures = 0ULL;
+    for (auto& piece : pieces) {
+
+            if (piece->color != Color::WHITE)
+                continue;
+            
+            piece->get_legal_moves(white, black);
+
+            white_captures |= piece->captures;
+        }
+    return white_captures;
+}
+
+uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
+
+    uint64_t black_captures = 0ULL;
+    for (auto& piece : pieces) {
+
+            if (piece->color != Color::BLACK)
+                continue;
+            
+            piece->get_legal_moves(white, black);
+
+            black_captures |= piece->captures;
+        }
+    return black_captures;
+}
+
+
 
 void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 

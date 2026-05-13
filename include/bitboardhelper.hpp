@@ -60,4 +60,6 @@ public:
  
 
     static uint8_t get_total_active_bits(uint64_t b);
+    static std::vector<uint8_t> get_bit_vector(uint64_t bitboard);
+
 };
