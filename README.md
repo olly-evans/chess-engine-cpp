@@ -58,9 +58,10 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - isolate event handling to an instantiated class.
 - then insantiate it perhaps in an app class where we have run()
 
-- en passant should be fairly trivial now. - olly 9th of may 2026.
 
 - implement check.
+
+- consider making a make_pseudo_move function that adjusts some fake bitboards lke in strip_pseudo_legal_attacks() piece function. or perhaps just make it a king_check_
 
 -- add a goddamn boolean for piece->color dear lord not some stupid enum.
 

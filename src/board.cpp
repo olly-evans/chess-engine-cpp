@@ -671,10 +671,8 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     
     for (auto& bitboard: bitboards) {
 
-        // works but can we just check this once.
         // goes first because otherwise we move the piece before checking if enpassant.
 
-        // if we do have an ep capture this runs for every iteration.
         if (is_ep_capture && BBHelper::get_bit(bitboard, ep_capture_bit)) {
 
             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);

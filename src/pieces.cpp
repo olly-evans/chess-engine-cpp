@@ -67,7 +67,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         uint64_t black_occ;
         uint64_t enemy_captures;
         
-        
+
         // maybe this is a board function, make fake move lol.
         if (is_white) {
             // Make fake bitboard with proposed move.
@@ -246,6 +246,12 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
         en_passant_moves |= (east >> 8);
         this->en_passant_captures |= east;
     }
+
+
+    // if (board.white_king_in_check())
+    // maybe tweak this to make the king just passed in and not hardcoded as real one.
+    // make the king or something and 
+
 
     // make pseudo move.
     
