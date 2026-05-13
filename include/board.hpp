@@ -144,9 +144,6 @@ public:
     uint64_t white_occupancy();
     uint64_t black_occupancy();
 
-    uint64_t white_captures();
-    uint64_t black_captures();
-
     bool is_piece_pinned(Piece* piece);
 
     bool white_king_in_check(uint64_t white, uint64_t black);

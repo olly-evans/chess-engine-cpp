@@ -73,32 +73,6 @@ uint64_t Board::black_occupancy() {
            bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
 }
 
-uint64_t Board::white_captures() {
-    
-    uint64_t white_captures = 0ULL;
-
-    // this shouldnt work because captures are only updated upon calling set_pseudo_legal_attacks();
-    for (auto& piece : pieces) {
-        if (islower(piece->piece_id))
-            continue;
-        white_captures |= piece->captures;
-    } 
-    return white_captures;
-}
-
-uint64_t Board::black_captures() {
-    
-    uint64_t black_captures = 0ULL;
-
-    // this shouldnt work because captures are only updated upon calling set_pseudo_legal_attacks();
-    for (auto& piece : pieces) {
-        if (isupper(piece->piece_id))
-            continue;
-        black_captures |= piece->captures;
-    } 
-    return black_captures;
-}
-
 // bool Board::is_piece_pinned(Piece* p) {
 
 //     uint64_t piece = (1ULL << p->bit);
@@ -149,20 +123,7 @@ uint64_t Board::black_captures() {
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[W_KING];
-    uint64_t enemy_captures = 0ULL;
-
-    for (auto& piece : pieces) {
-
-        if ((piece->color == Color::WHITE))
-            continue;
-        
-        // feels expensive but its not too bad.
-        // must update this->captures.
-        piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
-
-        enemy_captures |= piece->captures;
-    }
-
+    uint64_t enemy_captures = get_black_captures(white, black);
     if (enemy_captures & king)
         return true;
 
@@ -172,18 +133,7 @@ bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[B_KING];
-    uint64_t enemy_captures = 0ULL;
-
-    for (auto& piece : pieces) {
-
-        if ((piece->color == Color::BLACK))
-            continue;
-        
-        // must update this->captures.
-        piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
-
-        enemy_captures |= piece->captures;
-    }
+    uint64_t enemy_captures = get_white_captures(white, black);
 
     if (enemy_captures & king)
         return true;
