@@ -237,7 +237,7 @@ void Board::init() {
 
     // What needs to happen if fen string is invalid.
 
-    std::string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
+    std::string fen = "rnbq1knr/pp1ppP1p/6p1/2p5/8/P4Nb1/1PPP1PPP/RNBQKB1R w KQkq - 0 1";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     init_position_from_fen(fen);
 }
@@ -621,8 +621,9 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // this way we don't need to undo move i think.
 
     // for bit in moves not this with friendly occupancy and pass to get_legal_moves();
+    uint64_t attacks = piece->moves | piece->captures;
 
-    std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(piece->moves);
+    std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(attacks);
         
     bool is_white = (isupper(piece->piece_id));
 
@@ -642,21 +643,30 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
             white_occ = BBHelper::set_bit(white_occupancy(), bit);
             white_occ = BBHelper::clear_bit(white_occ, piece->bit);
 
-            black_occ = black_occupancy();
+            black_occ = BBHelper::clear_bit(black_occupancy(), bit);
 
             enemy_captures = get_black_captures(white_occ, black_occ);
+            // if we pseudo-move the piece onto a square with a enemy piece.
+            // when we get the captures of enemy piece it wont acknowledge piece.
+
+            // what if we have a capture that removes a piece
+            // make fake copy of captured piece bitboard.
 
         } else {
             black_occ = BBHelper::set_bit(black_occupancy(), bit);
             black_occ = BBHelper::clear_bit(black_occ, piece->bit);
 
-            white_occ = white_occupancy();
+            white_occ = BBHelper::clear_bit(white_occupancy(), bit);
 
             enemy_captures = get_white_captures(white_occ, black_occ);
         }        
         
-        if (friendly_king & enemy_captures)
+        
+        if (friendly_king & enemy_captures && BBHelper::get_bit(piece->moves, bit))
             piece->moves = BBHelper::clear_bit(piece->moves, bit);
+        
+        if (friendly_king & enemy_captures && BBHelper::get_bit(piece->captures, bit))
+            piece->captures = BBHelper::clear_bit(piece->captures, bit);
     }
 
     return piece;
@@ -670,6 +680,10 @@ uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
             if (piece->color != Color::WHITE)
                 continue;
             
+            // This just means if we pass a pseudo white/black occupancy we can ignore certain captures.
+            if (!(white & (1ULL << piece->bit)))
+                continue;
+
             piece->get_legal_moves(white, black);
 
             white_captures |= piece->captures;
@@ -685,6 +699,9 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
             if (piece->color != Color::BLACK)
                 continue;
             
+            if (!(black & (1ULL << piece->bit)))
+                continue;
+
             piece->get_legal_moves(white, black);
 
             black_captures |= piece->captures;
