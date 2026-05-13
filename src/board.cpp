@@ -237,7 +237,7 @@ void Board::init() {
 
     // What needs to happen if fen string is invalid.
 
-    std::string fen = "rnbq1knr/pp1ppP1p/6p1/2p5/8/P4Nb1/1PPP1PPP/RNBQKB1R w KQkq - 0 1";
+    std::string fen = "r3k2r/p1pp1pb1/bn2Qnp1/2qPN3/1p2P3/2N5/PPPBBPPP/R3K2R b KQkq - 3 2";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     init_position_from_fen(fen);
 }
@@ -629,11 +629,18 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
 
     for (uint8_t bit : move_bits) {
 
-        uint64_t enemy = is_white ? black_occupancy() : white_occupancy();
-
         // if our piece is now here, is the friendly king under attack.
 
-        uint64_t friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
+        uint64_t friendly_king;
+        if (toupper(piece->piece_id) == 'K') {
+            friendly_king = (1ULL << bit);
+
+            // this is the same as king bb.
+        } else {
+            friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
+        }
+
+        // what if the selected_piece is the king.
 
         uint64_t white_occ;
         uint64_t black_occ;
@@ -662,12 +669,14 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
         }        
         
         
+        // because we dont have a fake friendly king its alwasy the real bitboard.
         if (friendly_king & enemy_captures && BBHelper::get_bit(piece->moves, bit))
             piece->moves = BBHelper::clear_bit(piece->moves, bit);
         
         if (friendly_king & enemy_captures && BBHelper::get_bit(piece->captures, bit))
             piece->captures = BBHelper::clear_bit(piece->captures, bit);
     }
+    move_bits.clear();
 
     return piece;
 }
@@ -699,6 +708,7 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
             if (piece->color != Color::BLACK)
                 continue;
             
+            // This just means if we pass a pseudo white/black occupancy we can ignore certain captures.
             if (!(black & (1ULL << piece->bit)))
                 continue;
 
@@ -708,8 +718,6 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
         }
     return black_captures;
 }
-
-
 
 void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 
