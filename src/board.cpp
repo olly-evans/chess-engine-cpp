@@ -77,7 +77,7 @@ uint64_t Board::white_captures() {
     
     uint64_t white_captures = 0ULL;
 
-    // this shouldnt work because captures are only updated upon calling get_pseudo_legal_moves();
+    // this shouldnt work because captures are only updated upon calling set_pseudo_legal_attacks();
     for (auto& piece : pieces) {
         if (islower(piece->piece_id))
             continue;
@@ -90,7 +90,7 @@ uint64_t Board::black_captures() {
     
     uint64_t black_captures = 0ULL;
 
-    // this shouldnt work because captures are only updated upon calling get_pseudo_legal_moves();
+    // this shouldnt work because captures are only updated upon calling set_pseudo_legal_attacks();
     for (auto& piece : pieces) {
         if (isupper(piece->piece_id))
             continue;
@@ -134,7 +134,7 @@ uint64_t Board::black_captures() {
 //         // feels expensive but its not too bad.
 //         // must update this->captures.
 
-//         piece->get_pseudo_legal_moves(white_occ, black_occ);
+//         piece->set_pseudo_legal_attacks(white_occ, black_occ);
 
 //         enemy_captures |= piece->captures;
 //     }
@@ -158,7 +158,7 @@ bool Board::white_king_in_check(uint64_t white, uint64_t black) {
         
         // feels expensive but its not too bad.
         // must update this->captures.
-        piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
+        piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
 
         enemy_captures |= piece->captures;
     }
@@ -180,7 +180,7 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
             continue;
         
         // must update this->captures.
-        piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
+        piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
 
         enemy_captures |= piece->captures;
     }
@@ -194,7 +194,7 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 void Board::update_all_piece_moves_captures() {
 
     for (auto& piece : pieces) {
-        piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
+        piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     }
 
 }
@@ -589,7 +589,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // Highlight the square they clicked on.
     squares[clicked_bit].setFillColor(TURQOISE);
 
-    piece->moves = piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
+    piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     // set_pseudo_legal_attacks(); void we dont even use piece->moves after in this function.
 
     piece->remove_pseudo_legal_moves(*this);
@@ -610,7 +610,7 @@ uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
             if (!(white & (1ULL << piece->bit)))
                 continue;
 
-            piece->get_pseudo_legal_moves(white, black);
+            piece->set_pseudo_legal_attacks(white, black);
 
             white_captures |= piece->captures;
         }
@@ -629,7 +629,7 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
             if (!(black & (1ULL << piece->bit)))
                 continue;
 
-            piece->get_pseudo_legal_moves(white, black);
+            piece->set_pseudo_legal_attacks(white, black);
 
             black_captures |= piece->captures;
         }
