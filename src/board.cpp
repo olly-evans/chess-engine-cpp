@@ -188,7 +188,7 @@ void Board::init() {
 
     // "8/8/8/2k5/3pP3/8/8/4K3 b - e3 0 1" enpassant check test fen.
 
-    std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
+    std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     init_position_from_fen(fen);
 }
@@ -354,7 +354,8 @@ void Board::render_move_highlights() {
     
     float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
     float radius = board_square_size * radius_percent_of_squares;
-    
+
+    sf::Color circle_color = TURQOISE;
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         
@@ -371,9 +372,10 @@ void Board::render_move_highlights() {
         pos.y += ((float)board_square_size / 2) - radius;
 
         sf::CircleShape circle;
+
         circle.setPosition(pos);
         circle.setRadius(radius);
-        circle.setFillColor(TURQOISE);
+        circle.setFillColor(circle_color);
 
         main_window.draw(circle);
     }
@@ -381,7 +383,8 @@ void Board::render_move_highlights() {
 
 void Board::render_capture_highlights() {
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (BBHelper::get_bit(selected_piece->captures, i)) squares[i].setFillColor(TURQOISE);
+        if (BBHelper::get_bit(selected_piece->captures, i)) 
+            squares[i].setFillColor(TURQOISE);
     }
 }
 
@@ -396,7 +399,6 @@ void Board::render_bitboard_window() {
 
 void Board::run() {
     while (main_window.isOpen()) {
-        
         handle_events();
         render();
     }

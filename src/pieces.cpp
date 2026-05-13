@@ -50,7 +50,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
 
     /* 
     *
-    *  Strips moves and captures of attacks that would result 
+    *  Strips piece members this->moves and this->captures of attacks that would result 
     *  in a friendly king check.
     * 
     */
@@ -101,6 +101,16 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         
         if (friendly_king & enemy_captures && BBHelper::get_bit(this->captures, move_bit))
             this->captures = BBHelper::clear_bit(this->captures, move_bit);
+
+
+        // if (!(isupper(this->piece_id) == 'P'))
+        //     return;
+        
+        // if (friendly_king & enemy_captures && BBHelper::get_bit(this->en_passant_captures, move_bit)) 
+        // also need to check enpassant moves.
+
+        // perhaps pawn has own strip_pseudo_legal_enpassant();
+        
     }
 
     move_bits.clear();
@@ -219,7 +229,6 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
         en_passant_moves |= (west << 8);
         this->en_passant_captures |= west;
     }
-        
 
     if (enemy_pawns & (east) && east_moved_two && pawn_is_white) {
         en_passant_moves |= (east << 8);
