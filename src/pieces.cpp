@@ -67,6 +67,8 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         uint64_t black_occ;
         uint64_t enemy_captures;
         
+        
+        // maybe this is a board function, make fake move lol.
         if (is_white) {
             // Make fake bitboard with proposed move.
             white_occ = BBHelper::set_bit(board.white_occupancy(), move_bit);
@@ -244,6 +246,39 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
         en_passant_moves |= (east >> 8);
         this->en_passant_captures |= east;
     }
+
+    // make pseudo move.
+    
+
+    // 
+
+    // uint64_t white_occ;
+    // uint64_t black_occ;
+    // uint64_t enemy_captures;
+
+    // std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(en_passant_moves);
+    // if (pawn_is_white) {
+    //     // Make fake bitboard with proposed move.
+    //     white_occ = BBHelper::set_bit(w_bb, clicked_bit);
+    //     white_occ = BBHelper::clear_bit(white_occ, this->bit);
+
+    //     // Remove move from enemy occupancy bitboard incase our fake move is a capture.
+    //     black_occ = BBHelper::clear_bit(b_bb, this->bit - 8);
+
+    //     // Get enemy_captures with our fake occupancy bitboards.
+
+    // } else if (!pawn_is_white) {
+    //     black_occ = BBHelper::set_bit(b_bb, clicked_bit);
+    //     black_occ = BBHelper::clear_bit(black_occ, this->bit);
+
+    //     white_occ = BBHelper::clear_bit(w_bb, this->bit + 8);
+
+    // }   
+
+    // uint64_t friendly_king = pawn_is_white ? bitboards[W_KING] : bitboards[B_KING];
+
+    // if (friendly_king & enemy_captures && BBHelper::get_bit(pawn->en_passant_captures, clicked_bit))
+    //     pawn->en_passant_captures = BBHelper::clear_bit(pawn->en_passant_captures, clicked_bit);
 
     return en_passant_moves;
 }

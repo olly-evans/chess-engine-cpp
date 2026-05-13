@@ -667,12 +667,15 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     
     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
     uint8_t ep_capture_bit = (selected_piece->color == Color::WHITE) ? clicked_bit - 8 : clicked_bit + 8;
-
+    bool is_ep_capture = is_enpassant_capture(clicked_bit);
+    
     for (auto& bitboard: bitboards) {
 
         // works but can we just check this once.
         // goes first because otherwise we move the piece before checking if enpassant.
-        if (is_enpassant_capture(clicked_bit)) {
+
+        // if we do have an ep capture this runs for every iteration.
+        if (is_ep_capture && BBHelper::get_bit(bitboard, ep_capture_bit)) {
 
             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
             remove_piece(ep_capture_bit);
@@ -702,7 +705,9 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (bit_has_piece(clicked_bit))
         return false;
 
-    uint8_t color_ep_offset = (pawn->color == Color::WHITE) ? -8 : 8;
+    bool is_white = (pawn->color == Color::WHITE);
+
+    uint8_t color_ep_offset = is_white ? -8 : 8;
     uint8_t ep_capture_bit = clicked_bit + color_ep_offset;
 
     if (!bit_has_piece(ep_capture_bit))
@@ -710,6 +715,35 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
 
     if (!(pawn->en_passant_captures & (1ULL << (ep_capture_bit))))
         return false;
+
+    // make pseudo move.
+    
+    // uint64_t white_occ;
+    // uint64_t black_occ;
+    // uint64_t enemy_captures;
+
+    // if (is_white) {
+    //     // Make fake bitboard with proposed move.
+    //     white_occ = BBHelper::set_bit(white_occupancy(), clicked_bit);
+    //     white_occ = BBHelper::clear_bit(white_occ, pawn->bit);
+
+    //     // Remove move from enemy occupancy bitboard incase our fake move is a capture.
+    //     black_occ = BBHelper::clear_bit(black_occupancy(), pawn->bit - 8);
+
+    //     // Get enemy_captures with our fake occupancy bitboards.
+
+    // } else if (!is_white) {
+    //     black_occ = BBHelper::set_bit(black_occupancy(), clicked_bit);
+    //     black_occ = BBHelper::clear_bit(black_occ, pawn->bit);
+
+    //     white_occ = BBHelper::clear_bit(white_occupancy(), pawn->bit + 8);
+
+    // }   
+
+    // uint64_t friendly_king = is_white ? bitboards[W_KING] : bitboards[B_KING];
+
+    // if (friendly_king & enemy_captures && BBHelper::get_bit(pawn->en_passant_captures, clicked_bit))
+    //     pawn->en_passant_captures = BBHelper::clear_bit(pawn->en_passant_captures, clicked_bit);
 
     /* 
        Get to here and: we have a pawn, there is no piece on clicked_bit, 
