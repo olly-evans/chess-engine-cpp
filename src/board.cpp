@@ -92,7 +92,6 @@ uint64_t Board::black_occupancy() {
 //         white_occ = white_occupancy();
 //     }
 
-//     update_all_piece_moves_captures();
 
 //     // loop through moves and ~move_bit with occupancy, calculate enemy captures if we were on move bit.
 //     for (auto& piece : pieces) {
@@ -142,6 +141,7 @@ void Board::update_all_piece_attacks() {
 
     for (auto& piece : pieces) {
         piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
+        piece->strip_pseudo_legal_attacks(*this);
     }
 }
 
@@ -154,6 +154,8 @@ void Board::init() {
     
     // this kinda doesn't matter right now.
     Board::init_players();
+
+    // Init map of square names to bits.
     BBHelper::init_name_to_bit();
 
     // okey so in here somehwere we can find the players and see if we need to flip the board
