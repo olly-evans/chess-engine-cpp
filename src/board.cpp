@@ -57,10 +57,6 @@ int Board::mouse_win_pos_to_bit() {
     return BBHelper::square_to_bit(square);
 }
 
-void Board::reset_square_color(int bit) {
-    squares[bit].setFillColor(is_square_black(bit) ? MEDIUM_BROWN : WARM_CREAM);
-}
-
 /* BITBOARD METHODS */
 
 uint64_t Board::white_occupancy() {
@@ -140,13 +136,13 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
     return false;
 }
 
+// Don't use this right now but could be useful.
 
-void Board::update_all_piece_moves_captures() {
+void Board::update_all_piece_attacks() {
 
     for (auto& piece : pieces) {
         piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     }
-
 }
 
 /* INIT */

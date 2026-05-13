@@ -139,7 +139,6 @@ public:
     void die(const std::string& err);
     bool is_square_black(uint8_t i);
     int mouse_win_pos_to_bit();
-    void reset_square_color(int square);
 
     uint64_t white_occupancy();
     uint64_t black_occupancy();
@@ -151,7 +150,7 @@ public:
 
     void king_in_check(uint64_t white, uint64_t black);
 
-    void update_all_piece_moves_captures();
+    void update_all_piece_attacks();
 
 
 
