@@ -46,7 +46,7 @@ public:
 
     // All instances return the moves and assign this->captures.
     virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) = 0;
-    void remove_pseudo_legal_moves(Board& board);
+    void strip_pseudo_legal_attacks(Board& board);
     
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);

@@ -606,9 +606,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     squares[clicked_bit].setFillColor(TURQOISE);
 
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
-    // set_pseudo_legal_attacks(); void we dont even use piece->moves after in this function.
-
-    piece->remove_pseudo_legal_moves(*this);
+    piece->strip_pseudo_legal_attacks(*this);
 
     return piece;
 }

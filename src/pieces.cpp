@@ -46,7 +46,7 @@ void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-void Piece::remove_pseudo_legal_moves(Board& board) {
+void Piece::strip_pseudo_legal_attacks(Board& board) {
 
     /* 
     *
