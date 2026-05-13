@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class BBHelper {
 public:
@@ -37,6 +38,10 @@ public:
     };
  
     static const std::string bit_to_square_name[];
+
+    static std::unordered_map<std::string, uint8_t> name_to_index;
+    static void init_name_to_bit();
+    static uint8_t square_name_to_bit(const std::string& name);
 
     static int square_to_bit(int square);
     static int bit_to_square(int bit);

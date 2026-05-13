@@ -208,6 +208,7 @@ void Board::init() {
     
     // this kinda doesn't matter right now.
     Board::init_players();
+    BBHelper::init_name_to_bit();
 
     // okey so in here somehwere we can find the players and see if we need to flip the board
     // graphically. bitboards const.
@@ -237,7 +238,9 @@ void Board::init() {
 
     // What needs to happen if fen string is invalid.
 
-    std::string fen = "r3k2r/p1pp1pb1/bn2Qnp1/2qPN3/1p2P3/2N5/PPPBBPPP/R3K2R b KQkq - 3 2";
+    // "8/8/8/2k5/3pP3/8/8/4K3 b - e3 0 1" enpassant check test fen.
+
+    std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     init_position_from_fen(fen);
 }
@@ -310,6 +313,19 @@ void Board::init_position_from_fen(std::string fen) {
     }
 
     is_whites_turn = (fen_tokens[1] == "w");
+
+    // need to let the correct pawn know that this is now available.
+    std::string en_passant_target = fen_tokens[3];
+
+    if (en_passant_target == "-") 
+        return;
+    
+    uint8_t bit = BBHelper::square_name_to_bit(en_passant_target);
+    
+    uint64_t en_passant_bit = 1ULL << bit;
+
+    // get pawn that can capture here.
+    // append bit to its en_passant_captures.
 
     // Parse more tokens later if we want to.
 }

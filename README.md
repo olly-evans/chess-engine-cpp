@@ -63,3 +63,7 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - implement check.
 
 -- add a goddamn boolean for piece->color dear lord not some stupid enum.
+
+- continue passing enpassant square in fen string.
+
+-have map of square names to bits now so can use that more throughout.
