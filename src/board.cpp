@@ -77,7 +77,7 @@ uint64_t Board::white_captures() {
     
     uint64_t white_captures = 0ULL;
 
-    // this shouldnt work because captures are only updated upon calling get_legal_moves();
+    // this shouldnt work because captures are only updated upon calling get_pseudo_legal_moves();
     for (auto& piece : pieces) {
         if (islower(piece->piece_id))
             continue;
@@ -90,7 +90,7 @@ uint64_t Board::black_captures() {
     
     uint64_t black_captures = 0ULL;
 
-    // this shouldnt work because captures are only updated upon calling get_legal_moves();
+    // this shouldnt work because captures are only updated upon calling get_pseudo_legal_moves();
     for (auto& piece : pieces) {
         if (isupper(piece->piece_id))
             continue;
@@ -134,7 +134,7 @@ uint64_t Board::black_captures() {
 //         // feels expensive but its not too bad.
 //         // must update this->captures.
 
-//         piece->get_legal_moves(white_occ, black_occ);
+//         piece->get_pseudo_legal_moves(white_occ, black_occ);
 
 //         enemy_captures |= piece->captures;
 //     }
@@ -158,7 +158,7 @@ bool Board::white_king_in_check(uint64_t white, uint64_t black) {
         
         // feels expensive but its not too bad.
         // must update this->captures.
-        piece->get_legal_moves(white_occupancy(), black_occupancy());
+        piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
 
         enemy_captures |= piece->captures;
     }
@@ -180,7 +180,7 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
             continue;
         
         // must update this->captures.
-        piece->get_legal_moves(white_occupancy(), black_occupancy());
+        piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
 
         enemy_captures |= piece->captures;
     }
@@ -194,7 +194,7 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 void Board::update_all_piece_moves_captures() {
 
     for (auto& piece : pieces) {
-        piece->get_legal_moves(white_occupancy(), black_occupancy());
+        piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
     }
 
 }
@@ -566,20 +566,7 @@ void Board::on_left_mouse_press() {
     uint8_t old_bit = selected_piece->bit;
 
     handle_piece_move(clicked_bit);
-    reset_move_and_capture_highlights(old_bit);
-    
-    // works but we dont want to render pseudo-legal moves.
-
-    // if (is_whites_turn && white_king_in_check(white_occupancy(), black_occupancy())) {
-    //     std::cout << "White has played a move leaving their king in check, undoing move..." << "\n";
-    //     undo_move();
-    //     return;
-    // } else if (!is_whites_turn && black_king_in_check(white_occupancy(), black_occupancy())) {
-    //     std::cout << "Black has played a move leavign their king in check, undoing move..." << "\n";
-    //     undo_move();
-    //     return;
-    // }
-    
+    reset_move_and_capture_highlights(old_bit);    
     
     // MoveLogger::show_algebraic_move_history();
 
@@ -599,77 +586,17 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->color == Color::BLACK && is_whites_turn) return nullptr;
     if (piece->color == Color::WHITE && !is_whites_turn) return nullptr;
 
-    // can move this down but we want user to know theres just no legal moves.
+    // Highlight the square they clicked on.
     squares[clicked_bit].setFillColor(TURQOISE);
 
-    // or after get_legal moves, then strip
-    
+    piece->moves = piece->get_pseudo_legal_moves(white_occupancy(), black_occupancy());
+    // set_pseudo_legal_attacks(); void we dont even use piece->moves after in this function.
 
-    piece->moves = piece->get_legal_moves(white_occupancy(), black_occupancy());
-    
+    piece->remove_pseudo_legal_moves(*this);
 
-    // if (is_piece_pinned(piece)) {
-    //     std::cout << "the piece you selected is pinned, not calculating any moves." << "\n";
-
-    //     // find direction pinned, dont think it can be multiple.
-    //     // piece->get_direction_moves(); (west, nw etc..)
-    //     // piece->moves &= get_direction_moves();
-        
-    // }
-
-    // strip piece->moves of moves that result in a king check.
-    // this way we don't need to undo move i think.
-
-    // for bit in moves not this with friendly occupancy and pass to get_legal_moves();
-    uint64_t attacks = piece->moves | piece->captures;
-
-    std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(attacks);
-    std::cout << move_bits.size() << "\n";
-    bool is_white = (isupper(piece->piece_id));
-
-    for (uint8_t bit : move_bits) {
-
-        uint64_t white_occ;
-        uint64_t black_occ;
-        uint64_t enemy_captures;
-        
-        if (is_white) {
-            // Make fake bitboard with proposed move.
-            white_occ = BBHelper::set_bit(white_occupancy(), bit);
-            white_occ = BBHelper::clear_bit(white_occ, piece->bit);
-
-            // Remove move from enemy occupancy bitboard incase our fake move is a capture.
-            black_occ = BBHelper::clear_bit(black_occupancy(), bit);
-
-            // Get enemy_captures with our fake occupancy bitboards.
-            enemy_captures = get_black_captures(white_occ, black_occ);
-
-        } else if (!is_white) {
-            black_occ = BBHelper::set_bit(black_occupancy(), bit);
-            black_occ = BBHelper::clear_bit(black_occ, piece->bit);
-
-            white_occ = BBHelper::clear_bit(white_occupancy(), bit);
-
-            enemy_captures = get_white_captures(white_occ, black_occ);
-        }        
-        
-        uint64_t friendly_king;
-        if (toupper(piece->piece_id) == 'K') {
-            friendly_king = (1ULL << bit);
-        } else {
-            friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
-        }        
-
-        if (friendly_king & enemy_captures && BBHelper::get_bit(piece->moves, bit))
-            piece->moves = BBHelper::clear_bit(piece->moves, bit);
-        
-        if (friendly_king & enemy_captures && BBHelper::get_bit(piece->captures, bit))
-            piece->captures = BBHelper::clear_bit(piece->captures, bit);
-    }
-
-    move_bits.clear();
     return piece;
 }
+
 
 uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
 
@@ -679,11 +606,11 @@ uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
             if (piece->color != Color::WHITE)
                 continue;
             
-            // This just means if we pass a pseudo white/black occupancy we can ignore certain captures.
+            // This just means if we pass in a pseudo white/black occupancy we can ignore certain captures.
             if (!(white & (1ULL << piece->bit)))
                 continue;
 
-            piece->get_legal_moves(white, black);
+            piece->get_pseudo_legal_moves(white, black);
 
             white_captures |= piece->captures;
         }
@@ -702,7 +629,7 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
             if (!(black & (1ULL << piece->bit)))
                 continue;
 
-            piece->get_legal_moves(white, black);
+            piece->get_pseudo_legal_moves(white, black);
 
             black_captures |= piece->captures;
         }
@@ -769,7 +696,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
     /* Log Move */
 
-
+    // prob dont need selected bit and that if passing in whole board.
     MoveLogger::log_move(*this, clicked_bit, selected_piece->bit, selected_piece->piece_id);
 
     /* Process clicked_bit into a move */

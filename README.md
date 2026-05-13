@@ -61,3 +61,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - en passant should be fairly trivial now. - olly 9th of may 2026.
 
 - implement check.
+
+-- add a goddamn boolean for piece->color dear lord not some stupid enum.

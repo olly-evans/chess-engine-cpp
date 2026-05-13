@@ -11,7 +11,10 @@
 
 #include "util.hpp"
 
+// get rid of this thing ffs.
 enum class Color {BLACK, WHITE};
+
+class Board;
 
 class Piece {
 
@@ -42,7 +45,8 @@ public:
     void draw(sf::RenderWindow& window);
 
     // All instances return the moves and assign this->captures.
-    virtual uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
+    virtual uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) = 0;
+    void remove_pseudo_legal_moves(Board& board);
     
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
@@ -67,7 +71,7 @@ public:
         return resolve_texture_path();
     }
 
-    uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
     uint64_t get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
@@ -90,7 +94,7 @@ public:
         return resolve_texture_path();
     }
     
-    uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -103,7 +107,7 @@ public:
         return resolve_texture_path();
     }
     
-    uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -116,7 +120,7 @@ public:
         return resolve_texture_path();
     }
 
-    uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -129,7 +133,7 @@ public:
         return resolve_texture_path();
     }
 
-    uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
 
 };
 
@@ -142,7 +146,7 @@ public:
         return resolve_texture_path();
     }
 
-    uint64_t get_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
+    uint64_t get_pseudo_legal_moves(uint64_t w_bb, uint64_t b_bb) override;
     bool can_queenside_castle(uint64_t w_bb, uint64_t b_bb);
 
 };
