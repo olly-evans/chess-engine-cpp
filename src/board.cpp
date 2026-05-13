@@ -624,42 +624,27 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     uint64_t attacks = piece->moves | piece->captures;
 
     std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(attacks);
-        
+    std::cout << move_bits.size() << "\n";
     bool is_white = (isupper(piece->piece_id));
 
     for (uint8_t bit : move_bits) {
-
-        // if our piece is now here, is the friendly king under attack.
-
-        uint64_t friendly_king;
-        if (toupper(piece->piece_id) == 'K') {
-            friendly_king = (1ULL << bit);
-
-            // this is the same as king bb.
-        } else {
-            friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
-        }
-
-        // what if the selected_piece is the king.
 
         uint64_t white_occ;
         uint64_t black_occ;
         uint64_t enemy_captures;
         
         if (is_white) {
+            // Make fake bitboard with proposed move.
             white_occ = BBHelper::set_bit(white_occupancy(), bit);
             white_occ = BBHelper::clear_bit(white_occ, piece->bit);
 
+            // Remove move from enemy occupancy bitboard incase our fake move is a capture.
             black_occ = BBHelper::clear_bit(black_occupancy(), bit);
 
+            // Get enemy_captures with our fake occupancy bitboards.
             enemy_captures = get_black_captures(white_occ, black_occ);
-            // if we pseudo-move the piece onto a square with a enemy piece.
-            // when we get the captures of enemy piece it wont acknowledge piece.
 
-            // what if we have a capture that removes a piece
-            // make fake copy of captured piece bitboard.
-
-        } else {
+        } else if (!is_white) {
             black_occ = BBHelper::set_bit(black_occupancy(), bit);
             black_occ = BBHelper::clear_bit(black_occ, piece->bit);
 
@@ -668,16 +653,21 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
             enemy_captures = get_white_captures(white_occ, black_occ);
         }        
         
-        
-        // because we dont have a fake friendly king its alwasy the real bitboard.
+        uint64_t friendly_king;
+        if (toupper(piece->piece_id) == 'K') {
+            friendly_king = (1ULL << bit);
+        } else {
+            friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
+        }        
+
         if (friendly_king & enemy_captures && BBHelper::get_bit(piece->moves, bit))
             piece->moves = BBHelper::clear_bit(piece->moves, bit);
         
         if (friendly_king & enemy_captures && BBHelper::get_bit(piece->captures, bit))
             piece->captures = BBHelper::clear_bit(piece->captures, bit);
     }
-    move_bits.clear();
 
+    move_bits.clear();
     return piece;
 }
 
