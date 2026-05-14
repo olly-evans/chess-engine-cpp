@@ -164,7 +164,7 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
 // this can be done with one function for both functions below.
 void Board::init_main_window_squares() {
 
-    for (int i = H1; i <= A8; i++) {
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
         sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));

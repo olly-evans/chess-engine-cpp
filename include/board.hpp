@@ -58,17 +58,6 @@ private:
     
     std::vector<sf::RectangleShape> squares;
 
-    // White OOV
-    enum WhitePOV : uint8_t {
-        A8 = 63, B8 = 62, C8 = 61, D8 = 60, E8 = 59, F8 = 58, G8 = 57, H8 = 56,
-        A7 = 55, B7 = 54, C7 = 53, D7 = 52, E7 = 51, F7 = 50, G7 = 49, H7 = 48,
-        A6 = 47, B6 = 46, C6 = 47, D6 = 44, E6 = 43, F6 = 42, G6 = 41, H6 = 40,
-        A5 = 39, B5 = 38, C5 = 37, D5 = 36, E5 = 35, F5 = 34, G5 = 33, H5 = 32,
-        A4 = 31, B4 = 30, C4 = 29, D4 = 28, E4 = 27, F4 = 26, G4 = 25, H4 = 24,
-        A3 = 23, B3 = 22, C3 = 21, D3 = 20, E3 = 19, F3 = 18, G3 = 17, H3 = 16,
-        A2 = 15, B2 = 14, C2 = 13, D2 = 12, E2 = 11, F2 = 10, G2 = 9,  H2 = 8,
-        A1 = 7,  B1 = 6,  C1 = 5,  D1 = 4,  E1 = 3,  F1 = 2,  G1 = 1,  H1 = 0 
-    };
 
     /* DEBUG */
 
@@ -76,7 +65,7 @@ private:
     std::vector<sf::RectangleShape> bitboard_window_squares;
 
     /* BITBOARDS */
-
+    
     /*
 
     uint64_t w_pawns bitboard initial positions example.
@@ -102,8 +91,6 @@ private:
 
     */
 
-    // Vector of all bitboards.
-     // Names of the bitboards for debugging.
     int bitboard_vec_index = 0;
     
     uint64_t w_pawns = 0ULL;
@@ -131,6 +118,7 @@ public:
 
     unsigned int board_square_size;
 
+    // Vector of all bitboards.
     static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
     std::vector<char> bitboard_names;
 

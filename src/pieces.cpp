@@ -108,7 +108,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         if (in_check && BBHelper::get_bit(this->captures, move_bit))
             this->captures = BBHelper::clear_bit(this->captures, move_bit);
 
-        //strip_pseudo_legal_special_moves();
+        // strip_pseudo_legal_special_moves();
     }
 }
 
