@@ -35,7 +35,7 @@ public:
 
     Color color;
     bool is_white;
-    char piece_id;
+    char id;
 
     uint64_t moves = 0ULL;
     uint64_t captures = 0ULL;

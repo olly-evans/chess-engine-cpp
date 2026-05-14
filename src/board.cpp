@@ -234,10 +234,8 @@ void Board::init_position_from_fen(std::string fen) {
 
 void Board::create_piece(const char id, uint8_t bit) {
 
-    enum Color color = (isupper(id)) ? Color::WHITE : Color::BLACK;
-    const char norm_id = toupper(id);
 
-    switch (norm_id) {
+    switch (toupper(id)) {
 
         case 'P':
             pieces.emplace_back(new Pawn(id, main_window, bit, board_square_size));
@@ -615,7 +613,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     /* Log Move */
 
     // prob dont need selected bit and that if passing in whole board.
-    MoveLogger::log_move(*this, clicked_bit, selected_piece->bit, selected_piece->piece_id);
+    MoveLogger::log_move(*this, clicked_bit, selected_piece->bit, selected_piece->id);
 
     /* Process clicked_bit into a move */
     

@@ -12,17 +12,17 @@
 std::string Piece::resolve_texture_path() {
     std::filesystem::path path = std::filesystem::current_path();
     std::string color_prefix = (this->is_white ? "w" : "b");
-    char tmp_id = toupper(piece_id);
+    char tmp_id = toupper(id);
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
 Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-    piece_id(id), 
+    id(id), 
     window(w), 
     bit(b),
     board_square_size(b_squ_sz) {
     
-    is_white = (isupper(this->piece_id));
+    is_white = (isupper(this->id));
 
     // we then never touch index again.
 
@@ -62,7 +62,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
 
     std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(attacks);
 
-    bool is_white = (isupper(this->piece_id));
+    bool is_white = (isupper(this->id));
 
     for (uint8_t move_bit : move_bits) {
 
@@ -93,7 +93,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         
         // Make a fake king if we have a king selected, else use the real one.
         uint64_t friendly_king;
-        if (toupper(this->piece_id) == 'K') {
+        if (toupper(this->id) == 'K') {
             friendly_king = (1ULL << move_bit);
         } else {
             friendly_king = (is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
@@ -533,7 +533,7 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t king = (1ULL << this->bit);
     uint64_t moves = 0ULL;
-    bool is_white = (isupper(this->piece_id));
+    bool is_white = (isupper(this->id));
 
     moves |= (king << 1);
     moves |= (king << 7);
