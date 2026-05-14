@@ -49,7 +49,7 @@ public:
     virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) = 0;
 
     void strip_pseudo_legal_attacks(Board& board);
-    virtual void strip_pseudo_legal_special_moves() = 0;
+    virtual void strip_pseudo_legal_special_moves(Board& board) = 0;
 
     
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
@@ -77,7 +77,7 @@ public:
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
-    void strip_pseudo_legal_special_moves() override;
+    void strip_pseudo_legal_special_moves(Board& board) override;
 
     uint64_t get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
@@ -103,7 +103,7 @@ public:
     
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
         
-    void strip_pseudo_legal_special_moves() override;
+    void strip_pseudo_legal_special_moves(Board& board) override;
 
 };
 
@@ -118,7 +118,7 @@ public:
     
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
-    void strip_pseudo_legal_special_moves() override;
+    void strip_pseudo_legal_special_moves(Board& board) override;
 };
 
 class Rook : public Piece {
@@ -132,7 +132,7 @@ public:
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
     
-    void strip_pseudo_legal_special_moves() override;
+    void strip_pseudo_legal_special_moves(Board& board) override;
 };
 
 class Queen : public Piece {
@@ -146,7 +146,7 @@ public:
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
-    void strip_pseudo_legal_special_moves() override;
+    void strip_pseudo_legal_special_moves(Board& board) override;
 };
 
 class King : public Piece {
@@ -160,7 +160,7 @@ public:
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
     
-    void strip_pseudo_legal_special_moves() override;
+    void strip_pseudo_legal_special_moves(Board& board) override;
 
     bool can_queenside_castle(uint64_t w_bb, uint64_t b_bb);
 };
