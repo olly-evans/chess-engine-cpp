@@ -90,11 +90,11 @@ uint64_t BBHelper::remove_enemy_pieces(uint64_t moves, uint64_t enemy) {
 
 uint8_t BBHelper::get_total_active_bits(uint64_t b) {
 
-        uint8_t count = 0;
-        for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-            if (b & (1ULL << i)) count++;
-        }
-        return count;
+    uint8_t c;
+    for (c = 0; b; c++) {
+        b &= b - 1; // clear the lsb set.
+    }
+    return;
 }
 
 std::vector<uint8_t> BBHelper::get_bit_vector(uint64_t bitboard) {

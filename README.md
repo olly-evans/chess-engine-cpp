@@ -68,3 +68,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - continue passing enpassant square in fen string.
 
 -have map of square names to bits now so can use that more throughout.
+
+- delete messy remove enpassant bs, just make an overriding strip_special_moves function for each piece, will need it anyway for castling etc.. pass in this->moves and update it whatever
