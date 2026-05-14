@@ -31,7 +31,7 @@ protected:
 
 
 public:
-    Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
+    Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
 
     Color color;
     bool is_white;
@@ -63,8 +63,8 @@ public:
 
 class Pawn : public Piece {
 public:
-    Pawn(char id, Color col, sf::RenderWindow& w, uint8_t bitboard, int b_squ_sz) : 
-        Piece(id, col, w, bitboard, b_squ_sz) {}
+    Pawn(char id, sf::RenderWindow& w, uint8_t bitboard, int b_squ_sz) : 
+        Piece(id, w, bitboard, b_squ_sz) {}
     
     uint64_t en_passant_captures = 0ULL;
     
@@ -89,8 +89,8 @@ public:
         {-1, -2}, {1, -2}, {-1, 2}, {1, 2}
     };
 
-    Knight(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, col, w, b, b_squ_sz) {}
+    Knight(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+        Piece(id, w, b, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -102,8 +102,8 @@ public:
 
 class Bishop : public Piece {
 public:
-    Bishop(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, col, w, b, b_squ_sz) {}
+    Bishop(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+        Piece(id, w, b, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -115,8 +115,8 @@ public:
 
 class Rook : public Piece {
 public:
-    Rook(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, col, w, b, b_squ_sz) {}
+    Rook(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+        Piece(id, w, b, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -128,8 +128,8 @@ public:
 
 class Queen : public Piece {
 public:
-    Queen(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, col, w, b, b_squ_sz) {}
+    Queen(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+        Piece(id, w, b, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -141,8 +141,8 @@ public:
 
 class King : public Piece {
 public:
-    King(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, col, w, b, b_squ_sz) {}
+    King(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+        Piece(id, w, b, b_squ_sz) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();

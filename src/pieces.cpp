@@ -16,9 +16,8 @@ std::string Piece::resolve_texture_path() {
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
-Piece::Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
     piece_id(id), 
-    color(col),
     window(w), 
     bit(b),
     board_square_size(b_squ_sz) {
@@ -26,6 +25,8 @@ Piece::Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) :
     is_white = (isupper(this->piece_id));
 
     // we then never touch index again.
+
+    // can we load each image once?
     if (texture.loadFromFile(get_texture_path())) {
         sprite.setTexture(texture);
 
