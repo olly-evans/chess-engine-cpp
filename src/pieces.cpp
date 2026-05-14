@@ -60,9 +60,8 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
 
     uint64_t attacks = this->moves | this->captures;
 
+    // Lets try and do this better.
     std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(attacks);
-
-    bool is_white = (isupper(this->id));
 
     for (uint8_t move_bit : move_bits) {
 
@@ -71,7 +70,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         uint64_t enemy_captures;
         
         // maybe this is a board function, make fake move lol.
-        if (is_white) {
+        if (this->is_white) {
             // Make fake bitboard with proposed move.
             white_occ = BBHelper::set_bit(board.white_occupancy(), move_bit);
             white_occ = BBHelper::clear_bit(white_occ, this->bit);
@@ -82,7 +81,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
             // Get enemy_captures with our fake occupancy bitboards.
             enemy_captures = board.get_black_captures(white_occ, black_occ);
 
-        } else if (!is_white) {
+        } else {
             black_occ = BBHelper::set_bit(board.black_occupancy(), move_bit);
             black_occ = BBHelper::clear_bit(black_occ, this->bit);
 
@@ -91,17 +90,18 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
             enemy_captures = board.get_white_captures(white_occ, black_occ);
         }        
         
-        // Make a fake king if we have a king selected, else use the real one.
         uint64_t friendly_king;
+
+        // Make a fake king if we have a king selected, else use the real one.
         if (toupper(this->id) == 'K') {
             friendly_king = (1ULL << move_bit);
         } else {
-            friendly_king = (is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
+            friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
         }        
 
         bool in_check = friendly_king & enemy_captures;
 
-        // Strip from moves or captures anything that would result in friendly king being in check.
+        // Strip from moves or captures any attack that would result in friendly king being in check.
         if (in_check && BBHelper::get_bit(this->moves, move_bit))
             this->moves = BBHelper::clear_bit(this->moves, move_bit);
         
@@ -120,7 +120,6 @@ void Pawn::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     uint64_t pawn = 1ULL << this->bit;
     uint64_t moves = 0ULL;
 
-    
     if (this->is_white) {
         moves = get_white_pawn_moves(pawn, w_bb, b_bb);
 
@@ -242,6 +241,10 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     return en_passant_moves;
 }
 
+void Pawn::strip_pseudo_legal_special_moves() {
+    return;
+}
+
 /* KNIGHT */
 
 void Knight::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
@@ -266,7 +269,9 @@ void Knight::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     this->moves = BBHelper::remove_enemy_pieces(moves, (this->is_white) ? b_bb : w_bb);
 }
 
-
+void Knight::strip_pseudo_legal_special_moves() {
+    return;
+}
 
 /* BISHOP */
 
@@ -397,6 +402,10 @@ uint64_t Piece::get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     return north_east_moves;
 }
 
+void Bishop::strip_pseudo_legal_special_moves() {
+    return;
+}
+
 /* ROOK */
 
 void Rook::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
@@ -493,6 +502,10 @@ uint64_t Piece::get_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
     return (east_moves & ~(BBHelper::rank_masks[mask_index]));
 }
 
+void Rook::strip_pseudo_legal_special_moves() {
+    return;
+}
+
 /* QUEEN */
 
 void Queen::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
@@ -527,6 +540,10 @@ void Queen::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     this->moves = BBHelper::remove_enemy_pieces(moves, (this->is_white) ? b_bb : w_bb);
 };
 
+void Queen::strip_pseudo_legal_special_moves() {
+    return;
+}
+
 /* KING */
 
 void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
@@ -557,6 +574,10 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     moves = BBHelper::remove_friendly_pieces(moves, is_white ? w_bb : b_bb);
     this->moves = BBHelper::remove_enemy_pieces(moves, is_white ? b_bb : w_bb);
 };
+
+void King::strip_pseudo_legal_special_moves() {
+    return;
+}
 
 // bool King::can_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
