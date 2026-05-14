@@ -69,52 +69,6 @@ uint64_t Board::black_occupancy() {
            bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
 }
 
-// bool Board::is_piece_pinned(Piece* p) {
-
-//     uint64_t piece = (1ULL << p->bit);
-//     uint64_t enemy_captures = 0ULL;
-
-//     bool is_white = (p->color == Color::WHITE);
-
-//     // for every piece of opposite color get their captures.
-//     uint64_t white_occ;
-//     uint64_t black_occ;
-
-//     // passing in white_occ/black_occ without the selected_piece.
-//     // either genius or completely retarded.
-
-//     // okay we do this but for every move including bit.
-//     if (is_white) {
-//         white_occ = white_occupancy() & ~piece;
-//         black_occ = black_occupancy();
-//     } else {
-//         black_occ = black_occupancy() & ~piece;
-//         white_occ = white_occupancy();
-//     }
-
-
-//     // loop through moves and ~move_bit with occupancy, calculate enemy captures if we were on move bit.
-//     for (auto& piece : pieces) {
-
-//         if ((piece->color == p->color))
-//             continue;
-        
-        
-//         // feels expensive but its not too bad.
-//         // must update this->captures.
-
-//         piece->set_pseudo_legal_attacks(white_occ, black_occ);
-
-//         enemy_captures |= piece->captures;
-//     }
-
-//     uint64_t friendly_king = (is_white) ? bitboards[W_KING] : bitboards[B_KING];
-
-//     if (friendly_king & enemy_captures)
-//         return true;
-//     return false;
-// }
-
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[W_KING];
