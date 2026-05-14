@@ -94,11 +94,13 @@ uint8_t BBHelper::get_total_active_bits(uint64_t b) {
     for (c = 0; b; c++) {
         b &= b - 1; // clear the lsb set.
     }
-    return;
+    return c;
 }
 
 std::vector<uint8_t> BBHelper::get_bit_vector(uint64_t bitboard) {
 
+    // slow and awful.
+    // __builtin_clz
     std::vector<uint8_t> bits;
     for (uint8_t i = 0; i < GRID_NUM_SQUARES; i++) {
         if (BBHelper::get_bit(bitboard, i))

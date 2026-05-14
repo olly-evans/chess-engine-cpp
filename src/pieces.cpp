@@ -11,7 +11,7 @@
 
 std::string Piece::resolve_texture_path() {
     std::filesystem::path path = std::filesystem::current_path();
-    std::string color_prefix = (color == Color::WHITE ? "w" : "b");
+    std::string color_prefix = (this->is_white ? "w" : "b");
     char tmp_id = toupper(piece_id);
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
@@ -22,7 +22,9 @@ Piece::Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz) :
     window(w), 
     bit(b),
     board_square_size(b_squ_sz) {
-        
+    
+    is_white = (isupper(this->piece_id));
+
     // we then never touch index again.
     if (texture.loadFromFile(get_texture_path())) {
         sprite.setTexture(texture);
@@ -67,7 +69,6 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         uint64_t black_occ;
         uint64_t enemy_captures;
         
-
         // maybe this is a board function, make fake move lol.
         if (is_white) {
             // Make fake bitboard with proposed move.
@@ -97,25 +98,17 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
             friendly_king = (is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
         }        
 
+        bool in_check = friendly_king & enemy_captures;
+
         // Strip from moves or captures anything that would result in friendly king being in check.
-        if (friendly_king & enemy_captures && BBHelper::get_bit(this->moves, move_bit))
+        if (in_check && BBHelper::get_bit(this->moves, move_bit))
             this->moves = BBHelper::clear_bit(this->moves, move_bit);
         
-        if (friendly_king & enemy_captures && BBHelper::get_bit(this->captures, move_bit))
+        if (in_check && BBHelper::get_bit(this->captures, move_bit))
             this->captures = BBHelper::clear_bit(this->captures, move_bit);
 
-
-        // if (!(isupper(this->piece_id) == 'P'))
-        //     return;
-        
-        // if (friendly_king & enemy_captures && BBHelper::get_bit(this->en_passant_captures, move_bit)) 
-        // also need to check enpassant moves.
-
-        // perhaps pawn has own strip_pseudo_legal_enpassant();
-        
+        //strip_pseudo_legal_special_moves();
     }
-
-    move_bits.clear();
 }
 
 /* PAWN */
@@ -127,7 +120,7 @@ void Pawn::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     uint64_t moves = 0ULL;
 
     
-    if (this->color == Color::WHITE) {
+    if (this->is_white) {
         moves = get_white_pawn_moves(pawn, w_bb, b_bb);
 
         // enpassant
@@ -202,9 +195,7 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t pawn = (1ULL << this->bit);
 
-    bool pawn_is_white = (this->color == Color::WHITE);
-
-    uint64_t enemy_pawns = pawn_is_white ? Board::bitboards[B_PAWNS] : Board::bitboards[W_PAWNS];
+    uint64_t enemy_pawns = this->is_white ? Board::bitboards[B_PAWNS] : Board::bitboards[W_PAWNS];
 
     uint64_t west = (pawn << 1);
     uint64_t east = (pawn >> 1);
@@ -227,64 +218,25 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     // this->enpassant_captures, shows the capture square
     // move to clicked bit, remove clicked_bit << 8, clicked_bit >> 8. in board.
 
-    if (enemy_pawns & (west) && west_moved_two && pawn_is_white) {
+    if (enemy_pawns & (west) && west_moved_two && this->is_white) {
         en_passant_moves |= (west << 8);
         this->en_passant_captures |= west;
     }
 
-    if (enemy_pawns & (east) && east_moved_two && pawn_is_white) {
+    if (enemy_pawns & (east) && east_moved_two && this->is_white) {
         en_passant_moves |= (east << 8);
         this->en_passant_captures |= east;
     }
 
-    if (enemy_pawns & (west) && west_moved_two && !pawn_is_white) {
+    if (enemy_pawns & (west) && west_moved_two && !this->is_white) {
         en_passant_moves |= (west >> 8);
         this->en_passant_captures |= west;
     }
 
-    if (enemy_pawns & (east) && east_moved_two && !pawn_is_white) {
+    if (enemy_pawns & (east) && east_moved_two && !this->is_white) {
         en_passant_moves |= (east >> 8);
         this->en_passant_captures |= east;
     }
-
-
-    // if (board.white_king_in_check())
-    // maybe tweak this to make the king just passed in and not hardcoded as real one.
-    // make the king or something and 
-
-
-    // make pseudo move.
-    
-
-    // 
-
-    // uint64_t white_occ;
-    // uint64_t black_occ;
-    // uint64_t enemy_captures;
-
-    // std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(en_passant_moves);
-    // if (pawn_is_white) {
-    //     // Make fake bitboard with proposed move.
-    //     white_occ = BBHelper::set_bit(w_bb, clicked_bit);
-    //     white_occ = BBHelper::clear_bit(white_occ, this->bit);
-
-    //     // Remove move from enemy occupancy bitboard incase our fake move is a capture.
-    //     black_occ = BBHelper::clear_bit(b_bb, this->bit - 8);
-
-    //     // Get enemy_captures with our fake occupancy bitboards.
-
-    // } else if (!pawn_is_white) {
-    //     black_occ = BBHelper::set_bit(b_bb, clicked_bit);
-    //     black_occ = BBHelper::clear_bit(black_occ, this->bit);
-
-    //     white_occ = BBHelper::clear_bit(w_bb, this->bit + 8);
-
-    // }   
-
-    // uint64_t friendly_king = pawn_is_white ? bitboards[W_KING] : bitboards[B_KING];
-
-    // if (friendly_king & enemy_captures && BBHelper::get_bit(pawn->en_passant_captures, clicked_bit))
-    //     pawn->en_passant_captures = BBHelper::clear_bit(pawn->en_passant_captures, clicked_bit);
 
     return en_passant_moves;
 }
@@ -306,11 +258,11 @@ void Knight::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     moves |= (knight & BBHelper::NOT_A_FILE)  >> 17; 
     moves |= (knight & BBHelper::NOT_AB_FILE) >> 10; 
 
-    uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    uint64_t enemy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
 
-    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    this->moves = BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, (this->is_white ? w_bb : b_bb)); 
+    this->moves = BBHelper::remove_enemy_pieces(moves, (this->is_white) ? b_bb : w_bb);
 }
 
 
@@ -332,11 +284,11 @@ void Bishop::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     moves |= south_west_moves;
     moves |= south_east_moves;
 
-    uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    uint64_t enemy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
 
-    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    this->moves = BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, (this->is_white ? w_bb : b_bb)); 
+    this->moves = BBHelper::remove_enemy_pieces(moves, (this->is_white) ? b_bb : w_bb);
 };
 
 uint64_t Piece::get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
@@ -461,11 +413,11 @@ void Rook::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     moves |= west_moves;
     moves |= east_moves;
 
-    uint64_t enemy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    uint64_t enemy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
 
-    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    this->moves = BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);;
+    moves = BBHelper::remove_friendly_pieces(moves, (this->is_white ? w_bb : b_bb)); 
+    this->moves = BBHelper::remove_enemy_pieces(moves, (this->is_white) ? b_bb : w_bb);;
 };
 
 uint64_t Piece::get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
@@ -567,11 +519,11 @@ void Queen::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     moves |= south_west_moves;
     moves |= south_east_moves;
 
-    uint64_t enemy_occupancy = (this->color == Color::WHITE) ? b_bb : w_bb; 
+    uint64_t enemy_occupancy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
     
-    moves = BBHelper::remove_friendly_pieces(moves, (this->color == Color::WHITE ? w_bb : b_bb)); 
-    this->moves = BBHelper::remove_enemy_pieces(moves, (this->color == Color::WHITE) ? b_bb : w_bb);
+    moves = BBHelper::remove_friendly_pieces(moves, (this->is_white ? w_bb : b_bb)); 
+    this->moves = BBHelper::remove_enemy_pieces(moves, (this->is_white) ? b_bb : w_bb);
 };
 
 /* KING */
@@ -609,7 +561,7 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
 
 //     uint64_t king = (1ULL << this->bit);
 
-//     if (this->color == Color::WHITE) {
+//     if (this->is_white) {
         
 //         if (king & (1ULL << 3))
 

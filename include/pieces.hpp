@@ -34,6 +34,7 @@ public:
     Piece(char id, Color col, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
 
     Color color;
+    bool is_white;
     char piece_id;
 
     uint64_t moves = 0ULL;
