@@ -69,4 +69,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 -have map of square names to bits now so can use that more throughout.
 
-- delete messy remove enpassant bs, just make an overriding strip_special_moves function for each piece, will need it anyway for castling etc.. pass in this->moves and update it whatever
+- why are we adding the capture bit to captures not the move that does the capture???
+- i hate reusing the fake move code.

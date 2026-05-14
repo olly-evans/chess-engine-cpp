@@ -507,6 +507,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // Highlight the square they clicked on.
     squares[clicked_bit].setFillColor(TURQOISE);
 
+    // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     piece->strip_pseudo_legal_attacks(*this);
 
@@ -662,6 +663,7 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!bit_has_piece(ep_capture_bit))
         return false;
 
+    // this is the only place we use en_passant_captures...
     if (!(pawn->en_passant_captures & (1ULL << (ep_capture_bit))))
         return false;
 
