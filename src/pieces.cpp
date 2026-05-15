@@ -564,18 +564,14 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     this->moves = BBHelper::remove_enemy_pieces(moves, is_white ? b_bb : w_bb);
 };
 
+bool King::can_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
+
+    uint64_t king = (1ULL << this->bit);
+    // king start pos for color.
+    // queenside rook start pos for color.
+}
+
 void King::strip_pseudo_legal_special_moves(Board& board) {
     return;
 }
 
-// bool King::can_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
-
-//     uint64_t king = (1ULL << this->bit);
-
-//     if (this->is_white) {
-        
-//         if (king & (1ULL << 3))
-
-// how do we know a rook is queenside/kingside.
-//     }   
-// }

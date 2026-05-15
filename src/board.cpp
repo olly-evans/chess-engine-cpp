@@ -699,7 +699,6 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (bit_has_piece(clicked_bit))
         return false;
 
-
     uint8_t color_ep_offset = pawn->is_white ? -8 : 8;
     uint8_t ep_capture_bit = clicked_bit + color_ep_offset;
 
@@ -707,11 +706,12 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
         return false;
 
     // this is the only place we use en_passant_captures...
+    // could just have this is == 0ULL or smth.
     if (!(pawn->en_passant_captures & (1ULL << (ep_capture_bit))))
         return false;
 
     /* 
-       Get to here and: we have a pawn, there is no piece on clicked_bit, 
+       Get to here and: we have a pawn selected, there is no piece on clicked_bit, 
        there is a piece on ep_capture_bit and ep_capture_bit is a 
        valid en passant capture.
     */

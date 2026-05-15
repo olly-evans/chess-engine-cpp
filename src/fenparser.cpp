@@ -32,8 +32,6 @@ std::vector<std::string> FenParser::split_with_delimiter(std::string s, const st
     
 uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitboards) {
 
-    /* Split was giving garbage values so had to guard the return here */
-
     static uint64_t dummy = 0ULL;
     int index = -1;
 
@@ -54,7 +52,8 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitbo
         default: return dummy; 
     }
 
-    if (index < 0 || index >= (int)bitboards.size()) return dummy;
+    if (index < 0 || index >= (int)bitboards.size()) 
+        return dummy;
 
     return bitboards[index];
     
