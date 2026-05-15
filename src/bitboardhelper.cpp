@@ -88,7 +88,7 @@ uint64_t BBHelper::remove_enemy_pieces(uint64_t moves, uint64_t enemy) {
     return moves &= ~enemy;
 }
 
-uint8_t BBHelper::get_total_active_bits(uint64_t b) {
+uint8_t BBHelper::get_set_bits(uint64_t b) {
 
     uint8_t c;
     for (c = 0; b; c++) {
@@ -108,8 +108,3 @@ std::vector<uint8_t> BBHelper::get_bit_vector(uint64_t bitboard) {
     }
     return bits;
 }
-
-/* PIECE MOVEMENT */
-
-/* MAKE ALL THIS PART OF PIECE */
-

@@ -71,4 +71,4 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - why are we adding the capture bit to captures not the move that does the capture???
 
-- create the simulate move/captures.
+- split up handle_piece_move function, enpassant/normal moves

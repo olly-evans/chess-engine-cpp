@@ -631,6 +631,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     // handle_enpassant_move();
     // handle_move();
     // split it up.
+    
     for (auto& bitboard: bitboards) {
 
         // goes first because otherwise we move the piece before checking if enpassant.

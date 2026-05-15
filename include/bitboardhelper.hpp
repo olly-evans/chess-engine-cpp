@@ -64,7 +64,7 @@ public:
     static uint64_t remove_enemy_pieces(uint64_t moves, uint64_t enemy);
  
 
-    static uint8_t get_total_active_bits(uint64_t b);
+    static uint8_t get_set_bits(uint64_t b);
     static std::vector<uint8_t> get_bit_vector(uint64_t bitboard);
 
 };
