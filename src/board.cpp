@@ -142,9 +142,12 @@ void Board::init() {
 
     // "8/8/8/2k5/3pP3/8/8/4K3 b - e3 0 1" enpassant check test fen.
 
-    // pass into board.
-    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // pass into board
+    // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // enpassant discovered check: "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
+
+    std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
     init_position_from_fen(fen);
 }
 
@@ -492,6 +495,8 @@ void Board::on_left_mouse_press() {
     is_whites_turn = !is_whites_turn;
 }
 
+/* PIECE FUNCTIONALITY */
+
 Piece* Board::select_piece(uint8_t clicked_bit) {
 
     Piece* piece = get_piece(clicked_bit);
@@ -622,7 +627,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
     uint8_t ep_capture_bit = (selected_piece->is_white) ? clicked_bit - 8 : clicked_bit + 8;
     bool is_ep_capture = is_enpassant_capture(clicked_bit);
-    
+
+    // handle_enpassant_move();
+    // handle_move();
+    // split it up.
     for (auto& bitboard: bitboards) {
 
         // goes first because otherwise we move the piece before checking if enpassant.
@@ -650,6 +658,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
 uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture) {
 
+    /* take in a proposed move, simulate it with temporary bitboards and 
+    *  return the enemy colors captures. 
+    */
+    
     uint64_t white_occ;
     uint64_t black_occ;
     uint64_t enemy_captures;

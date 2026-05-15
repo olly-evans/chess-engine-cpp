@@ -223,14 +223,13 @@ void Pawn::strip_pseudo_legal_special_moves(Board& board) {
     uint8_t ep_capture_bit = BBHelper::get_first_bit(this->en_passant_captures);
     uint8_t ep_move_bit = this->is_white ? ep_capture_bit + 8 : ep_capture_bit - 8;
           
-    
     uint64_t enemy_captures = board.get_simulated_enemy_captures(this, this->bit, ep_move_bit, ep_capture_bit);
 
     uint64_t friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
 
     bool in_check = friendly_king & enemy_captures;
 
-    // so apparently en_passant_captures isnt the move bit its the capture bit.
+    // so apparently en_passant_captures isnt the move bit its the capture bit, whos idea was that
     if (in_check && BBHelper::get_bit(this->en_passant_captures, ep_capture_bit))
         this->captures = BBHelper::clear_bit(this->captures, ep_move_bit);
 }
