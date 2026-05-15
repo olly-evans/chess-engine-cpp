@@ -142,7 +142,8 @@ void Board::init() {
 
     // "8/8/8/2k5/3pP3/8/8/4K3 b - e3 0 1" enpassant check test fen.
 
-    std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    // pass into board.
+    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     init_position_from_fen(fen);
 }
@@ -628,6 +629,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
         if (is_ep_capture && BBHelper::get_bit(bitboard, ep_capture_bit)) {
 
+            // Enpassant capture.
             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
             remove_piece(ep_capture_bit);
         } else if (BBHelper::get_bit(bitboard, selected_piece->bit)){
@@ -644,6 +646,34 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     }
 
     selected_piece->bit = clicked_bit;
+}
+
+uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture) {
+
+    uint64_t white_occ;
+    uint64_t black_occ;
+    uint64_t enemy_captures;
+    
+    if (piece->is_white) {
+        // Make fake bitboard with proposed move.
+        white_occ = BBHelper::set_bit(white_occupancy(), end);
+        white_occ = BBHelper::clear_bit(white_occ, piece->bit);
+
+        // Remove move from enemy occupancy bitboard incase our fake move is a capture.
+        black_occ = BBHelper::clear_bit(black_occupancy(), capture);
+
+        // Get enemy_captures with our fake occupancy bitboards.
+        enemy_captures = get_black_captures(white_occ, black_occ);
+
+    } else {
+        black_occ = BBHelper::set_bit(black_occupancy(), end);
+        black_occ = BBHelper::clear_bit(black_occ, piece->bit);
+
+        white_occ = BBHelper::clear_bit(white_occupancy(), capture);
+
+        enemy_captures = get_white_captures(white_occ, black_occ);
+    }  
+    return enemy_captures;
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
@@ -681,4 +711,3 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
 void Board::free_pieces() {
     for (auto& piece : pieces) {delete piece;}
 }
-

@@ -197,7 +197,8 @@ public:
 
 
     void handle_piece_move(uint8_t clicked_bit);
-    
+    uint64_t get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture);
+
     bool is_enpassant_capture(uint8_t clicked_bit);
 
     /* FREES */
