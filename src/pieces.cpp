@@ -24,9 +24,8 @@ Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) :
     
     is_white = (isupper(this->id));
 
-    // we then never touch index again.
-
     // can we load each image once?
+    // perhaps loaded to each piece type or smth
     if (texture.loadFromFile(get_texture_path())) {
         sprite.setTexture(texture);
 
@@ -569,7 +568,7 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
 
     // uint64_t enemy_captures = (is_white) ? Board::black_captures() : Board::white_captures();
 
-    bool can_qs_castle = can_pseudo_queenside_castle(w_bb, b_bb);
+    bool can_qs_castle = can_pseudo_legal_queenside_castle(w_bb, b_bb);
 
     if (can_qs_castle) 
         moves |= (king << 2);
@@ -578,27 +577,39 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     this->moves = BBHelper::remove_enemy_pieces(moves, is_white ? b_bb : w_bb);
 };
 
-bool King::can_pseudo_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
+bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
+
+    // scrapping this, board holds QqKk, pop appropriate one when piece->has_moved etc.
+    
     uint64_t king = (1ULL << this->bit);
     uint64_t rooks = (this->is_white) ? Board::bitboards[W_ROOKS] : Board::bitboards[B_ROOKS];
 
     uint64_t king_start = (this->is_white) ? 0x8 : 0x800000000000000;
     uint64_t queenside_rook_start = (this->is_white) ? 0x80 : 0x8000000000000000;
 
-    uint64_t occupancy = w_bb | b_bb;
+
+    if (this->has_moved)
+        return false;
 
     if (!(king_start & king))
         return false;
 
+    // is queenside flag. problem is i cant access the rook from here.
     // This will work with either rook is the problem. And also if the rook has moved back onto square.
-    // if rook or kings bit has changed.
+    
     if (!(rooks & queenside_rook_start))
         return false;
     
-    if (!(BBHelper::get_bit(occupancy, (king << 1)) && BBHelper::get_bit(occupancy, (king << 2))))
+    uint64_t occupancy = w_bb | b_bb;
+    bool offset_one = !(occupancy & (king << 1));
+    bool offset_two = !(occupancy & (king << 2));
+
+    if (!(offset_one && offset_two))
         return false;
 
+
+    // rook pointer has_moved somehow idk.
     return true;
 }
 

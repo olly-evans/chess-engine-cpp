@@ -166,5 +166,5 @@ public:
     
     void strip_pseudo_legal_special_moves(Board& board) override;
 
-    bool can_pseudo_queenside_castle(uint64_t w_bb, uint64_t b_bb);
+    bool can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb);
 };
