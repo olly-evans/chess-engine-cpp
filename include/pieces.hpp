@@ -33,8 +33,9 @@ protected:
 public:
     Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
 
-    Color color;
     bool is_white;
+    bool has_moved = false;
+
     char id;
 
     uint64_t moves = 0ULL;

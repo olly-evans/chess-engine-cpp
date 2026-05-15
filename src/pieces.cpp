@@ -42,7 +42,7 @@ std::string Piece::get_texture_path() {
 
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
-    // moved flag.
+    this->has_moved = true;
 }
 
 uint8_t Piece::get_bit() {

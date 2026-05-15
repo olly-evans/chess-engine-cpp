@@ -686,7 +686,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
         } 
     }
 
-    selected_piece->bit = clicked_bit;
+    selected_piece->set_bit(clicked_bit); 
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
