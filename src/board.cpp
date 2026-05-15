@@ -107,6 +107,39 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
     return black_captures;
 }
 
+uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture) {
+
+    /* take in a proposed move, simulate it with temporary bitboards and 
+    *  return the enemy colors captures. 
+    *  Note: Even for one move its expensive as must update all color moves/captures.
+    */
+    
+    uint64_t white_occ;
+    uint64_t black_occ;
+    uint64_t enemy_captures;
+    
+    if (piece->is_white) {
+        // Make fake bitboard with proposed move.
+        white_occ = BBHelper::set_bit(white_occupancy(), end);
+        white_occ = BBHelper::clear_bit(white_occ, piece->bit);
+
+        // Remove move from enemy occupancy bitboard incase our fake move is a capture.
+        black_occ = BBHelper::clear_bit(black_occupancy(), capture);
+
+        // Get enemy_captures with our fake occupancy bitboards.
+        enemy_captures = get_black_captures(white_occ, black_occ);
+
+    } else {
+        black_occ = BBHelper::set_bit(black_occupancy(), end);
+        black_occ = BBHelper::clear_bit(black_occ, piece->bit);
+
+        white_occ = BBHelper::clear_bit(white_occupancy(), capture);
+
+        enemy_captures = get_white_captures(white_occ, black_occ);
+    }  
+    return enemy_captures;
+}
+
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[W_KING];
@@ -654,38 +687,6 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     }
 
     selected_piece->bit = clicked_bit;
-}
-
-uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture) {
-
-    /* take in a proposed move, simulate it with temporary bitboards and 
-    *  return the enemy colors captures. 
-    */
-    
-    uint64_t white_occ;
-    uint64_t black_occ;
-    uint64_t enemy_captures;
-    
-    if (piece->is_white) {
-        // Make fake bitboard with proposed move.
-        white_occ = BBHelper::set_bit(white_occupancy(), end);
-        white_occ = BBHelper::clear_bit(white_occ, piece->bit);
-
-        // Remove move from enemy occupancy bitboard incase our fake move is a capture.
-        black_occ = BBHelper::clear_bit(black_occupancy(), capture);
-
-        // Get enemy_captures with our fake occupancy bitboards.
-        enemy_captures = get_black_captures(white_occ, black_occ);
-
-    } else {
-        black_occ = BBHelper::set_bit(black_occupancy(), end);
-        black_occ = BBHelper::clear_bit(black_occ, piece->bit);
-
-        white_occ = BBHelper::clear_bit(white_occupancy(), capture);
-
-        enemy_captures = get_white_captures(white_occ, black_occ);
-    }  
-    return enemy_captures;
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {

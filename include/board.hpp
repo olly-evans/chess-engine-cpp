@@ -134,6 +134,8 @@ public:
     uint64_t get_white_captures(uint64_t white, uint64_t black); // omve if works, tmp position.
     uint64_t get_black_captures(uint64_t white, uint64_t black); // also tmp, just wanna see shit.
 
+    uint64_t get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture);
+
     bool white_king_in_check(uint64_t white, uint64_t black);
     bool black_king_in_check(uint64_t white, uint64_t black);
 
@@ -186,16 +188,14 @@ public:
     void on_left_mouse_press();
     void reset_move_and_capture_highlights(uint8_t selected_bit);
 
-    Piece* select_piece(uint8_t bit);
+    /* PIECE FUNCTIONALITY */
 
+    Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
     bool bit_has_piece(uint8_t clicked_bit);
     void remove_piece(uint8_t piece_to_remove_bit);
 
-
-
     void handle_piece_move(uint8_t clicked_bit);
-    uint64_t get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture);
 
     bool is_enpassant_capture(uint8_t clicked_bit);
 
