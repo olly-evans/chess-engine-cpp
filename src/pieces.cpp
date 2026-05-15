@@ -65,32 +65,8 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
 
     for (uint8_t move_bit : move_bits) {
 
-        // uint64_t white_occ;
-        // uint64_t black_occ;
-        // uint64_t enemy_captures;
-        
         uint64_t enemy_captures = board.get_simulated_enemy_captures(this, this->bit, move_bit, move_bit);
 
-        // if (this->is_white) {
-        //     // Make fake bitboard with proposed move.
-        //     white_occ = BBHelper::set_bit(board.white_occupancy(), move_bit);
-        //     white_occ = BBHelper::clear_bit(white_occ, this->bit);
-
-        //     // Remove move from enemy occupancy bitboard incase our fake move is a capture.
-        //     black_occ = BBHelper::clear_bit(board.black_occupancy(), move_bit);
-
-        //     // Get enemy_captures with our fake occupancy bitboards.
-        //     enemy_captures = board.get_black_captures(white_occ, black_occ);
-
-        // } else {
-        //     black_occ = BBHelper::set_bit(board.black_occupancy(), move_bit);
-        //     black_occ = BBHelper::clear_bit(black_occ, this->bit);
-
-        //     white_occ = BBHelper::clear_bit(board.white_occupancy(), move_bit);
-
-        //     enemy_captures = board.get_white_captures(white_occ, black_occ);
-        // }        
-        
         uint64_t friendly_king;
 
         // Make a fake king if we have a king selected, else use the real one.
@@ -245,33 +221,11 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 void Pawn::strip_pseudo_legal_special_moves(Board& board) {
 
     uint8_t ep_capture_bit = BBHelper::get_first_bit(this->en_passant_captures);
-
-    uint64_t white_occ;
-    uint64_t black_occ;
-    uint64_t enemy_captures;
-    
     uint8_t ep_move_bit = this->is_white ? ep_capture_bit + 8 : ep_capture_bit - 8;
-    // maybe this is a board function, make fake move lol.
-    if (this->is_white) {
-        // Make fake bitboard with proposed move.
-        white_occ = BBHelper::set_bit(board.white_occupancy(), ep_move_bit);
-        white_occ = BBHelper::clear_bit(white_occ, this->bit);
-
-        // Remove move from enemy occupancy bitboard incase our fake move is a capture.
-        black_occ = BBHelper::clear_bit(board.black_occupancy(), ep_capture_bit);
-
-        // Get enemy_captures with our fake occupancy bitboards.
-        enemy_captures = board.get_black_captures(white_occ, black_occ);
-
-    } else {
-        black_occ = BBHelper::set_bit(board.black_occupancy(), ep_move_bit);
-        black_occ = BBHelper::clear_bit(black_occ, this->bit);
-
-        white_occ = BBHelper::clear_bit(board.white_occupancy(), ep_capture_bit);
-
-        enemy_captures = board.get_white_captures(white_occ, black_occ);
-    }        
+          
     
+    uint64_t enemy_captures = board.get_simulated_enemy_captures(this, this->bit, ep_move_bit, ep_capture_bit);
+
     uint64_t friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
 
     bool in_check = friendly_king & enemy_captures;
