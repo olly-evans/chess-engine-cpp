@@ -40,6 +40,15 @@ std::string Piece::get_texture_path() {
     return resolve_texture_path();
 }
 
+void Piece::set_bit(uint8_t bit) {
+    this->bit = bit;
+    // moved flag.
+}
+
+uint8_t Piece::get_bit() {
+    return this->bit;
+}
+
 void Piece::draw(sf::RenderWindow& window) {
 
     uint8_t square = BBHelper::bit_to_square(this->bit);
@@ -560,15 +569,37 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
 
     // uint64_t enemy_captures = (is_white) ? Board::black_captures() : Board::white_captures();
 
+    bool can_qs_castle = can_pseudo_queenside_castle(w_bb, b_bb);
+
+    if (can_qs_castle) 
+        moves |= (king << 2);
+
     moves = BBHelper::remove_friendly_pieces(moves, is_white ? w_bb : b_bb);
     this->moves = BBHelper::remove_enemy_pieces(moves, is_white ? b_bb : w_bb);
 };
 
-bool King::can_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
+bool King::can_pseudo_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t king = (1ULL << this->bit);
-    // king start pos for color.
-    // queenside rook start pos for color.
+    uint64_t rooks = (this->is_white) ? Board::bitboards[W_ROOKS] : Board::bitboards[B_ROOKS];
+
+    uint64_t king_start = (this->is_white) ? 0x8 : 0x800000000000000;
+    uint64_t queenside_rook_start = (this->is_white) ? 0x80 : 0x8000000000000000;
+
+    uint64_t occupancy = w_bb | b_bb;
+
+    if (!(king_start & king))
+        return false;
+
+    // This will work with either rook is the problem. And also if the rook has moved back onto square.
+    // if rook or kings bit has changed.
+    if (!(rooks & queenside_rook_start))
+        return false;
+    
+    if (!(BBHelper::get_bit(occupancy, (king << 1)) && BBHelper::get_bit(occupancy, (king << 2))))
+        return false;
+
+    return true;
 }
 
 void King::strip_pseudo_legal_special_moves(Board& board) {

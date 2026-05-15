@@ -67,3 +67,7 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - split up handle_piece_move function, enpassant/normal moves
 
 - castling, this'll be easy right!!
+
+- dirty_moves bool, can avoid recalculating moves perhaps.
+
+- getter and setter for piece pos.

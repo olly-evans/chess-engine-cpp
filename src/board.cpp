@@ -217,8 +217,8 @@ void Board::init() {
     // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
     // enpassant discovered check: "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
-
-    std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
     init_position_from_fen(fen);
 }
 
@@ -501,8 +501,8 @@ void Board::undo_move() {
     BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
     
     Piece* moved_piece = get_piece(last_move.end_bit);
-    moved_piece->bit = last_move.start_bit; 
-
+    moved_piece->set_bit(last_move.start_bit);
+    
     // If the move didn't involve a capture we can clean up and return early.
     if (!last_move.has_capture) {
         MoveLogger::move_history.pop_back(); 
@@ -587,7 +587,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     piece->strip_pseudo_legal_attacks(*this);
-
+    
     return piece;
 }
 

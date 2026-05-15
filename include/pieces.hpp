@@ -43,6 +43,9 @@ public:
     
     virtual std::string get_texture_path();
 
+    void set_bit(uint8_t bit);
+    uint8_t get_bit();
+
     void draw(sf::RenderWindow& window);
 
     // All instances return the moves and assign this->captures.
@@ -162,5 +165,5 @@ public:
     
     void strip_pseudo_legal_special_moves(Board& board) override;
 
-    bool can_queenside_castle(uint64_t w_bb, uint64_t b_bb);
+    bool can_pseudo_queenside_castle(uint64_t w_bb, uint64_t b_bb);
 };
