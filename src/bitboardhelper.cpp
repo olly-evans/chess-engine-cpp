@@ -54,6 +54,22 @@ uint64_t BBHelper::clear_bit(uint64_t b, int bit) {
     return (b) &= ~(1ULL << bit);
 }
 
+/* CHECKS */
+
+bool BBHelper::has_friendly_piece(uint64_t friendly_bb, int bit) {
+    return friendly_bb & (1ULL << bit);
+}
+
+uint64_t BBHelper::remove_friendly_pieces(uint64_t attacks, uint64_t friendly) {
+    return attacks &= ~friendly;
+}
+
+uint64_t BBHelper::remove_enemy_pieces(uint64_t moves, uint64_t enemy) {
+    return moves &= ~enemy;
+}
+
+/* GETS */
+
 bool BBHelper::get_bit(uint64_t b, int bit) {
     return b & (1ULL << bit);
 }
@@ -72,20 +88,6 @@ uint8_t BBHelper::get_first_bit(uint64_t b) {
 
 uint8_t BBHelper::get_piece_file(uint64_t piece) {
     return GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
-}
-
-/* CHECKS */
-
-bool BBHelper::has_friendly_piece(uint64_t friendly_bb, int bit) {
-    return friendly_bb & (1ULL << bit);
-}
-
-uint64_t BBHelper::remove_friendly_pieces(uint64_t attacks, uint64_t friendly) {
-    return attacks &= ~friendly;
-}
-
-uint64_t BBHelper::remove_enemy_pieces(uint64_t moves, uint64_t enemy) {
-    return moves &= ~enemy;
 }
 
 uint8_t BBHelper::get_set_bits(uint64_t b) {

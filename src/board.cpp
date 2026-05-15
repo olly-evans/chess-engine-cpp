@@ -69,6 +69,44 @@ uint64_t Board::black_occupancy() {
            bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
 }
 
+uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
+
+    uint64_t white_captures = 0ULL;
+    for (auto& piece : pieces) {
+
+            if (!piece->is_white)
+                continue;
+            
+            // This just means if we pass in a pseudo white/black occupancy we can ignore certain captures.
+            if (!(white & (1ULL << piece->bit)))
+                continue;
+
+            piece->set_pseudo_legal_attacks(white, black);
+
+            white_captures |= piece->captures;
+        }
+    return white_captures;
+}
+
+uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
+
+    uint64_t black_captures = 0ULL;
+    for (auto& piece : pieces) {
+
+            if (piece->is_white)
+                continue;
+            
+            // This just means if we pass a pseudo white/black occupancy we can ignore certain captures.
+            if (!(black & (1ULL << piece->bit)))
+                continue;
+
+            piece->set_pseudo_legal_attacks(white, black);
+
+            black_captures |= piece->captures;
+        }
+    return black_captures;
+}
+
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
     uint64_t king = bitboards[W_KING];
@@ -520,45 +558,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     return piece;
 }
 
-
-uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
-
-    uint64_t white_captures = 0ULL;
-    for (auto& piece : pieces) {
-
-            if (!piece->is_white)
-                continue;
-            
-            // This just means if we pass in a pseudo white/black occupancy we can ignore certain captures.
-            if (!(white & (1ULL << piece->bit)))
-                continue;
-
-            piece->set_pseudo_legal_attacks(white, black);
-
-            white_captures |= piece->captures;
-        }
-    return white_captures;
-}
-
-uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
-
-    uint64_t black_captures = 0ULL;
-    for (auto& piece : pieces) {
-
-            if (piece->is_white)
-                continue;
-            
-            // This just means if we pass a pseudo white/black occupancy we can ignore certain captures.
-            if (!(black & (1ULL << piece->bit)))
-                continue;
-
-            piece->set_pseudo_legal_attacks(white, black);
-
-            black_captures |= piece->captures;
-        }
-    return black_captures;
-}
-
 void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 
     squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
@@ -631,7 +630,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     // handle_enpassant_move();
     // handle_move();
     // split it up.
-    
+
     for (auto& bitboard: bitboards) {
 
         // goes first because otherwise we move the piece before checking if enpassant.

@@ -131,7 +131,8 @@ public:
     uint64_t white_occupancy();
     uint64_t black_occupancy();
 
-    bool is_piece_pinned(Piece* piece);
+    uint64_t get_white_captures(uint64_t white, uint64_t black); // omve if works, tmp position.
+    uint64_t get_black_captures(uint64_t white, uint64_t black); // also tmp, just wanna see shit.
 
     bool white_king_in_check(uint64_t white, uint64_t black);
     bool black_king_in_check(uint64_t white, uint64_t black);
@@ -186,9 +187,6 @@ public:
     void reset_move_and_capture_highlights(uint8_t selected_bit);
 
     Piece* select_piece(uint8_t bit);
-    uint64_t get_white_captures(uint64_t white, uint64_t black); // omve if works, tmp position.
-    uint64_t get_black_captures(uint64_t white, uint64_t black); // also tmp, just wanna see shit.
-
 
     Piece* get_piece(uint8_t clicked_bit);
     bool bit_has_piece(uint8_t clicked_bit);
