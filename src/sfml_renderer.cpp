@@ -8,7 +8,7 @@ SFMLRenderer::SFMLRenderer(Board& board, const uint16_t w_width) :
     board(board),
     win_w(w_width), 
     main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
-    event_handler(get_main_window())
+    event_handler(board, get_main_window())
     {};
 
 bool SFMLRenderer::is_square_black(uint8_t i) {
@@ -20,13 +20,13 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 /* INIT */
 
 void SFMLRenderer::init_renderer() {
+    board.init();
+
     set_board_square_size(board_square_size);
     set_main_window_squares();
 
     load_textures();
-
-    board.init();
-    init_piece_sprites();
+    init_piece_sprites(); // tmp, will be dodgy when we remove pieces.
 
 }
 
@@ -55,13 +55,6 @@ void SFMLRenderer::set_main_window_squares() {
     }
 }
 
-std::string SFMLRenderer::resolve_texture_path(char id) {
-    std::filesystem::path path = std::filesystem::current_path();
-    std::string color_prefix = (isupper(id) ? "w" : "b");
-    char tmp_id = toupper(id);
-    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
-}
-
 void SFMLRenderer::load_textures() {
     for (char id : {'r','n','b','q','k','p','R','N','B','Q','K','P'}) {
         sf::Texture tex;
@@ -71,6 +64,13 @@ void SFMLRenderer::load_textures() {
             std::cerr << "Failed to load texture for: " << id << std::endl;
         }
     }
+}
+
+std::string SFMLRenderer::resolve_texture_path(char id) {
+    std::filesystem::path path = std::filesystem::current_path();
+    std::string color_prefix = (isupper(id) ? "w" : "b");
+    char tmp_id = toupper(id);
+    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
 void SFMLRenderer::init_piece_sprites() {
@@ -103,6 +103,8 @@ void SFMLRenderer::run() {
     }
 }
 
+/* RENDER */
+
 void SFMLRenderer::render() {
     render_main_window();
 }
@@ -118,15 +120,16 @@ void SFMLRenderer::render_main_window() {
     */
 
     main_window.clear();
-    // if (selected_piece) render_capture_highlights();
+    if (board.selected_piece) render_capture_highlights();
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         main_window.draw(squares[i]);
     }
-    // if (selected_piece) render_move_highlights();
+    if (board.selected_piece) render_move_highlights();
 
     // render_board_coords();
 
     for (auto& piece : board.pieces) {
+        // update_piece_pos();
         std::cout << piece->bit << ", " << piece->id << "\n";
         uint8_t square = BBHelper::bit_to_square(piece->bit);
 
@@ -153,7 +156,7 @@ void SFMLRenderer::render_move_highlights() {
         // Squares indexed from A8 to H1, forgive me thus.
         uint8_t square = GRID_NUM_SQUARES - i - 1;
 
-        if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
+        if (!BBHelper::get_bit(board.selected_piece->moves, i)) continue;
         
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
@@ -174,7 +177,7 @@ void SFMLRenderer::render_move_highlights() {
 
 void SFMLRenderer::render_capture_highlights() {
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (BBHelper::get_bit(selected_piece->captures, i)) 
+        if (BBHelper::get_bit(board.selected_piece->captures, i)) 
             squares[i].setFillColor(TURQOISE);
     }
 }

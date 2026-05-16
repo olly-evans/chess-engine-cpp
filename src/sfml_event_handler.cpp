@@ -4,9 +4,21 @@
 
 #include "SFML/Graphics.hpp"
 
-SFMLEventHandler::SFMLEventHandler(sf::RenderWindow& main_win) : 
+/* Handles SFML events. A member of SFMLRenderer. */
+
+SFMLEventHandler::SFMLEventHandler(Board& board, sf::RenderWindow& main_win) : 
+    board(board),    
     main_window(main_win) 
     {};
+
+int SFMLEventHandler::mouse_win_pos_to_bit() {
+    // May need to be broken up into smaller functions.
+    sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
+    sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
+                                    (mouse_window_pos.y / board_square_size));
+    int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
+    return BBHelper::square_to_bit(square);
+}
 
 void SFMLEventHandler::handle_events() {
 
@@ -57,46 +69,46 @@ void SFMLEventHandler::on_mouse_press(sf::Event &event) {
 
     switch (mouse_press) {
         case sf::Mouse::Left:
-            // on_left_mouse_press();
+            on_left_mouse_press();
             break;
     }
 }
 
-// void SFMLEventHandler::on_left_mouse_press() {
+void SFMLEventHandler::on_left_mouse_press() {
 
-//     /* 
-//      * Handles left mouse presses wowza!
-//      *
-//      * If we return early in this function it essentially just means wait until next left mouse press. 
-//      * 
-//      */
+    /* 
+     * Handles left mouse presses wowza!
+     *
+     * If we return early in this function it essentially just means wait until next left mouse press. 
+     * 
+     */
 
-//     uint8_t clicked_bit = mouse_win_pos_to_bit();
+    uint8_t clicked_bit = mouse_win_pos_to_bit();
 
-//     if (!selected_piece) {
-//         selected_piece = select_piece(clicked_bit);
-//         return;
-//     }
+    if (!board.selected_piece) {
+        board.selected_piece = board.select_piece(clicked_bit);
+        return;
+    }
 
-//     // If our click is not an move/capture then go again/reset.
-//     if (!BBHelper::get_bit(selected_piece->moves, clicked_bit) && !BBHelper::get_bit(selected_piece->captures, clicked_bit)) {
+    // If our click is not an move/capture then go again/reset.
+    if (!BBHelper::get_bit(board.selected_piece->moves, clicked_bit) && !BBHelper::get_bit(board.selected_piece->captures, clicked_bit)) {
 
-//         // Let user select a new piece without clicking to reset.
-//         reset_move_and_capture_highlights(selected_piece->bit);
-//         selected_piece = select_piece(clicked_bit); // Can be null which is fine ofc.
-//         return;
-//     }
+        // Let user select a new piece without clicking to reset.
+        reset_move_and_capture_highlights(board.selected_piece->bit);
+        board.selected_piece = board.select_piece(clicked_bit); // Can be null which is fine ofc.
+        return;
+    }
 
-//     // Below be executed if we have a selected piece and click on a valid move/capture square.
-//     uint8_t old_bit = selected_piece->bit;
+    // Below be executed if we have a selected piece and click on a valid move/capture square.
+    uint8_t old_bit = board.selected_piece->bit;
 
-//     handle_piece_move(clicked_bit);
-//     reset_move_and_capture_highlights(old_bit);    
+    board.handle_piece_move(clicked_bit);
+    reset_move_and_capture_highlights(old_bit);    
     
-//     // MoveLogger::show_algebraic_move_history();
+    // MoveLogger::show_algebraic_move_history();
 
-//     is_whites_turn = !is_whites_turn;
-// }
+    board.is_whites_turn = !board.is_whites_turn;
+}
 
 // void SFMLEventHandler::reset_move_and_capture_highlights(uint8_t selected_bit) {
 

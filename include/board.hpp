@@ -44,7 +44,6 @@ private:
     // Player* white_player;
     // Player* black_player;
 
-    bool is_whites_turn = true;
 
     /* WINDOW */
     
@@ -109,14 +108,14 @@ private:
 
     /* PIECES */
     
-    Piece* selected_piece = nullptr;
 
 public:
 
     Board();
 
-    unsigned int board_square_size;
-
+    bool is_whites_turn = true;
+    
+    Piece* selected_piece = nullptr;
     std::vector<Piece*> pieces;
 
     // Vector of all bitboards.

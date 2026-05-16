@@ -42,14 +42,14 @@ bool Board::is_square_black(uint8_t i) {
 }
 
 // event handler.
-int Board::mouse_win_pos_to_bit() {
-    // May need to be broken up into smaller functions.
-    sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
-    sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
-                                    (mouse_window_pos.y / board_square_size));
-    int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
-    return BBHelper::square_to_bit(square);
-}
+// int Board::mouse_win_pos_to_bit() {
+//     // May need to be broken up into smaller functions.
+//     sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
+//     sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
+//                                     (mouse_window_pos.y / board_square_size));
+//     int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
+//     return BBHelper::square_to_bit(square);
+// }
 
 /* BITBOARD METHODS */
 
