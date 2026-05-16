@@ -4,11 +4,11 @@
 #include "bitboardhelper.hpp"
 
 
-SFMLRenderer::SFMLRenderer(const uint16_t w_width) :
+SFMLRenderer::SFMLRenderer(Board& board, const uint16_t w_width) :
+    board(board),
     win_w(w_width), 
     main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
-    event_handler(get_main_window()),
-    board(board_square_size)
+    event_handler(get_main_window())
     {};
 
 bool SFMLRenderer::is_square_black(uint8_t i) {
@@ -22,8 +22,10 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 void SFMLRenderer::init_renderer() {
     set_board_square_size(board_square_size);
     set_main_window_squares();
+    load_textures();
+    init_piece_sprites();
 
-    board.init();
+    board.init(); // pieces created in here.
     
 }
 
@@ -81,15 +83,18 @@ void SFMLRenderer::render_main_window() {
     */
 
     main_window.clear();
-    if (selected_piece) render_capture_highlights();
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
-    if (selected_piece) render_move_highlights();
+    // if (selected_piece) render_capture_highlights();
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        main_window.draw(squares[i]);
+    }
+    // if (selected_piece) render_move_highlights();
 
     // render_board_coords();
 
     for (auto& piece : board.pieces) {
-
+        std::cout << piece->bit << ", " << piece->id << "\n";
         uint8_t square = BBHelper::bit_to_square(piece->bit);
+
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
         piece->sprite.setPosition(pos.x, pos.y);

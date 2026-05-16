@@ -27,21 +27,20 @@ public:
     Piece(char id, uint8_t b, int b_squ_sz);
 
     bool is_white;
-    bool has_moved = false;
+
     sf::Sprite sprite;
 
     char id;
 
     uint64_t moves = 0ULL;
     uint64_t captures = 0ULL;
-    uint64_t bit = 0ULL;
+    uint8_t bit;
     
     virtual std::string get_texture_path();
 
     void set_bit(uint8_t bit);
     uint8_t get_bit();
 
-    void draw(sf::RenderWindow& window);
 
     // All instances return the moves and assign this->captures.
     virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) = 0;

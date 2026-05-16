@@ -26,7 +26,6 @@ Piece::Piece(char id, uint8_t b, int b_squ_sz) :
         sprite.setScale(board_square_size / sprite_size.width, 
                         board_square_size / sprite_size.height);
     }
-    
 }
 
 std::string Piece::resolve_texture_path() {
@@ -44,20 +43,11 @@ std::string Piece::get_texture_path() {
 
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
-    this->has_moved = true;
+    // this->has_moved = true;
 }
 
 uint8_t Piece::get_bit() {
     return this->bit;
-}
-
-void Piece::draw(sf::RenderWindow& window) {
-
-    uint8_t square = BBHelper::bit_to_square(this->bit);
-    sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
-    sf::Vector2f pos = normalised_pos * (float)board_square_size;
-    sprite.setPosition(pos.x, pos.y);
-    window.draw(sprite);
 }
 
 void Piece::strip_pseudo_legal_attacks(Board& board) {
@@ -605,8 +595,8 @@ bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
     uint64_t queenside_rook_start = (this->is_white) ? 0x80 : 0x8000000000000000;
 
 
-    if (this->has_moved)
-        return false;
+    // if (this->has_moved)
+    //     return false;
 
     if (!(king_start & king))
         return false;

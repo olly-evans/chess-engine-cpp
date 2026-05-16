@@ -44,7 +44,7 @@ public:
     static uint8_t square_name_to_bit(const std::string& name);
 
     static int square_to_bit(int square);
-    static int bit_to_square(int bit);
+    static uint8_t bit_to_square(uint8_t bit);
 
     // manipulation
     static void set_bit_by_ref(uint64_t& b, int bit);

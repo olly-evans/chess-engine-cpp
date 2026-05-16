@@ -11,7 +11,6 @@ SFMLEventHandler::SFMLEventHandler(sf::RenderWindow& main_win) :
 void SFMLEventHandler::handle_events() {
 
     sf::Event event;
-
     if (main_window.waitEvent(event)) {
         on_main_window_event(event);
     }
@@ -19,7 +18,6 @@ void SFMLEventHandler::handle_events() {
 }
 
 void SFMLEventHandler::on_main_window_event(sf::Event &event) {
-
 
     if (event.type == sf::Event::Closed) main_window.close();
     if (event.type == sf::Event::KeyPressed) on_key_pressed(event);

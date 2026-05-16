@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cstdint>
+#include <unordered_map>
 
 constexpr uint8_t GRID_SZ = 8;
 constexpr uint8_t GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
@@ -33,7 +34,8 @@ private:
     sf::RenderWindow main_window;
 
     SFMLEventHandler event_handler;
-    Board board;
+    
+    Board& board;
 
     uint16_t board_square_size;
 
@@ -41,14 +43,21 @@ private:
 
     Piece* selected_piece = nullptr;
 
+    std::unordered_map<char, sf::Texture> texture_cache;
+    
+    
+
 
 public:
 
-    SFMLRenderer(const uint16_t w_width);
+    SFMLRenderer(Board& board, const uint16_t w_width);
 
     void init_renderer();
     
     bool is_square_black(uint8_t bit);
+    
+    void load_textures();
+    void init_piece_sprites();
     
     void set_board_square_size(uint16_t& sz);
     uint16_t get_board_square_size();

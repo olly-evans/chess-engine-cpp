@@ -280,7 +280,6 @@ void Board::create_piece(const char id, uint8_t bit) {
 
     // takes square size because it has to load textures etc..
     // renderer should do that.
-
     switch (toupper(id)) {
 
         case 'P':
