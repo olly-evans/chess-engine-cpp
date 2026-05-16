@@ -1,10 +1,11 @@
 #include <iostream>
 
 #include "board.hpp"
-#include "player.hpp"
+#include "sfml_renderer.hpp"
 
 int main() {
-    // SFMLRenderer renderer;
+    // SFMLRenderer renderer(WINDOW_WIDTH, WINDOW_NAME);
+    
     // renderer.init_renderer();
 
     // i dont want sf:: in relation to board liek at all.

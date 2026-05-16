@@ -5,14 +5,20 @@
 #include <iostream>
 #include <cstdint>
 
-// constexpr unsigned uint8_t GRID_SZ = 8;
-// constexpr unsigned uint8_t GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
+constexpr uint8_t GRID_SZ = 8;
+constexpr uint8_t GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
 constexpr auto WINDOW_HEIGHT = 1280;
 constexpr auto WINDOW_WIDTH = 1280;
 static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
 
 constexpr auto WINDOW_NAME = "Chess";
+
+const sf::Color WARM_CREAM(240, 217, 181);
+const sf::Color MEDIUM_BROWN(181, 136, 99);
+const sf::Color BLACK(0, 0, 0);
+const sf::Color WHITE(255, 255, 255);
+const sf::Color TURQOISE(50, 200, 150);
 
 class SFMLRenderer {
 private:
@@ -30,7 +36,7 @@ private:
 
 public:
     SFMLRenderer(const uint16_t w_width);
-    
+
     void init_renderer();
     
     bool is_square_black(uint8_t bit);
