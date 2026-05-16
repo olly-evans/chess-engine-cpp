@@ -88,6 +88,7 @@ void SFMLRenderer::render_main_window() {
     // render_board_coords();
 
     for (auto& piece : board.pieces) {
+
         uint8_t square = BBHelper::bit_to_square(piece->bit);
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;

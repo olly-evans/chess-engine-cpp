@@ -212,11 +212,11 @@ void Board::init() {
 
     // pass into board
     // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    // std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
     // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    init_position_from_fen(ep_discovered_check);
+    init_position_from_fen(fen);
 }
 
 // void Board::init_players() {
@@ -226,36 +226,6 @@ void Board::init() {
 //     white_player = new Human(is_white);
 //     black_player = new Engine(!is_white);
 
-// }
-
-// void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
-//     if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
-//     sz = win_h / GRID_SZ;
-// }
-
-// void Board::init_main_window_squares() {
-
-//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-//         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
-//         sf::Vector2f pos = normalised_pos * (float)board_square_size;
-        
-//         sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
-
-//         rec.setPosition(pos);
-//         rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-//         squares.insert(squares.begin(), rec);
-//     }
-// }
-
-// void Board::init_bitboard_window_squares() {
-
-//     // From A8-H1.
-//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-//         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
-//         sf::Vector2f pos = normalised_pos * (float)board_square_size;
-//         bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-//         bitboard_window_squares[i].setPosition(pos);
-//     }
 // }
 
 void Board::init_position_from_fen(std::string fen) {
@@ -307,25 +277,29 @@ void Board::init_position_from_fen(std::string fen) {
 
 void Board::create_piece(const char id, uint8_t bit) {
 
+
+    // takes square size because it has to load textures etc..
+    // renderer should do that.
+
     switch (toupper(id)) {
 
         case 'P':
-            pieces.emplace_back(new Pawn(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn(id, bit, board_square_size));
             break;
         case 'N':
-            pieces.emplace_back(new Knight(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight(id, bit, board_square_size));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop(id, bit, board_square_size));
             break;
         case 'R':
-            pieces.emplace_back(new Rook(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook(id, bit, board_square_size));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen(id, bit, board_square_size));
             break;
         case 'K':
-            pieces.emplace_back(new King(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new King(id, bit, board_square_size));
             break;
         default: break;
     }
@@ -341,101 +315,6 @@ void Board::create_piece(const char id, uint8_t bit) {
 //     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
 //         if ()
 //     }
-// }
-
-/* RENDER */
-
-// I'm thinking render belongs in its own module. With as much sfml logic as possible.
-void Board::render() {
-    render_main_window();
-    // if (Debug::enabled) render_bitboard_window();
-}
-
-void Board::render_main_window() {
-
-    /* 
-    *
-    *   Captures change the square color to stand out more, thus must
-    *   be rendered before we redraw the squares vector to not have any
-    *   delay when using waitEvent().
-    * 
-    */
-
-    main_window.clear();
-    if (selected_piece) render_capture_highlights();
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
-    if (selected_piece) render_move_highlights();
-
-    // render_board_coords();
-
-    for (auto& piece : pieces) {piece->draw(main_window);}
-    main_window.display();
-}
-
-void Board::render_move_highlights() {
-
-    /* Renders turqoise circles to the square the selected piece can move. */
-    
-    float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
-    float radius = board_square_size * radius_percent_of_squares;
-
-    sf::Color circle_color = TURQOISE;
-
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        
-        // Squares indexed from A8 to H1, forgive me thus.
-        uint8_t square = GRID_NUM_SQUARES - i - 1;
-
-        if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
-        
-        sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
-        sf::Vector2f pos = normalised_pos * (float)board_square_size;
-
-        // Offset to centre circle in square. Top left placed at pos.
-        pos.x += ((float)board_square_size / 2) - radius;
-        pos.y += ((float)board_square_size / 2) - radius;
-
-        sf::CircleShape circle;
-
-        circle.setPosition(pos);
-        circle.setRadius(radius);
-        circle.setFillColor(circle_color);
-
-        main_window.draw(circle);
-    }
-}
-
-void Board::render_capture_highlights() {
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (BBHelper::get_bit(selected_piece->captures, i)) 
-            squares[i].setFillColor(TURQOISE);
-    }
-}
-
-// void Board::render_bitboard_window() {
-//     bitboard_window.clear();
-//     for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
-//     Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
-//     bitboard_window.display();
-// }
-
-/* RUN */
-
-// void Board::run() {
-//     while (main_window.isOpen()) {
-//         handle_events();
-//         render();
-//     }
-//     free_pieces(); 
-// }
-
-/* RUN -> EVENT HANDLING */
-
-
-
-
-// void Board::on_bitboard_window_event(sf::Event &event) {
-//     if (event.type == sf::Event::Closed) bitboard_window.close();
 // }
 
 

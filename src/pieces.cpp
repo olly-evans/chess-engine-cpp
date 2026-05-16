@@ -10,9 +10,8 @@
 #include <cstdint>
 #include <string>
 
-Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+Piece::Piece(char id, uint8_t b, int b_squ_sz) : 
     id(id), 
-    window(w), 
     bit(b),
     board_square_size(b_squ_sz) {
     
@@ -27,12 +26,15 @@ Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) :
         sprite.setScale(board_square_size / sprite_size.width, 
                         board_square_size / sprite_size.height);
     }
+    
 }
 
 std::string Piece::resolve_texture_path() {
     std::filesystem::path path = std::filesystem::current_path();
     std::string color_prefix = (this->is_white ? "w" : "b");
     char tmp_id = toupper(id);
+    std::cout << "path for " << this->id << " is: " << path.string() + "/assets/" + color_prefix + tmp_id + ".png" + "\n";
+
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
