@@ -176,7 +176,7 @@ void Board::init() {
     // Selection window with empty colored squares to choose white/black.
     
     // this kinda doesn't matter right now.
-    Board::init_players();
+    // init_players();
 
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
@@ -196,7 +196,7 @@ void Board::init() {
     };
 
 
-    Board::init_get_board_square_size(board_square_size, win_h, win_w);
+    init_get_board_square_size(board_square_size, win_h, win_w);
     // init_board_coords();
 
     // for now i wont flip the board if we have two human players.
@@ -220,14 +220,14 @@ void Board::init() {
     init_position_from_fen(ep_discovered_check);
 }
 
-void Board::init_players() {
+// void Board::init_players() {
 
-    bool is_white = true; //temp
+//     bool is_white = true; //temp
 
-    white_player = new Human(is_white);
-    black_player = new Engine(!is_white);
+//     white_player = new Human(is_white);
+//     black_player = new Engine(!is_white);
 
-}
+// }
 
 void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
     if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");

@@ -41,8 +41,8 @@ private:
 
     /* GAMESTATE */
     
-    Player* white_player;
-    Player* black_player;
+    // Player* white_player;
+    // Player* black_player;
 
     bool is_whites_turn = true;
 
