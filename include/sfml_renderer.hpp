@@ -4,6 +4,7 @@
 #include "sfml_event_handler.hpp"
 
 #include "pieces.hpp"
+#include "board.hpp"
 
 #include <iostream>
 #include <cstdint>
@@ -30,8 +31,10 @@ private:
     
     
     sf::RenderWindow main_window;
+
     SFMLEventHandler event_handler;
-    
+    Board board;
+
     uint16_t board_square_size;
 
     std::vector<sf::RectangleShape> squares;

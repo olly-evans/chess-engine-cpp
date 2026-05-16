@@ -109,7 +109,6 @@ private:
 
     /* PIECES */
     
-    std::vector<Piece*> pieces;
     Piece* selected_piece = nullptr;
 
 public:
@@ -117,6 +116,8 @@ public:
     Board(const uint16_t squ_size);
 
     unsigned int board_square_size;
+    
+    std::vector<Piece*> pieces;
 
     // Vector of all bitboards.
     static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.

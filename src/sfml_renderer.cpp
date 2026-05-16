@@ -7,7 +7,8 @@
 SFMLRenderer::SFMLRenderer(const uint16_t w_width) :
     win_w(w_width), 
     main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
-    event_handler(get_main_window())
+    event_handler(get_main_window()),
+    board(board_square_size)
     {};
 
 bool SFMLRenderer::is_square_black(uint8_t i) {
@@ -57,7 +58,6 @@ sf::RenderWindow& SFMLRenderer::get_main_window() {
 
 void SFMLRenderer::run() {
     
-
     while (main_window.isOpen()) {
         event_handler.handle_events();
         render();
@@ -85,7 +85,7 @@ void SFMLRenderer::render_main_window() {
 
     // render_board_coords();
 
-    // for (auto& piece : pieces) {piece->draw(main_window);}
+    for (auto& piece : board.pieces) {piece->draw(main_window);}
     main_window.display();
 }
 
