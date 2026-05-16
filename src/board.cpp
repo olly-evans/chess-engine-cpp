@@ -1,6 +1,4 @@
 #include "SFML/Graphics.hpp"
-#include "SFML/System/String.hpp"
-#include "SFML/Graphics/Image.hpp"
 
 #include "pieces.hpp"
 #include "debug.hpp"
@@ -215,11 +213,11 @@ void Board::init() {
 
     // pass into board
     // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    // enpassant discovered check: "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"
+    std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
     // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    init_position_from_fen(fen);
+    init_position_from_fen(ep_discovered_check);
 }
 
 void Board::init_players() {
@@ -236,13 +234,14 @@ void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const
     sz = win_h / GRID_SZ;
 }
 
-// this can be done with one function for both functions below.
 void Board::init_main_window_squares() {
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
         sf::Vector2f pos = normalised_pos * (float)board_square_size;
+        
         sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
+
         rec.setPosition(pos);
         rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         squares.insert(squares.begin(), rec);
@@ -308,7 +307,6 @@ void Board::init_position_from_fen(std::string fen) {
 }
 
 void Board::create_piece(const char id, uint8_t bit) {
-
 
     switch (toupper(id)) {
 

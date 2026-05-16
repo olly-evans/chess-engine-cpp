@@ -9,13 +9,6 @@
 #include <cstdint>
 #include <string>
 
-std::string Piece::resolve_texture_path() {
-    std::filesystem::path path = std::filesystem::current_path();
-    std::string color_prefix = (this->is_white ? "w" : "b");
-    char tmp_id = toupper(id);
-    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
-}
-
 Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
     id(id), 
     window(w), 
@@ -33,6 +26,13 @@ Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) :
         sprite.setScale(board_square_size / sprite_size.width, 
                         board_square_size / sprite_size.height);
     }
+}
+
+std::string Piece::resolve_texture_path() {
+    std::filesystem::path path = std::filesystem::current_path();
+    std::string color_prefix = (this->is_white ? "w" : "b");
+    char tmp_id = toupper(id);
+    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
 std::string Piece::get_texture_path() {
@@ -62,7 +62,8 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
     /* 
     *
     *  Strips piece members this->moves and this->captures of attacks that would result 
-    *  in a friendly king check.
+    *  in a friendly king check by simulating all of the moves. Yes, slow af but works
+    *  for now.
     * 
     */
 
@@ -94,6 +95,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
             this->captures = BBHelper::clear_bit(this->captures, move_bit);
 
     }
+    // I don't like this, but at least its modular and in the general stripping function.
     strip_pseudo_legal_special_moves(board);
 }
 
@@ -113,19 +115,16 @@ void Pawn::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
         this->captures |= enpassant_captures;
         
         // promotions.
-
-        moves = BBHelper::remove_friendly_pieces(moves, w_bb);
-        this->moves = BBHelper::remove_enemy_pieces(moves, b_bb);
     } else {
 
         moves = get_black_pawn_moves(pawn , w_bb, b_bb);
 
         uint64_t enpassant_captures = get_enpassant(w_bb, b_bb);
         this->captures |= enpassant_captures;
-
-        moves = BBHelper::remove_friendly_pieces(moves, b_bb);
-        this->moves = BBHelper::remove_enemy_pieces(moves, w_bb);
     }
+
+    moves = BBHelper::remove_friendly_pieces(moves, b_bb);
+    this->moves = BBHelper::remove_enemy_pieces(moves, w_bb);
 };
 
 uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb) {
@@ -169,7 +168,7 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     // Or doesn't seem right but works so eh.
     if (!(pawn & (black_pawn_start_rank)) | (w_bb & (pawn >> 16))) return moves;
     moves |= (pawn >> 16);
-
+    
     return moves;
 }
 
@@ -580,8 +579,22 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
 bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
 
-    // scrapping this, board holds QqKk, pop appropriate one when piece->has_moved etc.
+    // scrapping this, board holds QqKk, pop appropriate char when piece->has_moved and other conditions met etc.
+
+    /*
+    enum CastlingRights {
+    W_KINGSIDE  = 1 << 0,
+    W_QUEENSIDE = 1 << 1,
+    B_KINGSIDE  = 1 << 2,
+    B_QUEENSIDE = 1 << 3,
+    };
+
+    uint8_t castling_rights = W_KINGSIDE | W_QUEENSIDE | B_KINGSIDE | B_QUEENSIDE;
     
+    this is in board, figure it out from this this is how decent engines do it apparently no has_moved needed.
+    do need to figure out how to append to ->moves though.
+
+    */
     uint64_t king = (1ULL << this->bit);
     uint64_t rooks = (this->is_white) ? Board::bitboards[W_ROOKS] : Board::bitboards[B_ROOKS];
 

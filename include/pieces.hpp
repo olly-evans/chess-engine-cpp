@@ -87,8 +87,6 @@ public:
     uint64_t get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
 
     uint64_t get_enpassant(uint64_t w_bb, uint64_t b_bb);
-
-
 };
 
 class Knight : public Piece {
