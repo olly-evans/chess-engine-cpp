@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "sfml_event_handler.hpp"
 
 #include "pieces.hpp"
 
@@ -27,11 +28,12 @@ private:
 
     const uint16_t win_w;
     
+    
+    sf::RenderWindow main_window;
+    SFMLEventHandler event_handler;
+    
     uint16_t board_square_size;
 
-    SFMLEventHandler event_handler;
-
-    sf::RenderWindow main_window;
     std::vector<sf::RectangleShape> squares;
 
     Piece* selected_piece = nullptr;

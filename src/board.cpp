@@ -421,149 +421,56 @@ void Board::render_capture_highlights() {
 
 /* RUN */
 
-void Board::run() {
-    while (main_window.isOpen()) {
-        handle_events();
-        render();
-    }
-    free_pieces(); 
-}
+// void Board::run() {
+//     while (main_window.isOpen()) {
+//         handle_events();
+//         render();
+//     }
+//     free_pieces(); 
+// }
 
 /* RUN -> EVENT HANDLING */
 
-void Board::handle_events() {
-
-    sf::Event event;
-
-    if (main_window.waitEvent(event)) {
-        on_main_window_event(event);
-    }
-
-    if (bitboard_window.isOpen()) {
-        sf::Event debug_event;
-        while (bitboard_window.pollEvent(debug_event)) {
-            on_bitboard_window_event(debug_event);
-        }
-    }
-}
-
-void Board::on_main_window_event(sf::Event &event) {
 
 
-    if (event.type == sf::Event::Closed) main_window.close();
-    if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
-    if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);
-}
 
-void Board::on_bitboard_window_event(sf::Event &event) {
-    if (event.type == sf::Event::Closed) bitboard_window.close();
-}
+// void Board::on_bitboard_window_event(sf::Event &event) {
+//     if (event.type == sf::Event::Closed) bitboard_window.close();
+// }
 
-/* KEYPRESSES */
 
-void Board::on_key_pressed(sf::Event &event) {
+// void Board::undo_move() {
 
-    auto key = event.key.code;
+//     if (MoveLogger::move_history.empty()) 
+//         return;
 
-    switch (key) {
-        // case sf::Keyboard::Tab:
+//     Move& last_move = MoveLogger::move_history.back();
 
-        //     // this'll get fucked by event and renderer but i dont care.
-        //     if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-        //     bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-        //     bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
-        //     break;
-        case sf::Keyboard::Z:
-            if (Debug::enabled) {
-                undo_move();
-                is_whites_turn = !is_whites_turn;
-            }
-        default: 
-            return;
-    }   
-}
+//     // Just so if we undo a move whilst user has piece selected we don't get funny business.
+//     if (selected_piece) 
+//         reset_move_and_capture_highlights(selected_piece->bit);
 
-void Board::undo_move() {
+//     uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.moved_id, bitboards);
 
-    if (MoveLogger::move_history.empty()) 
-        return;
-
-    Move& last_move = MoveLogger::move_history.back();
-
-    // Just so if we undo a move whilst user has piece selected we don't get funny business.
-    if (selected_piece) 
-        reset_move_and_capture_highlights(selected_piece->bit);
-
-    uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.moved_id, bitboards);
-
-    BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
-    BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
+//     BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
+//     BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
     
-    Piece* moved_piece = get_piece(last_move.end_bit);
-    moved_piece->set_bit(last_move.start_bit);
+//     Piece* moved_piece = get_piece(last_move.end_bit);
+//     moved_piece->set_bit(last_move.start_bit);
     
-    // If the move didn't involve a capture we can clean up and return early.
-    if (!last_move.has_capture) {
-        MoveLogger::move_history.pop_back(); 
-        return;
-    }
+//     // If the move didn't involve a capture we can clean up and return early.
+//     if (!last_move.has_capture) {
+//         MoveLogger::move_history.pop_back(); 
+//         return;
+//     }
 
-    // capture_bit changes depending on move type in handle_piece_move.
-    create_piece(last_move.captured_id, last_move.capture_bit);
-    uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
-    BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
+//     // capture_bit changes depending on move type in handle_piece_move.
+//     create_piece(last_move.captured_id, last_move.capture_bit);
+//     uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
+//     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
 
-    MoveLogger::move_history.pop_back();
-}
-
-/* MOUSE PRESSES */
-
-void Board::on_mouse_press(sf::Event &event) {
-
-    auto mouse_press = event.mouseButton.button;
-
-    switch (mouse_press) {
-        case sf::Mouse::Left:
-            on_left_mouse_press();
-            break;
-    }
-}
-
-void Board::on_left_mouse_press() {
-
-    /* 
-     * Handles left mouse presses wowza!
-     *
-     * If we return early in this function it essentially just means wait until next left mouse press. 
-     * 
-     */
-
-    uint8_t clicked_bit = mouse_win_pos_to_bit();
-
-    if (!selected_piece) {
-        selected_piece = select_piece(clicked_bit);
-        return;
-    }
-
-    // If our click is not an move/capture then go again/reset.
-    if (!BBHelper::get_bit(selected_piece->moves, clicked_bit) && !BBHelper::get_bit(selected_piece->captures, clicked_bit)) {
-
-        // Let user select a new piece without clicking to reset.
-        reset_move_and_capture_highlights(selected_piece->bit);
-        selected_piece = select_piece(clicked_bit); // Can be null which is fine ofc.
-        return;
-    }
-
-    // Below be executed if we have a selected piece and click on a valid move/capture square.
-    uint8_t old_bit = selected_piece->bit;
-
-    handle_piece_move(clicked_bit);
-    reset_move_and_capture_highlights(old_bit);    
-    
-    // MoveLogger::show_algebraic_move_history();
-
-    is_whites_turn = !is_whites_turn;
-}
+//     MoveLogger::move_history.pop_back();
+// }
 
 /* PIECE FUNCTIONALITY */
 
@@ -590,16 +497,7 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     return piece;
 }
 
-void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
 
-    squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
-    
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (!BBHelper::get_bit(selected_piece->captures, i)) continue;
-        squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-    }
-    selected_piece = nullptr;
-}
 
 Piece* Board::get_piece(uint8_t clicked_bit) {
 

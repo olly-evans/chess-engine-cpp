@@ -1,14 +1,14 @@
 #include "sfml_renderer.hpp"
-#include "bitboardhelper.hpp"
 #include "sfml_event_handler.hpp"
 
-// perhaps takes in an SFMLEventHandler
+#include "bitboardhelper.hpp"
+
 
 SFMLRenderer::SFMLRenderer(const uint16_t w_width) :
     win_w(w_width), 
     main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
     event_handler(get_main_window())
-    {}
+    {};
 
 bool SFMLRenderer::is_square_black(uint8_t i) {
     uint8_t x = i % GRID_SZ;
@@ -21,6 +21,7 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 void SFMLRenderer::init_renderer() {
     set_board_square_size(board_square_size);
     set_main_window_squares();
+    
 }
 
 void SFMLRenderer::set_board_square_size(uint16_t& sz) {
@@ -58,9 +59,8 @@ void SFMLRenderer::run() {
     
 
     while (main_window.isOpen()) {
-        // event_hander.handle_events();
+        event_handler.handle_events();
         render();
-        return; // rm
     }
 }
 
