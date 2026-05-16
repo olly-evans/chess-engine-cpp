@@ -23,6 +23,7 @@
 
 std::vector<uint64_t> Board::bitboards;
 
+// main_window, board_square_size
 Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) :
 win_w(ww),
 win_h(wh),
@@ -469,6 +470,8 @@ void Board::on_key_pressed(sf::Event &event) {
 
     switch (key) {
         case sf::Keyboard::Tab:
+
+            // this'll get fucked by event and renderer but i dont care.
             if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
             bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
             bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
