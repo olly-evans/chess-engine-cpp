@@ -30,6 +30,10 @@ void SFMLRenderer::set_board_square_size(uint16_t& sz) {
     sz = win_w / GRID_SZ;
 }
 
+uint16_t SFMLRenderer::get_board_square_size() {
+    return board_square_size;
+}
+
 void SFMLRenderer::set_main_window_squares() {
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {

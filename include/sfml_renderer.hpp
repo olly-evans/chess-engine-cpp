@@ -8,8 +8,8 @@
 constexpr uint8_t GRID_SZ = 8;
 constexpr uint8_t GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
-constexpr auto WINDOW_HEIGHT = 1280;
-constexpr auto WINDOW_WIDTH = 1280;
+constexpr uint16_t WINDOW_HEIGHT = 1280;
+constexpr uint16_t WINDOW_WIDTH = 1280;
 static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
 
 constexpr auto WINDOW_NAME = "Chess";
@@ -37,6 +37,7 @@ private:
     // uint8_t bitboard_vec_index = 0;
 
 public:
+
     SFMLRenderer(const uint16_t w_width);
 
     void init_renderer();
@@ -45,7 +46,7 @@ public:
     
     void set_board_square_size(uint16_t& sz);
     uint16_t get_board_square_size();
-    
+
     void set_main_window_squares();
 
     sf::RenderWindow& get_main_window();

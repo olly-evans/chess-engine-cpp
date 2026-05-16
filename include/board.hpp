@@ -13,19 +13,19 @@
 #include <iostream>
 #include <cmath>
 
-constexpr auto WINDOW_HEIGHT = 1280;
-constexpr auto WINDOW_WIDTH = 1280;
-static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
+// constexpr auto WINDOW_HEIGHT = 1280;
+// constexpr auto WINDOW_WIDTH = 1280;
+// static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
 
-constexpr auto WINDOW_NAME = "Chess";
+// constexpr auto WINDOW_NAME = "Chess";
 
-/* COLORS */
+// /* COLORS */
 
-const sf::Color WARM_CREAM(240, 217, 181);
-const sf::Color MEDIUM_BROWN(181, 136, 99);
-const sf::Color BLACK(0, 0, 0);
-const sf::Color WHITE(255, 255, 255);
-const sf::Color TURQOISE(50, 200, 150);
+// const sf::Color WARM_CREAM(240, 217, 181);
+// const sf::Color MEDIUM_BROWN(181, 136, 99);
+// const sf::Color BLACK(0, 0, 0);
+// const sf::Color WHITE(255, 255, 255);
+// const sf::Color TURQOISE(50, 200, 150);
 
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;

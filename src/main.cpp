@@ -4,9 +4,9 @@
 #include "sfml_renderer.hpp"
 
 int main() {
-    // SFMLRenderer renderer(WINDOW_WIDTH, WINDOW_NAME);
 
-    // renderer.init_renderer();
+    SFMLRenderer renderer(WINDOW_WIDTH);
+    renderer.init_renderer();
 
     // i dont want sf:: in relation to board liek at all.
 
@@ -15,7 +15,7 @@ int main() {
     // pass it in and leave main_window as is i think.
     // main_window.
 
-    Board board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
+    Board board = Board(renderer.get_board_square_size());
     board.init();
     board.run(); // board.update();
 

@@ -12,7 +12,6 @@
 #include "util.hpp"
 
 // get rid of this thing ffs.
-enum class Color {BLACK, WHITE};
 
 class Board;
 

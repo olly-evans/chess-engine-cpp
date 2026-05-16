@@ -7,6 +7,7 @@
 #include "board.hpp"
 #include "gamestate.hpp"
 #include "movelogger.hpp"
+#include "sfml_renderer.hpp"
 
 #include <sstream>
 #include <iostream>
