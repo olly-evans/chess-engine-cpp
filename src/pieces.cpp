@@ -10,22 +10,21 @@
 #include <cstdint>
 #include <string>
 
-Piece::Piece(char id, uint8_t b, int b_squ_sz) : 
+Piece::Piece(char id, uint8_t b) : 
     id(id), 
-    bit(b),
-    board_square_size(b_squ_sz) {
+    bit(b) {
     
     is_white = (isupper(this->id));
 
     // can we load each image once?
     // perhaps loaded to each piece type or smth
-    if (texture.loadFromFile(get_texture_path())) {
-        sprite.setTexture(texture);
+    // if (texture.loadFromFile(get_texture_path())) {
+    //     sprite.setTexture(texture);
 
-        sf::FloatRect sprite_size = sprite.getGlobalBounds();
-        sprite.setScale(board_square_size / sprite_size.width, 
-                        board_square_size / sprite_size.height);
-    }
+    //     sf::FloatRect sprite_size = sprite.getGlobalBounds();
+    //     sprite.setScale(board_square_size / sprite_size.width, 
+    //                     board_square_size / sprite_size.height);
+    // }
 }
 
 std::string Piece::resolve_texture_path() {

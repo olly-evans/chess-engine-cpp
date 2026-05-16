@@ -24,7 +24,7 @@ protected:
 
 
 public:
-    Piece(char id, uint8_t b, int b_squ_sz);
+    Piece(char id, uint8_t b);
 
     bool is_white;
 
@@ -63,8 +63,8 @@ public:
 
 class Pawn : public Piece {
 public:
-    Pawn(char id, uint8_t bitboard, int b_squ_sz) : 
-        Piece(id, bitboard, b_squ_sz) {}
+    Pawn(char id, uint8_t bitboard) : 
+        Piece(id, bitboard) {}
     
     uint64_t en_passant_captures = 0ULL;
     
@@ -89,8 +89,8 @@ public:
         {-1, -2}, {1, -2}, {-1, 2}, {1, 2}
     };
 
-    Knight(char id, uint8_t b, int b_squ_sz) : 
-        Piece(id, b, b_squ_sz) {}
+    Knight(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -104,8 +104,8 @@ public:
 
 class Bishop : public Piece {
 public:
-    Bishop(char id, uint8_t b, int b_squ_sz) : 
-        Piece(id, b, b_squ_sz) {}
+    Bishop(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -118,8 +118,8 @@ public:
 
 class Rook : public Piece {
 public:
-    Rook(char id, uint8_t b, int b_squ_sz) : 
-        Piece(id, b, b_squ_sz) {}
+    Rook(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -132,8 +132,8 @@ public:
 
 class Queen : public Piece {
 public:
-    Queen(char id, uint8_t b, int b_squ_sz) : 
-        Piece(id, b, b_squ_sz) {}
+    Queen(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();
@@ -146,8 +146,8 @@ public:
 
 class King : public Piece {
 public:
-    King(char id, uint8_t b, int b_squ_sz) : 
-        Piece(id, b, b_squ_sz) {}
+    King(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     virtual std::string get_texture_path() override {
         return resolve_texture_path();

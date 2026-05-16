@@ -280,22 +280,22 @@ void Board::create_piece(const char id, uint8_t bit) {
     switch (toupper(id)) {
 
         case 'P':
-            pieces.emplace_back(new Pawn(id, bit, board_square_size));
+            pieces.emplace_back(new Pawn(id, bit));
             break;
         case 'N':
-            pieces.emplace_back(new Knight(id, bit, board_square_size));
+            pieces.emplace_back(new Knight(id, bit));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop(id, bit, board_square_size));
+            pieces.emplace_back(new Bishop(id, bit));
             break;
         case 'R':
-            pieces.emplace_back(new Rook(id, bit, board_square_size));
+            pieces.emplace_back(new Rook(id, bit));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen(id, bit, board_square_size));
+            pieces.emplace_back(new Queen(id, bit));
             break;
         case 'K':
-            pieces.emplace_back(new King(id, bit, board_square_size));
+            pieces.emplace_back(new King(id, bit));
             break;
         default: break;
     }

@@ -22,11 +22,11 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 void SFMLRenderer::init_renderer() {
     set_board_square_size(board_square_size);
     set_main_window_squares();
-    
+
     load_textures();
     init_piece_sprites();
 
-    board.init(); // pieces created in here.
+    board.init();
     
 }
 
@@ -74,14 +74,16 @@ void SFMLRenderer::load_textures() {
 }
 
 void SFMLRenderer::init_piece_sprites() {
-    for (auto* piece : board.pieces) {
+
+    // this isnt gunna work when we removed pieces.
+    for (auto& piece : board.pieces) {
         if (texture_cache.count(piece->id)) {
             piece->sprite.setTexture(texture_cache[piece->id]);
 
             sf::FloatRect bounds = piece->sprite.getGlobalBounds();
             piece->sprite.setScale(
-                board_square_size / bounds.width,
-                board_square_size / bounds.height
+                get_board_square_size() / bounds.width,
+                get_board_square_size() / bounds.height
             );
         }
     }
