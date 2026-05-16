@@ -1,10 +1,13 @@
 #include "sfml_renderer.hpp"
+#include "bitboardhelper.hpp"
+#include "sfml_event_handler.hpp"
 
 // perhaps takes in an SFMLEventHandler
 
 SFMLRenderer::SFMLRenderer(const uint16_t w_width) :
     win_w(w_width), 
-    main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME)
+    main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
+    event_handler(get_main_window())
     {}
 
 bool SFMLRenderer::is_square_black(uint8_t i) {
@@ -16,9 +19,6 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 /* INIT */
 
 void SFMLRenderer::init_renderer() {
-
-    // SFMLEventHandler event_handler(get_main_window());
-    // event_handler.init();
     set_board_square_size(board_square_size);
     set_main_window_squares();
 }
@@ -56,11 +56,75 @@ sf::RenderWindow& SFMLRenderer::get_main_window() {
 
 void SFMLRenderer::run() {
     
-    // event_handler.init();
 
     while (main_window.isOpen()) {
         // event_hander.handle_events();
-        // render();
+        render();
         return; // rm
+    }
+}
+
+void SFMLRenderer::render() {
+    render_main_window();
+}
+
+void SFMLRenderer::render_main_window() {
+
+    /* 
+    *
+    *   Captures change the square color to stand out more, thus must
+    *   be rendered before we redraw the squares vector to not have any
+    *   delay when using waitEvent().
+    * 
+    */
+
+    main_window.clear();
+    if (selected_piece) render_capture_highlights();
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
+    if (selected_piece) render_move_highlights();
+
+    // render_board_coords();
+
+    // for (auto& piece : pieces) {piece->draw(main_window);}
+    main_window.display();
+}
+
+void SFMLRenderer::render_move_highlights() {
+
+    /* Renders turqoise circles to the square the selected piece can move. */
+    
+    float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
+    float radius = board_square_size * radius_percent_of_squares;
+
+    sf::Color circle_color = TURQOISE;
+
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        
+        // Squares indexed from A8 to H1, forgive me thus.
+        uint8_t square = GRID_NUM_SQUARES - i - 1;
+
+        if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
+        
+        sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
+        sf::Vector2f pos = normalised_pos * (float)board_square_size;
+
+        // Offset to centre circle in square. Top left placed at pos.
+        pos.x += ((float)board_square_size / 2) - radius;
+        pos.y += ((float)board_square_size / 2) - radius;
+
+        sf::CircleShape circle;
+
+        circle.setPosition(pos);
+        circle.setRadius(radius);
+        circle.setFillColor(circle_color);
+
+        main_window.draw(circle);
+    }
+}
+
+void SFMLRenderer::render_capture_highlights() {
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (BBHelper::get_bit(selected_piece->captures, i)) 
+            squares[i].setFillColor(TURQOISE);
     }
 }

@@ -2,6 +2,8 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "pieces.hpp"
+
 #include <iostream>
 #include <cstdint>
 
@@ -27,14 +29,13 @@ private:
     
     uint16_t board_square_size;
 
-    // Piece* selected_piece; // used for rendering so makes sense.
+    SFMLEventHandler event_handler;
 
     sf::RenderWindow main_window;
     std::vector<sf::RectangleShape> squares;
 
-    // sf::RenderWindow bitboard_window;
-    // std::vector<sf::RectangleShape> bitboard_window_squares;
-    // uint8_t bitboard_vec_index = 0;
+    Piece* selected_piece = nullptr;
+
 
 public:
 
@@ -52,7 +53,11 @@ public:
     sf::RenderWindow& get_main_window();
 
 
+    void run(); // Main game loop.
 
-    void run(); // main loop
+    void render(); 
+    void render_main_window();
+    void render_move_highlights();
+    void render_capture_highlights();
 
 };

@@ -204,7 +204,7 @@ void Board::init() {
     // init_main_window_squares();
 
     // I like this for now. Keeps it in init and only runs if debug enabled.
-    if (Debug::enabled) Board::init_bitboard_window_squares();
+    // if (Debug::enabled) Board::init_bitboard_window_squares();
 
     // What needs to happen if fen string is invalid.
 
@@ -228,35 +228,35 @@ void Board::init() {
 
 // }
 
-void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
-    if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
-    sz = win_h / GRID_SZ;
-}
+// void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
+//     if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
+//     sz = win_h / GRID_SZ;
+// }
 
-void Board::init_main_window_squares() {
+// void Board::init_main_window_squares() {
 
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
-        sf::Vector2f pos = normalised_pos * (float)board_square_size;
+//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+//         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
+//         sf::Vector2f pos = normalised_pos * (float)board_square_size;
         
-        sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
+//         sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
 
-        rec.setPosition(pos);
-        rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-        squares.insert(squares.begin(), rec);
-    }
-}
+//         rec.setPosition(pos);
+//         rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+//         squares.insert(squares.begin(), rec);
+//     }
+// }
 
-void Board::init_bitboard_window_squares() {
+// void Board::init_bitboard_window_squares() {
 
-    // From A8-H1.
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
-        sf::Vector2f pos = normalised_pos * (float)board_square_size;
-        bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-        bitboard_window_squares[i].setPosition(pos);
-    }
-}
+//     // From A8-H1.
+//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+//         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
+//         sf::Vector2f pos = normalised_pos * (float)board_square_size;
+//         bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
+//         bitboard_window_squares[i].setPosition(pos);
+//     }
+// }
 
 void Board::init_position_from_fen(std::string fen) {
 
