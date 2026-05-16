@@ -27,6 +27,8 @@ private:
     
     uint16_t board_square_size;
 
+    // Piece* selected_piece; // used for rendering so makes sense.
+
     sf::RenderWindow main_window;
     std::vector<sf::RectangleShape> squares;
 

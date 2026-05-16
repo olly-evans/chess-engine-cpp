@@ -17,6 +17,8 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 
 void SFMLRenderer::init_renderer() {
 
+    // SFMLEventHandler event_handler(get_main_window());
+    // event_handler.init();
     set_board_square_size(board_square_size);
     set_main_window_squares();
 }
@@ -46,9 +48,15 @@ sf::RenderWindow& SFMLRenderer::get_main_window() {
     return main_window;
 }
 
+/* MAIN GAME LOOP */
+
 void SFMLRenderer::run() {
     
+    // event_handler.init();
+
     while (main_window.isOpen()) {
-        return;
+        // event_hander.handle_events();
+        // render();
+        return; // rm
     }
 }
