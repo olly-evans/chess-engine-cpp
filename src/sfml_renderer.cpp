@@ -22,6 +22,7 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 void SFMLRenderer::init_renderer() {
     set_board_square_size(board_square_size);
     set_main_window_squares();
+    
     load_textures();
     init_piece_sprites();
 
@@ -51,6 +52,38 @@ void SFMLRenderer::set_main_window_squares() {
         rec.setPosition(pos);
         rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
         squares.insert(squares.begin(), rec);
+    }
+}
+
+std::string SFMLRenderer::resolve_texture_path(char id) {
+    std::filesystem::path path = std::filesystem::current_path();
+    std::string color_prefix = (isupper(id) ? "w" : "b");
+    char tmp_id = toupper(id);
+    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
+}
+
+void SFMLRenderer::load_textures() {
+    for (char id : {'r','n','b','q','k','p','R','N','B','Q','K','P'}) {
+        sf::Texture tex;
+        if (tex.loadFromFile(resolve_texture_path(id))) {
+            texture_cache[id] = std::move(tex);
+        } else {
+            std::cerr << "Failed to load texture for: " << id << std::endl;
+        }
+    }
+}
+
+void SFMLRenderer::init_piece_sprites() {
+    for (auto* piece : board.pieces) {
+        if (texture_cache.count(piece->id)) {
+            piece->sprite.setTexture(texture_cache[piece->id]);
+
+            sf::FloatRect bounds = piece->sprite.getGlobalBounds();
+            piece->sprite.setScale(
+                board_square_size / bounds.width,
+                board_square_size / bounds.height
+            );
+        }
     }
 }
 

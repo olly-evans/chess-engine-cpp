@@ -113,10 +113,10 @@ private:
 
 public:
 
-    Board(const uint16_t squ_size);
+    Board();
 
     unsigned int board_square_size;
-    
+
     std::vector<Piece*> pieces;
 
     // Vector of all bitboards.

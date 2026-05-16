@@ -55,10 +55,11 @@ public:
     void init_renderer();
     
     bool is_square_black(uint8_t bit);
-    
+
+    std::string resolve_texture_path(char id);
     void load_textures();
     void init_piece_sprites();
-    
+
     void set_board_square_size(uint16_t& sz);
     uint16_t get_board_square_size();
 

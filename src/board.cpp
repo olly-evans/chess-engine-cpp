@@ -23,10 +23,7 @@
 
 std::vector<uint64_t> Board::bitboards;
 
-// main_window, board_square_size,
-Board::Board(const uint16_t squ_size) : 
-    board_square_size(squ_size) 
-    {};
+Board::Board() {};
 
 unsigned int board_square_size;
 
