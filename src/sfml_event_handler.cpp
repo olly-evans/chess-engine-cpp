@@ -4,11 +4,19 @@
 
 #include "SFML/Graphics.hpp"
 
-/* Handles SFML events. A member of SFMLRenderer. */
+/*  
+    
+    Handles SFML events. 
 
-SFMLEventHandler::SFMLEventHandler(Board& board, sf::RenderWindow& main_win) : 
+    SFMLRenderer has an SFMLEventHandler called event_handler. 
+    
+*/
+
+SFMLEventHandler::SFMLEventHandler(Board& board, sf::RenderWindow& main_win, uint16_t squ_sz, std::function<void(uint8_t)> reset_highlights) : 
     board(board),    
-    main_window(main_win) 
+    main_window(main_win),
+    board_square_size(squ_sz),
+    reset_highlights(reset_highlights)
     {};
 
 int SFMLEventHandler::mouse_win_pos_to_bit() {
@@ -20,6 +28,7 @@ int SFMLEventHandler::mouse_win_pos_to_bit() {
     return BBHelper::square_to_bit(square);
 }
 
+/* EVENT LOOP */
 void SFMLEventHandler::handle_events() {
 
     sf::Event event;
@@ -94,7 +103,7 @@ void SFMLEventHandler::on_left_mouse_press() {
     if (!BBHelper::get_bit(board.selected_piece->moves, clicked_bit) && !BBHelper::get_bit(board.selected_piece->captures, clicked_bit)) {
 
         // Let user select a new piece without clicking to reset.
-        reset_move_and_capture_highlights(board.selected_piece->bit);
+        reset_highlights(board.selected_piece->bit);
         board.selected_piece = board.select_piece(clicked_bit); // Can be null which is fine ofc.
         return;
     }
@@ -103,20 +112,10 @@ void SFMLEventHandler::on_left_mouse_press() {
     uint8_t old_bit = board.selected_piece->bit;
 
     board.handle_piece_move(clicked_bit);
-    reset_move_and_capture_highlights(old_bit);    
+    reset_highlights(old_bit);    
     
     // MoveLogger::show_algebraic_move_history();
 
     board.is_whites_turn = !board.is_whites_turn;
 }
 
-// void SFMLEventHandler::reset_move_and_capture_highlights(uint8_t selected_bit) {
-
-//     squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
-    
-//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-//         if (!BBHelper::get_bit(selected_piece->captures, i)) continue;
-//         squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-//     }
-//     selected_piece = nullptr;
-// }

@@ -8,7 +8,8 @@ SFMLRenderer::SFMLRenderer(Board& board, const uint16_t w_width) :
     board(board),
     win_w(w_width), 
     main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
-    event_handler(board, get_main_window())
+    event_handler(board, main_window, board_square_size, 
+                 [this](uint8_t bit) {reset_move_and_capture_highlights(bit);})
     {};
 
 bool SFMLRenderer::is_square_black(uint8_t i) {
@@ -27,6 +28,7 @@ void SFMLRenderer::init_renderer() {
 
     load_textures();
     init_piece_sprites(); // tmp, will be dodgy when we remove pieces.
+    // will aslo fail with undo_moves()
 
 }
 
@@ -180,4 +182,17 @@ void SFMLRenderer::render_capture_highlights() {
         if (BBHelper::get_bit(board.selected_piece->captures, i)) 
             squares[i].setFillColor(TURQOISE);
     }
+}
+
+void SFMLRenderer::reset_move_and_capture_highlights(uint8_t selected_bit) {
+
+    squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
+    
+    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
+        if (!BBHelper::get_bit(board.selected_piece->captures, i)) 
+            continue;
+
+        squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+    }
+    board.selected_piece = nullptr;
 }

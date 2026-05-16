@@ -41,12 +41,8 @@ private:
 
     std::vector<sf::RectangleShape> squares;
 
-    Piece* selected_piece = nullptr;
-
     std::unordered_map<char, sf::Texture> texture_cache;
     
-    
-
 
 public:
 
@@ -74,5 +70,8 @@ public:
     void render_main_window();
     void render_move_highlights();
     void render_capture_highlights();
+
+    void reset_move_and_capture_highlights(uint8_t selected_bit);
+
 
 };
