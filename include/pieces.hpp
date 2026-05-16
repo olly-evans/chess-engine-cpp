@@ -11,8 +11,6 @@
 
 #include "util.hpp"
 
-// get rid of this thing ffs.
-
 class Board;
 
 class Piece {

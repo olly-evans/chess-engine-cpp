@@ -348,7 +348,7 @@ void Board::create_piece(const char id, uint8_t bit) {
 // I'm thinking render belongs in its own module. With as much sfml logic as possible.
 void Board::render() {
     render_main_window();
-    if (Debug::enabled) render_bitboard_window();
+    // if (Debug::enabled) render_bitboard_window();
 }
 
 void Board::render_main_window() {

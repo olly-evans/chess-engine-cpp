@@ -3,6 +3,7 @@
 #include "board.hpp"
 #include "bitboardhelper.hpp"
 #include "movelogger.hpp"
+#include "sfml_renderer.hpp"
 
 #include <iostream>
 #include <filesystem>

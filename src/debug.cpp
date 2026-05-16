@@ -1,5 +1,8 @@
+
 #include "debug.hpp"
 #include "board.hpp"
+#include "sfml_renderer.hpp"
+
 #include <iostream>
 
 void Debug::draw_cycle_bitboard(sf::RenderWindow &window, int win_w, int win_h, std::vector<uint64_t> bitboards, std::vector<char> bitboard_names, int bitboard_vec_index, std::vector<sf::RectangleShape> &squares) {
