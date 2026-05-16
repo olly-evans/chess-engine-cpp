@@ -24,10 +24,10 @@ void SFMLRenderer::init_renderer() {
     set_main_window_squares();
 
     load_textures();
-    init_piece_sprites();
 
     board.init();
-    
+    init_piece_sprites();
+
 }
 
 void SFMLRenderer::set_board_square_size(uint16_t& sz) {
