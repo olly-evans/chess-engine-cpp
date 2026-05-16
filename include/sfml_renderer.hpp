@@ -8,8 +8,18 @@
 // constexpr unsigned uint8_t GRID_SZ = 8;
 // constexpr unsigned uint8_t GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
+constexpr auto WINDOW_HEIGHT = 1280;
+constexpr auto WINDOW_WIDTH = 1280;
+static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
+
+constexpr auto WINDOW_NAME = "Chess";
+
 class SFMLRenderer {
 private:
+
+    const uint16_t win_w;
+    
+    uint16_t board_square_size;
 
     sf::RenderWindow main_window;
     std::vector<sf::RectangleShape> squares;
@@ -19,13 +29,19 @@ private:
     // uint8_t bitboard_vec_index = 0;
 
 public:
+    SFMLRenderer(const uint16_t w_width);
+    
     void init_renderer();
     
     bool is_square_black(uint8_t bit);
     
-    void set_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
+    void set_board_square_size(uint16_t& sz);
     void set_main_window_squares();
 
     sf::RenderWindow& get_main_window();
+
+
+
+    void run(); // main loop
 
 };

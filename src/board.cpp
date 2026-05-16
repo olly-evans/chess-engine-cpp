@@ -46,6 +46,7 @@ bool Board::is_square_black(uint8_t i) {
     return (x + y) % 2;
 }
 
+// event handler.
 int Board::mouse_win_pos_to_bit() {
     // May need to be broken up into smaller functions.
     sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
