@@ -20,16 +20,12 @@
 //     .
 // };
 
-
 std::vector<uint64_t> Board::bitboards;
 
-// main_window, board_square_size
-Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) :
-win_w(ww),
-win_h(wh),
-win_name(std::move(wn)),
-main_window(sf::VideoMode(win_w, win_h),
-win_name) {};
+// main_window, board_square_size,
+Board::Board(const uint16_t squ_size) : 
+    board_square_size(squ_size) 
+    {};
 
 unsigned int board_square_size;
 
@@ -198,13 +194,13 @@ void Board::init() {
     };
 
 
-    init_get_board_square_size(board_square_size, win_h, win_w);
+    // init_get_board_square_size(board_square_size, win_h, win_w);
     // init_board_coords();
 
     // for now i wont flip the board if we have two human players.
     // so for now we'll assume one player is an Engine but as a Human.
 
-    init_main_window_squares();
+    // init_main_window_squares();
 
     // I like this for now. Keeps it in init and only runs if debug enabled.
     if (Debug::enabled) Board::init_bitboard_window_squares();
@@ -415,12 +411,12 @@ void Board::render_capture_highlights() {
     }
 }
 
-void Board::render_bitboard_window() {
-    bitboard_window.clear();
-    for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
-    Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
-    bitboard_window.display();
-}
+// void Board::render_bitboard_window() {
+//     bitboard_window.clear();
+//     for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
+//     Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
+//     bitboard_window.display();
+// }
 
 /* RUN */
 
@@ -469,13 +465,13 @@ void Board::on_key_pressed(sf::Event &event) {
     auto key = event.key.code;
 
     switch (key) {
-        case sf::Keyboard::Tab:
+        // case sf::Keyboard::Tab:
 
-            // this'll get fucked by event and renderer but i dont care.
-            if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-            bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
-            break;
+        //     // this'll get fucked by event and renderer but i dont care.
+        //     if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
+        //     bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
+        //     bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
+        //     break;
         case sf::Keyboard::Z:
             if (Debug::enabled) {
                 undo_move();

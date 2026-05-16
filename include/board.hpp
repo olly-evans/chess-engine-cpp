@@ -48,9 +48,9 @@ private:
 
     /* WINDOW */
     
-    const std::string win_name;
-    const unsigned int win_h;
-    const unsigned int win_w;
+    // const std::string win_name;
+    // const unsigned int win_h;
+    // const unsigned int win_w;
 
     sf::RenderWindow main_window;
     
@@ -114,7 +114,7 @@ private:
 
 public:
 
-    Board(const unsigned int ww, const unsigned int wh, const std::string wn);
+    Board(const uint16_t squ_size);
 
     unsigned int board_square_size;
 

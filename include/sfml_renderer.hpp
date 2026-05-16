@@ -44,6 +44,8 @@ public:
     bool is_square_black(uint8_t bit);
     
     void set_board_square_size(uint16_t& sz);
+    uint16_t get_board_square_size();
+    
     void set_main_window_squares();
 
     sf::RenderWindow& get_main_window();
