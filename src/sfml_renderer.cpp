@@ -22,6 +22,8 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 void SFMLRenderer::init_renderer() {
     set_board_square_size(board_square_size);
     set_main_window_squares();
+
+    board.init();
     
 }
 
@@ -85,7 +87,14 @@ void SFMLRenderer::render_main_window() {
 
     // render_board_coords();
 
-    for (auto& piece : board.pieces) {piece->draw(main_window);}
+    for (auto& piece : board.pieces) {
+        uint8_t square = BBHelper::bit_to_square(piece->bit);
+        sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
+        sf::Vector2f pos = normalised_pos * (float)board_square_size;
+        piece->sprite.setPosition(pos.x, pos.y);
+        main_window.draw(piece->sprite);
+    }
+
     main_window.display();
 }
 

@@ -19,7 +19,7 @@ protected:
     uint8_t board_square_size;
 
     sf::Texture texture;
-    sf::Sprite sprite;
+    
     
     sf::RenderWindow& window;
 
@@ -32,7 +32,8 @@ public:
 
     bool is_white;
     bool has_moved = false;
-
+    sf::Sprite sprite;
+    
     char id;
 
     uint64_t moves = 0ULL;
