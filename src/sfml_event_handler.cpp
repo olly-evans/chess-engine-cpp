@@ -29,6 +29,7 @@ int SFMLEventHandler::mouse_win_pos_to_bit() {
 }
 
 /* EVENT LOOP */
+
 void SFMLEventHandler::handle_events() {
 
     sf::Event event;

@@ -71,3 +71,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - dirty_moves bool, can avoid recalculating moves perhaps.
 
 - getter and setter for piece pos.
+
+- board.selected_piece debug, some sort of infinite loop happening.
