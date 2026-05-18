@@ -97,7 +97,7 @@ sf::RenderWindow& SFMLApp::get_main_window() {
 void SFMLApp::run() {
     
     while (main_window.isOpen()) {
-        // event_handler.handle_events();
+        handle_events();
         render();
     }
 }

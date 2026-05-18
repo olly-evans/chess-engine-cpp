@@ -130,6 +130,5 @@ public:
     void handle_piece_move(uint8_t clicked_bit);
     bool is_enpassant_capture(uint8_t clicked_bit);
 
-    /* FREES */
     void free_pieces();
 };
