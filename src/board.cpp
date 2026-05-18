@@ -22,9 +22,111 @@
 
 std::vector<uint64_t> Board::bitboards;
 
-Board::Board() {};
+Board::Board() {
+    
+    bitboards = {
+        w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
+        b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
+    };
 
-unsigned int board_square_size;
+    bitboard_names = {
+        'P', 'N', 'B', 'R', 'Q', 'K',
+        'p', 'n', 'b', 'r', 'q', 'k',
+    };
+};
+
+/* INIT */
+
+void Board::init() {
+
+
+    // Selection window with empty colored squares to choose white/black.
+    
+    // this kinda doesn't matter right now.
+    // init_players();
+
+    // Init map of square names to bits.
+    BBHelper::init_name_to_bit();
+
+    // okey so in here somehwere we can find the players and see if we need to flip the board
+    // graphically. bitboards const.
+
+    // constructor???
+    
+
+    // for now i wont flip the board if we have two human players.
+    // so for now we'll assume one player is an Engine but as a Human.
+
+    // I like this for now. Keeps it in init and only runs if debug enabled.
+    // if (Debug::enabled) Board::init_bitboard_window_squares();
+
+    // What needs to happen if fen string is invalid.
+
+
+    // pass into board
+    // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
+    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    load_position_from_fen(fen);
+}
+
+// void Board::init_players() {
+
+//     bool is_white = true; //temp
+
+//     white_player = new Human(is_white);
+//     black_player = new Engine(!is_white);
+
+// }
+
+void Board::load_position_from_fen(std::string fen) {
+
+    /* Parses fen string and appropriately initialises bitboards. */
+
+    std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
+
+
+    // I want these hardcoded tokens to have seperate functions.
+    std::string board = fen_tokens[0];
+    int rank = 7, file = 0;
+    for (char ch : board) {
+
+        if (ch == '/') {
+            rank--;
+            file = 0;
+        } else if (isdigit(ch)) {
+            file += ch - '0';
+        } else if (isalpha(ch)) {
+            int bit = rank * 8 + (7 - file);
+
+            create_piece(ch, bit);
+            file++;
+
+            // Get correct piece type bitboard from ch.
+            uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
+            BBHelper::set_bit_by_ref(bitboard, bit);
+        }
+    }
+
+    is_whites_turn = (fen_tokens[1] == "w");
+
+    // need to let the correct pawn know that this is now available.
+    std::string en_passant_target = fen_tokens[3];
+
+    if (en_passant_target == "-") 
+        return;
+    
+    uint8_t bit = BBHelper::square_name_to_bit(en_passant_target);
+    
+    uint64_t en_passant_bit = 1ULL << bit;
+
+    // get pawn that can capture here.
+    // append bit to its en_passant_capture_bit.
+
+    // Parse more tokens later if we want to.
+}
 
 /* BITBOARD METHODS */
 
@@ -138,107 +240,6 @@ void Board::update_all_piece_attacks() {
         piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
         piece->strip_pseudo_legal_attacks(*this);
     }
-}
-
-/* INIT */
-
-void Board::init() {
-
-
-    // Selection window with empty colored squares to choose white/black.
-    
-    // this kinda doesn't matter right now.
-    // init_players();
-
-    // Init map of square names to bits.
-    BBHelper::init_name_to_bit();
-
-    // okey so in here somehwere we can find the players and see if we need to flip the board
-    // graphically. bitboards const.
-
-    // constructor???
-    bitboards = {
-        w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
-        b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
-    };
-
-    bitboard_names = {
-        'P', 'N', 'B', 'R', 'Q', 'K',
-        'p', 'n', 'b', 'r', 'q', 'k',
-    };
-
-    // for now i wont flip the board if we have two human players.
-    // so for now we'll assume one player is an Engine but as a Human.
-
-    // I like this for now. Keeps it in init and only runs if debug enabled.
-    // if (Debug::enabled) Board::init_bitboard_window_squares();
-
-    // What needs to happen if fen string is invalid.
-
-
-    // pass into board
-    // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    // std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
-    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    load_position_from_fen(fen);
-}
-
-// void Board::init_players() {
-
-//     bool is_white = true; //temp
-
-//     white_player = new Human(is_white);
-//     black_player = new Engine(!is_white);
-
-// }
-
-void Board::load_position_from_fen(std::string fen) {
-
-    /* Parses fen string and appropriately initialises bitboards. */
-
-    std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
-
-
-    // I want these hardcoded tokens to have seperate functions.
-    std::string board = fen_tokens[0];
-    int rank = 7, file = 0;
-    for (char ch : board) {
-
-        if (ch == '/') {
-            rank--;
-            file = 0;
-        } else if (isdigit(ch)) {
-            file += ch - '0';
-        } else if (isalpha(ch)) {
-            int bit = rank * 8 + (7 - file);
-
-            create_piece(ch, bit);
-            file++;
-
-            // Get correct piece type bitboard from ch.
-            uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
-            BBHelper::set_bit_by_ref(bitboard, bit);
-        }
-    }
-
-    is_whites_turn = (fen_tokens[1] == "w");
-
-    // need to let the correct pawn know that this is now available.
-    std::string en_passant_target = fen_tokens[3];
-
-    if (en_passant_target == "-") 
-        return;
-    
-    uint8_t bit = BBHelper::square_name_to_bit(en_passant_target);
-    
-    uint64_t en_passant_bit = 1ULL << bit;
-
-    // get pawn that can capture here.
-    // append bit to its en_passant_captures.
-
-    // Parse more tokens later if we want to.
 }
 
 void Board::create_piece(const char id, uint8_t bit) {
@@ -361,7 +362,8 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 bool Board::bit_has_piece(uint8_t clicked_bit) {
     
     for (auto& bitboard : bitboards) {
-        if (bitboard & (1ULL << clicked_bit)) return true;
+        if (bitboard & (1ULL << clicked_bit)) 
+            return true;
     }
     return false;
 }
@@ -444,6 +446,7 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
+    // can do this in one loop and pass both bits.
     if (bit_has_piece(clicked_bit))
         return false;
 
@@ -453,9 +456,9 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!bit_has_piece(ep_capture_bit))
         return false;
 
-    // this is the only place we use en_passant_captures...
+    // this is the only place we use en_passant_capture_bit...
     // could just have this is == 0ULL or smth.
-    if (!(pawn->en_passant_captures & (1ULL << (ep_capture_bit))))
+    if (!(pawn->en_passant_capture_bit & (1ULL << (ep_capture_bit))))
         return false;
 
     /* 

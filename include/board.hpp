@@ -29,29 +29,31 @@ private:
     
     // Player* white_player;
     // Player* black_player;
-    
-
-    /* WINDOW */
-    
-    // const std::string win_name;
-    // const unsigned int win_h;
-    // const unsigned int win_w;
-
-    // sf::RenderWindow main_window;
-    
-    /* GRID */
-    
-    // std::vector<sf::RectangleShape> squares;
-
 
     /* DEBUG */
 
-    sf::RenderWindow bitboard_window;
-    std::vector<sf::RectangleShape> bitboard_window_squares;
+    // sf::RenderWindow bitboard_window;
+    // std::vector<sf::RectangleShape> bitboard_window_squares;
+    // int bitboard_vec_index = 0;
 
     /* BITBOARDS */
+
     
-    /*
+    uint64_t w_pawns = 0ULL;
+    uint64_t w_knights = 0ULL;
+    uint64_t w_bishops = 0ULL;
+    uint64_t w_rooks = 0ULL;
+    uint64_t w_queen = 0ULL;
+    uint64_t w_king = 0ULL;
+
+    uint64_t b_pawns = 0ULL;
+    uint64_t b_knights = 0ULL;
+    uint64_t b_bishops = 0ULL;
+    uint64_t b_rooks = 0ULL;
+    uint64_t b_queen = 0ULL;
+    uint64_t b_king = 0ULL;    
+
+        /*
 
     uint64_t w_pawns bitboard initial positions example.
 
@@ -76,28 +78,8 @@ private:
 
     */
 
-    int bitboard_vec_index = 0;
-    
-    uint64_t w_pawns = 0ULL;
-    uint64_t w_knights = 0ULL;
-    uint64_t w_bishops = 0ULL;
-    uint64_t w_rooks = 0ULL;
-    uint64_t w_queen = 0ULL;
-    uint64_t w_king = 0ULL;
-
-    uint64_t b_pawns = 0ULL;
-    uint64_t b_knights = 0ULL;
-    uint64_t b_bishops = 0ULL;
-    uint64_t b_rooks = 0ULL;
-    uint64_t b_queen = 0ULL;
-    uint64_t b_king = 0ULL;
-
-    /* PIECES */
-    
-
 public:
 
-    Board();
 
     bool is_whites_turn = true;
     
@@ -108,10 +90,17 @@ public:
     static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
     std::vector<char> bitboard_names;
 
-    /* UTIL METHODS */
+public:
+    Board();
 
-    void die(const std::string& err);
-    int mouse_win_pos_to_bit();
+    /* INIT */
+
+    void init();
+    // void init_players();
+
+    void load_position_from_fen(std::string fen);
+
+    /* Bitboards */
 
     uint64_t white_occupancy();
     uint64_t black_occupancy();
@@ -128,19 +117,6 @@ public:
 
     void update_all_piece_attacks();
 
-
-
-    /* INIT */
-
-    void init();
-    // void init_players();
-
-    void init_bitboard_window_squares();
-    void load_position_from_fen(std::string fen);
-
-
-    void render_bitboard_window();
-
     /* PIECE FUNCTIONALITY */
     
     void create_piece(const char ch, uint8_t bit);
@@ -152,10 +128,8 @@ public:
     bool bit_has_piece(uint8_t clicked_bit);
 
     void handle_piece_move(uint8_t clicked_bit);
-
     bool is_enpassant_capture(uint8_t clicked_bit);
 
     /* FREES */
-
     void free_pieces();
 };
