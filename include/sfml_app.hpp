@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
-#include "sfml_event_handler.hpp"
 
 #include "pieces.hpp"
 #include "board.hpp"
@@ -25,15 +24,13 @@ const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
 const sf::Color TURQOISE(50, 200, 150);
 
-class SFMLRenderer {
+class SFMLApp {
 private:
 
     const uint16_t win_w;
     
     
     sf::RenderWindow main_window;
-
-    SFMLEventHandler event_handler;
     
     Board& board;
 
@@ -46,7 +43,7 @@ private:
 
 public:
 
-    SFMLRenderer(Board& board, const uint16_t w_width);
+    SFMLApp(Board& board, const uint16_t w_width);
 
     void init_renderer();
     
@@ -66,6 +63,8 @@ public:
 
     void run(); // Main game loop.
 
+    /* RENDERING*/
+
     void render(); 
     void render_main_window();
     void render_move_highlights();
@@ -73,5 +72,13 @@ public:
 
     void reset_move_and_capture_highlights(uint8_t selected_bit);
 
+    /* EVENT HANDLING */
 
+    int mouse_win_pos_to_bit();
+
+    void handle_events();
+    void on_main_window_event(sf::Event &event);
+    void on_key_pressed(sf::Event &event);
+    void on_mouse_press(sf::Event &event);
+    void on_left_mouse_press();
 };

@@ -345,6 +345,8 @@ void Board::create_piece(const char id, uint8_t bit) {
 
 Piece* Board::select_piece(uint8_t clicked_bit) {
 
+    // perhaps just make a an event_handler function. does make sense.
+    // does need squares though
     Piece* piece = get_piece(clicked_bit);
     if (!piece) 
         return nullptr;

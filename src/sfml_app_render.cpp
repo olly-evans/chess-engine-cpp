@@ -1,18 +1,14 @@
-#include "sfml_renderer.hpp"
-#include "sfml_event_handler.hpp"
-
+#include "sfml_app.hpp"
 #include "bitboardhelper.hpp"
 
 
-SFMLRenderer::SFMLRenderer(Board& board, const uint16_t w_width) :
+SFMLApp::SFMLApp(Board& board, const uint16_t w_width) :
     board(board),
     win_w(w_width), 
-    main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME),
-    event_handler(board, main_window, board_square_size, 
-                 [this](uint8_t bit) {reset_move_and_capture_highlights(bit);})
+    main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME)
     {};
 
-bool SFMLRenderer::is_square_black(uint8_t i) {
+bool SFMLApp::is_square_black(uint8_t i) {
     uint8_t x = i % GRID_SZ;
     uint8_t y = i / GRID_SZ;
     return (x + y) % 2;
@@ -20,7 +16,7 @@ bool SFMLRenderer::is_square_black(uint8_t i) {
 
 /* INIT */
 
-void SFMLRenderer::init_renderer() {
+void SFMLApp::init_renderer() {
     board.init();
 
     set_board_square_size(board_square_size);
@@ -32,18 +28,18 @@ void SFMLRenderer::init_renderer() {
 
 }
 
-void SFMLRenderer::set_board_square_size(uint16_t& sz) {
+void SFMLApp::set_board_square_size(uint16_t& sz) {
     if ((win_w % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0)    
         exit(1);
 
     sz = win_w / GRID_SZ;
 }
 
-uint16_t SFMLRenderer::get_board_square_size() {
+uint16_t SFMLApp::get_board_square_size() {
     return board_square_size;
 }
 
-void SFMLRenderer::set_main_window_squares() {
+void SFMLApp::set_main_window_squares() {
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
@@ -57,7 +53,7 @@ void SFMLRenderer::set_main_window_squares() {
     }
 }
 
-void SFMLRenderer::load_textures() {
+void SFMLApp::load_textures() {
     for (char id : {'r','n','b','q','k','p','R','N','B','Q','K','P'}) {
         sf::Texture tex;
         if (tex.loadFromFile(resolve_texture_path(id))) {
@@ -68,14 +64,14 @@ void SFMLRenderer::load_textures() {
     }
 }
 
-std::string SFMLRenderer::resolve_texture_path(char id) {
+std::string SFMLApp::resolve_texture_path(char id) {
     std::filesystem::path path = std::filesystem::current_path();
     std::string color_prefix = (isupper(id) ? "w" : "b");
     char tmp_id = toupper(id);
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
-void SFMLRenderer::init_piece_sprites() {
+void SFMLApp::init_piece_sprites() {
 
     // this isnt gunna work when we removed pieces.
     for (auto& piece : board.pieces) {
@@ -91,27 +87,27 @@ void SFMLRenderer::init_piece_sprites() {
     }
 }
 
-sf::RenderWindow& SFMLRenderer::get_main_window() {
+sf::RenderWindow& SFMLApp::get_main_window() {
     return main_window;
 }
 
 /* MAIN GAME LOOP */
 
-void SFMLRenderer::run() {
+void SFMLApp::run() {
     
     while (main_window.isOpen()) {
-        event_handler.handle_events();
+        // event_handler.handle_events();
         render();
     }
 }
 
 /* RENDER */
 
-void SFMLRenderer::render() {
+void SFMLApp::render() {
     render_main_window();
 }
 
-void SFMLRenderer::render_main_window() {
+void SFMLApp::render_main_window() {
 
     /* 
     *
@@ -144,7 +140,7 @@ void SFMLRenderer::render_main_window() {
     main_window.display();
 }
 
-void SFMLRenderer::render_move_highlights() {
+void SFMLApp::render_move_highlights() {
 
     /* Renders turqoise circles to the square the selected piece can move. */
     
@@ -177,14 +173,14 @@ void SFMLRenderer::render_move_highlights() {
     }
 }
 
-void SFMLRenderer::render_capture_highlights() {
+void SFMLApp::render_capture_highlights() {
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         if (BBHelper::get_bit(board.selected_piece->captures, i)) 
             squares[i].setFillColor(TURQOISE);
     }
 }
 
-void SFMLRenderer::reset_move_and_capture_highlights(uint8_t selected_bit) {
+void SFMLApp::reset_move_and_capture_highlights(uint8_t selected_bit) {
 
     squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
     
