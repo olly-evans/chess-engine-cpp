@@ -14,7 +14,6 @@ class Board;
 class Piece {
 
 protected:
-    uint8_t board_square_size;
 
     sf::Texture texture;
 
