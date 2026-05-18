@@ -3,13 +3,12 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
-
 #include <vector>
 #include <string>
 #include <filesystem>
 #include <cstdint>
 
-class Board;
+class Board; // this is only here for stip pseudo legal moves.
 
 class Piece {
 
@@ -30,18 +29,15 @@ public:
     uint64_t moves = 0ULL;
     uint64_t captures = 0ULL;
     uint8_t bit;
-    
 
     void set_bit(uint8_t bit);
     uint8_t get_bit();
-
 
     // All instances return the moves and assign this->captures.
     virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) = 0;
 
     void strip_pseudo_legal_attacks(Board& board);
     virtual void strip_pseudo_legal_special_moves(Board& board) = 0;
-
     
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
@@ -74,10 +70,6 @@ public:
 
 class Knight : public Piece {
 public:
-    const int offsets[8][2] = {
-        {-2, -1}, {-2, 1}, {2, -1}, {2, 1},
-        {-1, -2}, {1, -2}, {-1, 2}, {1, 2}
-    };
 
     Knight(char id, uint8_t b) : 
         Piece(id, b) {}
