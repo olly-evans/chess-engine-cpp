@@ -9,8 +9,6 @@
 #include <filesystem>
 #include <cstdint>
 
-#include "util.hpp"
-
 class Board;
 
 class Piece {
