@@ -28,38 +28,36 @@ class SFMLApp {
 private:
 
     const uint16_t win_w;
-    
+    uint16_t board_square_size;    
     
     sf::RenderWindow main_window;
     
     Board& board;
 
-    uint16_t board_square_size;
 
     std::vector<sf::RectangleShape> squares;
 
-    std::unordered_map<char, sf::Texture> texture_cache;
-    
+    std::unordered_map<char, sf::Texture> texture_cache;  
 
 public:
 
     SFMLApp(Board& board, const uint16_t w_width);
 
-    void init_renderer();
-    
     bool is_square_black(uint8_t bit);
 
+    void init();
+    
+    void set_board_square_size(uint16_t& sz);
+    void set_main_window_squares();
+    
     std::string resolve_texture_path(char id);
     void load_textures();
-    void init_piece_sprites();
+    void init_piece_texture_cache();
 
-    void set_board_square_size(uint16_t& sz);
+
+    
     uint16_t get_board_square_size();
-
-    void set_main_window_squares();
-
     sf::RenderWindow& get_main_window();
-
 
     void run(); // Main game loop.
 

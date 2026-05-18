@@ -16,7 +16,7 @@ bool SFMLApp::is_square_black(uint8_t i) {
 
 /* INIT */
 
-void SFMLApp::init_renderer() {
+void SFMLApp::init() {
     
     board.init();
 
@@ -24,7 +24,7 @@ void SFMLApp::init_renderer() {
     set_main_window_squares();
 
     load_textures();
-    init_piece_sprites(); // tmp, will be dodgy when we remove pieces.
+    init_piece_texture_cache(); // tmp, will be dodgy when we remove pieces.
     // will aslo fail with undo_moves()
 
 }
@@ -72,7 +72,7 @@ std::string SFMLApp::resolve_texture_path(char id) {
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }
 
-void SFMLApp::init_piece_sprites() {
+void SFMLApp::init_piece_texture_cache() {
 
     // this isnt gunna work when we removed pieces.
     for (auto& piece : board.pieces) {
