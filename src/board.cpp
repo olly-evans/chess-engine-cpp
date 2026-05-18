@@ -338,9 +338,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     if (piece->is_white && !is_whites_turn) 
         return nullptr;
 
-    // Highlight the square they clicked on.
-    // squares[clicked_bit].setFillColor(TURQOISE); 
-
     // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     piece->strip_pseudo_legal_attacks(*this);

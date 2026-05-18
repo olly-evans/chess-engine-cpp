@@ -119,7 +119,7 @@ void SFMLApp::render_main_window() {
     */
 
     main_window.clear();
-    if (board.selected_piece) render_capture_highlights();
+    if (board.selected_piece) render_capture_highlights(); // rendered before squares updates otherwise delay from waitEvent().
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         main_window.draw(squares[i]);
     }
@@ -175,6 +175,10 @@ void SFMLApp::render_move_highlights() {
 }
 
 void SFMLApp::render_capture_highlights() {
+
+    // Selecting a piece means it gets a capture highlight so here we are.
+    squares[board.selected_piece->bit].setFillColor(TURQOISE);
+
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         if (BBHelper::get_bit(board.selected_piece->captures, i)) 
             squares[i].setFillColor(TURQOISE);
