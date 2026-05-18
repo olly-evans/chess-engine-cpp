@@ -17,6 +17,7 @@ bool SFMLApp::is_square_black(uint8_t i) {
 /* INIT */
 
 void SFMLApp::init_renderer() {
+    
     board.init();
 
     set_board_square_size(board_square_size);

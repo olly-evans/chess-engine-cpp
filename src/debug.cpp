@@ -1,7 +1,7 @@
 
 #include "debug.hpp"
 #include "board.hpp"
-#include "sfml_renderer.hpp"
+#include "sfml_app.hpp"
 
 #include <iostream>
 

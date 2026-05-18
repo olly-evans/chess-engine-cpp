@@ -7,7 +7,6 @@
 #include "board.hpp"
 #include "gamestate.hpp"
 #include "movelogger.hpp"
-#include "sfml_renderer.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -27,34 +26,16 @@ Board::Board() {};
 
 unsigned int board_square_size;
 
-/* UTIL METHODS */
-
-bool Board::is_square_black(uint8_t i) {
-    uint8_t x = i % GRID_SZ;
-    uint8_t y = i / GRID_SZ;
-    return (x + y) % 2;
-}
-
-// event handler.
-// int Board::mouse_win_pos_to_bit() {
-//     // May need to be broken up into smaller functions.
-//     sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
-//     sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
-//                                     (mouse_window_pos.y / board_square_size));
-//     int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
-//     return BBHelper::square_to_bit(square);
-// }
-
 /* BITBOARD METHODS */
 
 uint64_t Board::white_occupancy() {
-    return bitboards[W_PAWNS] | bitboards[W_KNIGHTS] | bitboards[W_BISHOPS] |
-           bitboards[W_ROOKS] | bitboards[W_QUEEN]   | bitboards[W_KING];
+    return bitboards[FenParser::Bitboards::W_PAWNS] | bitboards[FenParser::Bitboards::W_KNIGHTS] | bitboards[FenParser::Bitboards::W_BISHOPS] |
+           bitboards[FenParser::Bitboards::W_ROOKS] | bitboards[FenParser::Bitboards::W_QUEEN]   | bitboards[FenParser::Bitboards::W_KING];
 }
 
 uint64_t Board::black_occupancy() {
-    return bitboards[B_PAWNS] | bitboards[B_KNIGHTS] | bitboards[B_BISHOPS] |
-           bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
+    return bitboards[FenParser::Bitboards::B_PAWNS] | bitboards[FenParser::Bitboards::B_KNIGHTS] | bitboards[FenParser::Bitboards::B_BISHOPS] |
+           bitboards[FenParser::Bitboards::B_ROOKS] | bitboards[FenParser::Bitboards::B_QUEEN]   | bitboards[FenParser::Bitboards::B_KING];
 }
 
 uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
@@ -130,7 +111,7 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
 
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
-    uint64_t king = bitboards[W_KING];
+    uint64_t king = bitboards[FenParser::Bitboards::W_KING];
     uint64_t enemy_captures = get_black_captures(white, black);
     if (enemy_captures & king)
         return true;
@@ -138,9 +119,10 @@ bool Board::white_king_in_check(uint64_t white, uint64_t black) {
     return false;
 }
 
+// also dont use rn, but eh
 bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 
-    uint64_t king = bitboards[B_KING];
+    uint64_t king = bitboards[FenParser::Bitboards::B_KING];
     uint64_t enemy_captures = get_white_captures(white, black);
 
     if (enemy_captures & king)
@@ -207,7 +189,7 @@ void Board::init() {
     // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
     std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
     // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    init_position_from_fen(fen);
+    load_position_from_fen(fen);
 }
 
 // void Board::init_players() {
@@ -219,7 +201,7 @@ void Board::init() {
 
 // }
 
-void Board::init_position_from_fen(std::string fen) {
+void Board::load_position_from_fen(std::string fen) {
 
     /* Parses fen string and appropriately initialises bitboards. */
 
@@ -358,11 +340,12 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     
     if (!piece->is_white && is_whites_turn) 
         return nullptr;
+
     if (piece->is_white && !is_whites_turn) 
         return nullptr;
 
     // Highlight the square they clicked on.
-    squares[clicked_bit].setFillColor(TURQOISE); 
+    // squares[clicked_bit].setFillColor(TURQOISE); 
 
     // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());

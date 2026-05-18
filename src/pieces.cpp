@@ -1,9 +1,8 @@
-#include "util.hpp"
 #include "pieces.hpp"
 #include "board.hpp"
 #include "bitboardhelper.hpp"
 #include "movelogger.hpp"
-#include "sfml_renderer.hpp"
+#include "sfml_app.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -15,18 +14,6 @@ Piece::Piece(char id, uint8_t b) :
     bit(b) {
     
     is_white = (isupper(this->id));
-}
-
-std::string Piece::resolve_texture_path() {
-    std::filesystem::path path = std::filesystem::current_path();
-    std::string color_prefix = (this->is_white ? "w" : "b");
-    char tmp_id = toupper(id);
-
-    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
-}
-
-std::string Piece::get_texture_path() {
-    return resolve_texture_path();
 }
 
 void Piece::set_bit(uint8_t bit) {
@@ -63,7 +50,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         if (toupper(this->id) == 'K') {
             friendly_king = (1ULL << move_bit);
         } else {
-            friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
+            friendly_king = (this->is_white) ? board.bitboards[FenParser::W_KING] : board.bitboards[FenParser::B_KING];
         }        
 
         bool in_check = friendly_king & enemy_captures;
@@ -160,7 +147,7 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t pawn = (1ULL << this->bit);
 
-    uint64_t enemy_pawns = this->is_white ? Board::bitboards[B_PAWNS] : Board::bitboards[W_PAWNS];
+    uint64_t enemy_pawns = this->is_white ? Board::bitboards[FenParser::B_PAWNS] : Board::bitboards[FenParser::W_PAWNS];
 
     uint64_t west = (pawn << 1);
     uint64_t east = (pawn >> 1);
@@ -213,7 +200,7 @@ void Pawn::strip_pseudo_legal_special_moves(Board& board) {
           
     uint64_t enemy_captures = board.get_simulated_enemy_captures(this, this->bit, ep_move_bit, ep_capture_bit);
 
-    uint64_t friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
+    uint64_t friendly_king = (this->is_white) ? board.bitboards[FenParser::W_KING] : board.bitboards[FenParser::B_KING];
 
     bool in_check = friendly_king & enemy_captures;
 
@@ -577,7 +564,7 @@ bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
     */
     uint64_t king = (1ULL << this->bit);
-    uint64_t rooks = (this->is_white) ? Board::bitboards[W_ROOKS] : Board::bitboards[B_ROOKS];
+    uint64_t rooks = (this->is_white) ? Board::bitboards[FenParser::W_ROOKS] : Board::bitboards[FenParser::B_ROOKS];
 
     uint64_t king_start = (this->is_white) ? 0x8 : 0x800000000000000;
     uint64_t queenside_rook_start = (this->is_white) ? 0x80 : 0x8000000000000000;

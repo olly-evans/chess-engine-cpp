@@ -1,15 +1,15 @@
 #include <iostream>
 
 #include "board.hpp"
-#include "sfml_renderer.hpp"
+#include "sfml_app.hpp"
 
 int main() {
 
     Board board;
 
-    SFMLRenderer renderer(board, WINDOW_WIDTH);
-    renderer.init_renderer();
-    renderer.run();
+    SFMLApp app(board, WINDOW_WIDTH);
+    app.init_renderer();
+    app.run();
 
     return 0;
 }

@@ -1,6 +1,6 @@
 #include "bitboardhelper.hpp"
 #include "util.hpp"
-#include "sfml_renderer.hpp"
+#include "sfml_app.hpp"
 
 #include <cmath>
 

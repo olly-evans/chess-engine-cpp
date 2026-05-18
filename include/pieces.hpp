@@ -20,8 +20,6 @@ protected:
 
     sf::Texture texture;
 
-    std::string resolve_texture_path();
-
 
 public:
     Piece(char id, uint8_t b);
@@ -36,7 +34,6 @@ public:
     uint64_t captures = 0ULL;
     uint8_t bit;
     
-    virtual std::string get_texture_path();
 
     void set_bit(uint8_t bit);
     uint8_t get_bit();
@@ -67,10 +64,6 @@ public:
         Piece(id, bitboard) {}
     
     uint64_t en_passant_captures = 0ULL;
-    
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
@@ -91,10 +84,6 @@ public:
 
     Knight(char id, uint8_t b) : 
         Piece(id, b) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
     
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
         
@@ -106,10 +95,6 @@ class Bishop : public Piece {
 public:
     Bishop(char id, uint8_t b) : 
         Piece(id, b) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
     
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
@@ -121,10 +106,6 @@ public:
     Rook(char id, uint8_t b) : 
         Piece(id, b) {}
 
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
-
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
     
     void strip_pseudo_legal_special_moves(Board& board) override;
@@ -135,10 +116,6 @@ public:
     Queen(char id, uint8_t b) : 
         Piece(id, b) {}
 
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
-
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
     void strip_pseudo_legal_special_moves(Board& board) override;
@@ -148,10 +125,6 @@ class King : public Piece {
 public:
     King(char id, uint8_t b) : 
         Piece(id, b) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
     
