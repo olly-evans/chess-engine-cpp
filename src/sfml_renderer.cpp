@@ -132,7 +132,7 @@ void SFMLRenderer::render_main_window() {
 
     for (auto& piece : board.pieces) {
         // update_piece_pos();
-        std::cout << piece->bit << ", " << piece->id << "\n";
+        // std::cout << piece->bit << ", " << piece->id << "\n";
         uint8_t square = BBHelper::bit_to_square(piece->bit);
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);

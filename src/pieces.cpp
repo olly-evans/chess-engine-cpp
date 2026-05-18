@@ -15,23 +15,12 @@ Piece::Piece(char id, uint8_t b) :
     bit(b) {
     
     is_white = (isupper(this->id));
-
-    // can we load each image once?
-    // perhaps loaded to each piece type or smth
-    // if (texture.loadFromFile(get_texture_path())) {
-    //     sprite.setTexture(texture);
-
-    //     sf::FloatRect sprite_size = sprite.getGlobalBounds();
-    //     sprite.setScale(board_square_size / sprite_size.width, 
-    //                     board_square_size / sprite_size.height);
-    // }
 }
 
 std::string Piece::resolve_texture_path() {
     std::filesystem::path path = std::filesystem::current_path();
     std::string color_prefix = (this->is_white ? "w" : "b");
     char tmp_id = toupper(id);
-    std::cout << "path for " << this->id << " is: " << path.string() + "/assets/" + color_prefix + tmp_id + ".png" + "\n";
 
     return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
 }

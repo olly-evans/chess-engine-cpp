@@ -29,12 +29,6 @@ unsigned int board_square_size;
 
 /* UTIL METHODS */
 
-void Board::die(const std::string& err) {
-    main_window.close();
-    std::cerr << err << std::endl;
-    exit(1);
-}
-
 bool Board::is_square_black(uint8_t i) {
     uint8_t x = i % GRID_SZ;
     uint8_t y = i / GRID_SZ;
@@ -274,7 +268,7 @@ void Board::init_position_from_fen(std::string fen) {
 
 void Board::create_piece(const char id, uint8_t bit) {
 
-
+    std::cout << "creating... " << id << "\n";
     // takes square size because it has to load textures etc..
     // renderer should do that.
     switch (toupper(id)) {
@@ -352,18 +346,21 @@ void Board::create_piece(const char id, uint8_t bit) {
 Piece* Board::select_piece(uint8_t clicked_bit) {
 
     Piece* piece = get_piece(clicked_bit);
-    if (!piece) return nullptr;
+    if (!piece) 
+        return nullptr;
 
     // TODO:
     // Works fine but will eventually be a dependancy nightmare, perhaps move checks to gamestate class.
-    // bool can_white_move()
+    // bool can_white_movcreatee()
     // bool can_black_move()
     
-    if (!piece->is_white && is_whites_turn) return nullptr;
-    if (piece->is_white && !is_whites_turn) return nullptr;
+    if (!piece->is_white && is_whites_turn) 
+        return nullptr;
+    if (piece->is_white && !is_whites_turn) 
+        return nullptr;
 
     // Highlight the square they clicked on.
-    squares[clicked_bit].setFillColor(TURQOISE);
+    squares[clicked_bit].setFillColor(TURQOISE); 
 
     // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());

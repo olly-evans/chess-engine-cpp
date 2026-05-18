@@ -35,6 +35,7 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitbo
     static uint64_t dummy = 0ULL;
     int index = -1;
 
+    
     switch (ch) {
         case 'P': index = W_PAWNS;   break;
         case 'N': index = W_KNIGHTS; break;

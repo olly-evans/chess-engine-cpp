@@ -51,11 +51,11 @@ private:
     // const unsigned int win_h;
     // const unsigned int win_w;
 
-    sf::RenderWindow main_window;
+    // sf::RenderWindow main_window;
     
     /* GRID */
     
-    std::vector<sf::RectangleShape> squares;
+    // std::vector<sf::RectangleShape> squares;
 
 
     /* DEBUG */
