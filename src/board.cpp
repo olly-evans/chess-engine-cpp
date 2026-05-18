@@ -156,7 +156,7 @@ void Board::init() {
     // okey so in here somehwere we can find the players and see if we need to flip the board
     // graphically. bitboards const.
 
-    // Board::init_bitboards_from_fen(fen);
+    // constructor???
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
         b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
@@ -167,21 +167,14 @@ void Board::init() {
         'p', 'n', 'b', 'r', 'q', 'k',
     };
 
-
-    // init_get_board_square_size(board_square_size, win_h, win_w);
-    // init_board_coords();
-
     // for now i wont flip the board if we have two human players.
     // so for now we'll assume one player is an Engine but as a Human.
-
-    // init_main_window_squares();
 
     // I like this for now. Keeps it in init and only runs if debug enabled.
     // if (Debug::enabled) Board::init_bitboard_window_squares();
 
     // What needs to happen if fen string is invalid.
 
-    // "8/8/8/2k5/3pP3/8/8/4K3 b - e3 0 1" enpassant check test fen.
 
     // pass into board
     // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";

@@ -133,52 +133,23 @@ public:
     /* INIT */
 
     void init();
-    void init_players();
-    void init_bitboards_from_fen(std::string fen);
-
-    void init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w);
-    
-    void init_main_window_squares();
+    // void init_players();
 
     void init_bitboard_window_squares();
     void load_position_from_fen(std::string fen);
 
-    void create_piece(const char ch, uint8_t bit);
-
-    void init_pieces();
-
-    /* RENDER */
-
-    void render();
-    void render_main_window();
-    void render_move_highlights();
-    void render_capture_highlights();
 
     void render_bitboard_window();
 
-    /* RUN */
-
-    void run();
-
-    /* EVENT HANDLING */
-
-    void handle_events();
-    void on_main_window_event(sf::Event &event);
-    void on_bitboard_window_event(sf::Event &event);
-
-    void on_key_pressed(sf::Event &event);
-    void undo_move();
-
-    void on_mouse_press(sf::Event &event);
-    void on_left_mouse_press();
-    void reset_move_and_capture_highlights(uint8_t selected_bit);
-
     /* PIECE FUNCTIONALITY */
+    
+    void create_piece(const char ch, uint8_t bit);
 
     Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
-    bool bit_has_piece(uint8_t clicked_bit);
     void remove_piece(uint8_t piece_to_remove_bit);
+
+    bool bit_has_piece(uint8_t clicked_bit);
 
     void handle_piece_move(uint8_t clicked_bit);
 
@@ -187,5 +158,4 @@ public:
     /* FREES */
 
     void free_pieces();
-
 };
