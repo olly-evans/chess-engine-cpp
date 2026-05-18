@@ -87,11 +87,12 @@ void Board::load_position_from_fen(std::string fen) {
 
     std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
-
     // I want these hardcoded tokens to have seperate functions.
-    std::string board = fen_tokens[0];
-    int rank = 7, file = 0;
-    for (char ch : board) {
+    std::string position = fen_tokens[0];
+
+    // parse_fen_position();
+    uint8_t rank = 7, file = 0;
+    for (char ch : position) {
 
         if (ch == '/') {
             rank--;
@@ -99,7 +100,7 @@ void Board::load_position_from_fen(std::string fen) {
         } else if (isdigit(ch)) {
             file += ch - '0';
         } else if (isalpha(ch)) {
-            int bit = rank * 8 + (7 - file);
+            uint8_t bit = rank * 8 + (7 - file);
 
             create_piece(ch, bit);
             file++;
@@ -112,6 +113,7 @@ void Board::load_position_from_fen(std::string fen) {
 
     is_whites_turn = (fen_tokens[1] == "w");
 
+    // parse_fen_enp();
     // need to let the correct pawn know that this is now available.
     std::string en_passant_target = fen_tokens[3];
 
@@ -344,8 +346,6 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     
     return piece;
 }
-
-
 
 Piece* Board::get_piece(uint8_t clicked_bit) {
 

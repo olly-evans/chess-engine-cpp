@@ -47,7 +47,7 @@ public:
     static uint8_t bit_to_square(uint8_t bit);
 
     // manipulation
-    static void set_bit_by_ref(uint64_t& b, int bit);
+    static void set_bit_by_ref(uint64_t& b, uint8_t bit);
     static void clear_bit_by_ref(uint64_t& b, int bit);
  
     static uint64_t set_bit(uint64_t b, int bit);
