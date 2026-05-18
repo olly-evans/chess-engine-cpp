@@ -23,7 +23,7 @@
 std::vector<uint64_t> Board::bitboards;
 
 Board::Board() {
-    
+
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
         b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
@@ -284,38 +284,38 @@ void Board::create_piece(const char id, uint8_t bit) {
 // }
 
 
-// void Board::undo_move() {
+void Board::undo_move() {
 
-//     if (MoveLogger::move_history.empty()) 
-//         return;
+    if (MoveLogger::move_history.empty()) 
+        return;
 
-//     Move& last_move = MoveLogger::move_history.back();
+    Move& last_move = MoveLogger::move_history.back();
 
-//     // Just so if we undo a move whilst user has piece selected we don't get funny business.
-//     if (selected_piece) 
-//         reset_move_and_capture_highlights(selected_piece->bit);
+    // Just so if we undo a move whilst user has piece selected we don't get funny business.
+    // if (selected_piece) 
+    //     reset_move_and_capture_highlights(selected_piece->bit);
 
-//     uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.moved_id, bitboards);
+    uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.moved_id, bitboards);
 
-//     BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
-//     BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
+    BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
+    BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
     
-//     Piece* moved_piece = get_piece(last_move.end_bit);
-//     moved_piece->set_bit(last_move.start_bit);
+    Piece* moved_piece = get_piece(last_move.end_bit);
+    moved_piece->set_bit(last_move.start_bit);
     
-//     // If the move didn't involve a capture we can clean up and return early.
-//     if (!last_move.has_capture) {
-//         MoveLogger::move_history.pop_back(); 
-//         return;
-//     }
+    // If the move didn't involve a capture we can clean up and return early.
+    if (!last_move.has_capture) {
+        MoveLogger::move_history.pop_back(); 
+        return;
+    }
 
-//     // capture_bit changes depending on move type in handle_piece_move.
-//     create_piece(last_move.captured_id, last_move.capture_bit);
-//     uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
-//     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
+    // capture_bit changes depending on move type in handle_piece_move.
+    create_piece(last_move.captured_id, last_move.capture_bit);
+    uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
+    BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
 
-//     MoveLogger::move_history.pop_back();
-// }
+    MoveLogger::move_history.pop_back();
+}
 
 /* PIECE FUNCTIONALITY */
 

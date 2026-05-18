@@ -100,27 +100,27 @@ public:
 
     void load_position_from_fen(std::string fen);
 
-    /* Bitboards */
+    /* BITBOARD METHODS */
 
     uint64_t white_occupancy();
     uint64_t black_occupancy();
 
-    uint64_t get_white_captures(uint64_t white, uint64_t black); // omve if works, tmp position.
-    uint64_t get_black_captures(uint64_t white, uint64_t black); // also tmp, just wanna see shit.
-
+    uint64_t get_white_captures(uint64_t white, uint64_t black); 
+    uint64_t get_black_captures(uint64_t white, uint64_t black); 
     uint64_t get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture);
+
+    /* CHECK */
 
     bool white_king_in_check(uint64_t white, uint64_t black);
     bool black_king_in_check(uint64_t white, uint64_t black);
 
-    void king_in_check(uint64_t white, uint64_t black);
-
     void update_all_piece_attacks();
+
+    void undo_move();
 
     /* PIECE FUNCTIONALITY */
     
     void create_piece(const char ch, uint8_t bit);
-
     Piece* select_piece(uint8_t bit);
     Piece* get_piece(uint8_t clicked_bit);
     void remove_piece(uint8_t piece_to_remove_bit);
