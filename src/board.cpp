@@ -235,7 +235,6 @@ bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 }
 
 // Don't use this right now but could be useful.
-
 void Board::update_all_piece_attacks() {
 
     for (auto& piece : pieces) {

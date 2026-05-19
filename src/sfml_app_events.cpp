@@ -46,18 +46,11 @@ void SFMLApp::on_key_pressed(sf::Event &event) {
     auto key = event.key.code;
 
     switch (key) {
-        // case sf::Keyboard::Tab:
-
-        //     // this'll get fucked by event and renderer but i dont care.
-        //     if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-        //     bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-        //     bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
-        //     break;
-        // case sf::Keyboard::Z:
-        //     if (Debug::enabled) {
-        //         undo_move();
-        //         is_whites_turn = !is_whites_turn;
-        //     }
+        case sf::Keyboard::Z:
+            if (Debug::enabled) {
+                board.undo_move();
+                board.is_whites_turn = !board.is_whites_turn;
+            }
         default: 
             return;
     }   
