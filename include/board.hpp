@@ -27,14 +27,9 @@ private:
 
     /* GAMESTATE */
     
+    // probably in app at some point.
     // Player* white_player;
     // Player* black_player;
-
-    /* DEBUG */
-
-    // sf::RenderWindow bitboard_window;
-    // std::vector<sf::RectangleShape> bitboard_window_squares;
-    // int bitboard_vec_index = 0;
 
     /* BITBOARDS */
 
