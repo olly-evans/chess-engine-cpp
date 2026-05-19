@@ -246,9 +246,6 @@ void Board::update_all_piece_attacks() {
 
 void Board::create_piece(const char id, uint8_t bit) {
 
-    std::cout << "creating... " << id << "\n";
-    // takes square size because it has to load textures etc..
-    // renderer should do that.
     switch (toupper(id)) {
 
         case 'P':
@@ -351,7 +348,7 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 
     for (auto& piece : pieces) {
         if (clicked_bit == piece->bit) 
-            return piece;
+            return piece.get();
     }
     return nullptr;
 }
@@ -367,12 +364,11 @@ bool Board::bit_has_piece(uint8_t clicked_bit) {
 
 void Board::remove_piece(uint8_t piece_to_remove_bit) {
 
-    auto it = std::find_if(pieces.begin(), pieces.end(), [piece_to_remove_bit](Piece* p) {
+    auto it = std::find_if(pieces.begin(), pieces.end(), [piece_to_remove_bit](const std::shared_ptr<Piece>& p) {
         return p->bit == piece_to_remove_bit;
     });
 
     if (it != pieces.end()) {
-        delete *it;        // free the memory
         pieces.erase(it);  // remove from vector
     }
 }
@@ -465,10 +461,4 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     */
 
     return true;  
-}
-
-/* FREES */
-
-void Board::free_pieces() {
-    for (auto& piece : pieces) {delete piece;}
 }

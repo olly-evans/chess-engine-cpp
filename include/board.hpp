@@ -79,7 +79,7 @@ public:
     bool is_whites_turn = true;
     
     Piece* selected_piece = nullptr;
-    std::vector<Piece*> pieces;
+    std::vector<std::shared_ptr<Piece>> pieces;
 
     // Vector of all bitboards.
     static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
@@ -124,6 +124,4 @@ public:
 
     void handle_piece_move(uint8_t clicked_bit);
     bool is_enpassant_capture(uint8_t clicked_bit);
-
-    void free_pieces();
 };

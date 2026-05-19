@@ -68,8 +68,8 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - castling, this'll be easy right!!
 
-- dirty_moves bool, can avoid recalculating moves perhaps.
+- dirty_moves bool, can avoid recalculating moves perhaps, perhaps store a white | black uint64_t, if white_occupancy | black_occupancy != to this we can recalculate.
 
-- getter and setter for piece pos.
+- debugging option to view a bitboard, just one for now.
 
-- board.selected_piece debug, some sort of infinite loop happening.
+- when using set_bit, auto-calculate file/rank.
