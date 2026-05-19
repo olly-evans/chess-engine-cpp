@@ -47,10 +47,12 @@ void SFMLApp::on_key_pressed(sf::Event &event) {
 
     switch (key) {
         case sf::Keyboard::Z:
-            if (Debug::enabled) {
-                board.undo_move();
-                board.is_whites_turn = !board.is_whites_turn;
-            }
+            if (!Debug::enabled)
+                return;
+            
+            board.undo_move();
+            board.is_whites_turn = !board.is_whites_turn;
+            
         default: 
             return;
     }   
