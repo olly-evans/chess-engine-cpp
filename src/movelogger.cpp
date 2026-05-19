@@ -13,6 +13,9 @@ void MoveLogger::show_algebraic_move_history() {
 
     // std::cout << "\033[2J\033[1;1H";
 
+    // dont print whole think, call after movehistory appended, get .back()
+    // and print info for this one move.
+    // that way it appends in terminal.
     for (int i = 0; i < move_history.size(); i++) {
         
         uint64_t selected_piece = 0ULL;
