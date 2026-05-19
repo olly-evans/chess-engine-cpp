@@ -1,60 +1,28 @@
-#include "util.hpp"
 #include "pieces.hpp"
 #include "board.hpp"
 #include "bitboardhelper.hpp"
 #include "movelogger.hpp"
+#include "sfml_app.hpp"
 
 #include <iostream>
 #include <filesystem>
 #include <cstdint>
 #include <string>
 
-Piece::Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
+Piece::Piece(char id, uint8_t b) : 
     id(id), 
-    window(w), 
-    bit(b),
-    board_square_size(b_squ_sz) {
+    bit(b) {
     
     is_white = (isupper(this->id));
-
-    // can we load each image once?
-    // perhaps loaded to each piece type or smth
-    if (texture.loadFromFile(get_texture_path())) {
-        sprite.setTexture(texture);
-
-        sf::FloatRect sprite_size = sprite.getGlobalBounds();
-        sprite.setScale(board_square_size / sprite_size.width, 
-                        board_square_size / sprite_size.height);
-    }
-}
-
-std::string Piece::resolve_texture_path() {
-    std::filesystem::path path = std::filesystem::current_path();
-    std::string color_prefix = (this->is_white ? "w" : "b");
-    char tmp_id = toupper(id);
-    return path.string() + "/assets/" + color_prefix + tmp_id + ".png";
-}
-
-std::string Piece::get_texture_path() {
-    return resolve_texture_path();
 }
 
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
-    this->has_moved = true;
+    // this->has_moved = true;
 }
 
 uint8_t Piece::get_bit() {
     return this->bit;
-}
-
-void Piece::draw(sf::RenderWindow& window) {
-
-    uint8_t square = BBHelper::bit_to_square(this->bit);
-    sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
-    sf::Vector2f pos = normalised_pos * (float)board_square_size;
-    sprite.setPosition(pos.x, pos.y);
-    window.draw(sprite);
 }
 
 void Piece::strip_pseudo_legal_attacks(Board& board) {
@@ -82,7 +50,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
         if (toupper(this->id) == 'K') {
             friendly_king = (1ULL << move_bit);
         } else {
-            friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
+            friendly_king = (this->is_white) ? board.bitboards[FenParser::W_KING] : board.bitboards[FenParser::B_KING];
         }        
 
         bool in_check = friendly_king & enemy_captures;
@@ -179,7 +147,7 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t pawn = (1ULL << this->bit);
 
-    uint64_t enemy_pawns = this->is_white ? Board::bitboards[B_PAWNS] : Board::bitboards[W_PAWNS];
+    uint64_t enemy_pawns = this->is_white ? Board::bitboards[FenParser::B_PAWNS] : Board::bitboards[FenParser::W_PAWNS];
 
     uint64_t west = (pawn << 1);
     uint64_t east = (pawn >> 1);
@@ -204,22 +172,22 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     if (enemy_pawns & (west) && west_moved_two && this->is_white) {
         en_passant_moves |= (west << 8);
-        this->en_passant_captures |= west;
+        this->en_passant_capture_bit |= west;
     }
 
     if (enemy_pawns & (east) && east_moved_two && this->is_white) {
         en_passant_moves |= (east << 8);
-        this->en_passant_captures |= east;
+        this->en_passant_capture_bit |= east;
     }
 
     if (enemy_pawns & (west) && west_moved_two && !this->is_white) {
         en_passant_moves |= (west >> 8);
-        this->en_passant_captures |= west;
+        this->en_passant_capture_bit |= west;
     }
 
     if (enemy_pawns & (east) && east_moved_two && !this->is_white) {
         en_passant_moves |= (east >> 8);
-        this->en_passant_captures |= east;
+        this->en_passant_capture_bit |= east;
     }
 
     return en_passant_moves;
@@ -227,17 +195,17 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
 void Pawn::strip_pseudo_legal_special_moves(Board& board) {
 
-    uint8_t ep_capture_bit = BBHelper::get_first_bit(this->en_passant_captures);
+    uint8_t ep_capture_bit = BBHelper::get_first_bit(this->en_passant_capture_bit);
     uint8_t ep_move_bit = this->is_white ? ep_capture_bit + 8 : ep_capture_bit - 8;
           
     uint64_t enemy_captures = board.get_simulated_enemy_captures(this, this->bit, ep_move_bit, ep_capture_bit);
 
-    uint64_t friendly_king = (this->is_white) ? board.bitboards[W_KING] : board.bitboards[B_KING];
+    uint64_t friendly_king = (this->is_white) ? board.bitboards[FenParser::W_KING] : board.bitboards[FenParser::B_KING];
 
     bool in_check = friendly_king & enemy_captures;
 
-    // so apparently en_passant_captures isnt the move bit its the capture bit, whos idea was that
-    if (in_check && BBHelper::get_bit(this->en_passant_captures, ep_capture_bit))
+    // so apparently en_passant_capture_bit isnt the move bit its the capture bit, whos idea was that
+    if (in_check && BBHelper::get_bit(this->en_passant_capture_bit, ep_capture_bit))
         this->captures = BBHelper::clear_bit(this->captures, ep_move_bit);
 }
 
@@ -596,14 +564,14 @@ bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
     */
     uint64_t king = (1ULL << this->bit);
-    uint64_t rooks = (this->is_white) ? Board::bitboards[W_ROOKS] : Board::bitboards[B_ROOKS];
+    uint64_t rooks = (this->is_white) ? Board::bitboards[FenParser::W_ROOKS] : Board::bitboards[FenParser::B_ROOKS];
 
     uint64_t king_start = (this->is_white) ? 0x8 : 0x800000000000000;
     uint64_t queenside_rook_start = (this->is_white) ? 0x80 : 0x8000000000000000;
 
 
-    if (this->has_moved)
-        return false;
+    // if (this->has_moved)
+    //     return false;
 
     if (!(king_start & king))
         return false;

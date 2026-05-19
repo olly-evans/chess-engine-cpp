@@ -20,52 +20,126 @@
 //     .
 // };
 
-
 std::vector<uint64_t> Board::bitboards;
 
-Board::Board(const unsigned int ww, const unsigned int wh, const std::string wn) :
-win_w(ww),
-win_h(wh),
-win_name(std::move(wn)),
-main_window(sf::VideoMode(win_w, win_h),
-win_name) {};
+Board::Board() {
 
-unsigned int board_square_size;
+    bitboards = {
+        w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
+        b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
+    };
 
-/* UTIL METHODS */
+    bitboard_names = {
+        'P', 'N', 'B', 'R', 'Q', 'K',
+        'p', 'n', 'b', 'r', 'q', 'k',
+    };
+};
 
-void Board::die(const std::string& err) {
-    main_window.close();
-    std::cerr << err << std::endl;
-    exit(1);
+/* INIT */
+
+void Board::init() {
+
+
+    // Selection window with empty colored squares to choose white/black.
+    
+    // this kinda doesn't matter right now.
+    // init_players();
+
+    // Init map of square names to bits.
+    BBHelper::init_name_to_bit();
+
+    // okey so in here somehwere we can find the players and see if we need to flip the board
+    // graphically. bitboards const.
+
+    // constructor???
+    
+
+    // for now i wont flip the board if we have two human players.
+    // so for now we'll assume one player is an Engine but as a Human.
+
+    // I like this for now. Keeps it in init and only runs if debug enabled.
+    // if (Debug::enabled) Board::init_bitboard_window_squares();
+
+    // What needs to happen if fen string is invalid.
+
+
+    // pass into board
+    // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
+    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    load_position_from_fen(fen);
 }
 
-bool Board::is_square_black(uint8_t i) {
-    uint8_t x = i % GRID_SZ;
-    uint8_t y = i / GRID_SZ;
-    return (x + y) % 2;
-}
+// void Board::init_players() {
 
-// event handler.
-int Board::mouse_win_pos_to_bit() {
-    // May need to be broken up into smaller functions.
-    sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
-    sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),
-                                    (mouse_window_pos.y / board_square_size));
-    int square = (mouse_square_pos.y * GRID_SZ) + mouse_square_pos.x;
-    return BBHelper::square_to_bit(square);
+//     bool is_white = true; //temp
+
+//     white_player = new Human(is_white);
+//     black_player = new Engine(!is_white);
+
+// }
+
+void Board::load_position_from_fen(std::string fen) {
+
+    /* Parses fen string and appropriately initialises bitboards. */
+
+    std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
+
+    // I want these hardcoded tokens to have seperate functions.
+    std::string position = fen_tokens[0];
+
+    // parse_fen_position();
+    uint8_t rank = 7, file = 0;
+    for (char ch : position) {
+
+        if (ch == '/') {
+            rank--;
+            file = 0;
+        } else if (isdigit(ch)) {
+            file += ch - '0';
+        } else if (isalpha(ch)) {
+            uint8_t bit = rank * 8 + (7 - file);
+
+            create_piece(ch, bit);
+            file++;
+
+            // Get correct piece type bitboard from ch.
+            uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
+            BBHelper::set_bit_by_ref(bitboard, bit);
+        }
+    }
+
+    is_whites_turn = (fen_tokens[1] == "w");
+
+    // parse_fen_enp();
+    // need to let the correct pawn know that this is now available.
+    std::string en_passant_target = fen_tokens[3];
+
+    if (en_passant_target == "-") 
+        return;
+    
+    uint8_t bit = BBHelper::square_name_to_bit(en_passant_target);
+    
+    uint64_t en_passant_bit = 1ULL << bit;
+
+    // get pawn that can capture here.
+    // append bit to its en_passant_capture_bit.
+
+    // Parse more tokens later if we want to.
 }
 
 /* BITBOARD METHODS */
 
 uint64_t Board::white_occupancy() {
-    return bitboards[W_PAWNS] | bitboards[W_KNIGHTS] | bitboards[W_BISHOPS] |
-           bitboards[W_ROOKS] | bitboards[W_QUEEN]   | bitboards[W_KING];
+    return bitboards[FenParser::Bitboards::W_PAWNS] | bitboards[FenParser::Bitboards::W_KNIGHTS] | bitboards[FenParser::Bitboards::W_BISHOPS] |
+           bitboards[FenParser::Bitboards::W_ROOKS] | bitboards[FenParser::Bitboards::W_QUEEN]   | bitboards[FenParser::Bitboards::W_KING];
 }
 
 uint64_t Board::black_occupancy() {
-    return bitboards[B_PAWNS] | bitboards[B_KNIGHTS] | bitboards[B_BISHOPS] |
-           bitboards[B_ROOKS] | bitboards[B_QUEEN]   | bitboards[B_KING];
+    return bitboards[FenParser::Bitboards::B_PAWNS] | bitboards[FenParser::Bitboards::B_KNIGHTS] | bitboards[FenParser::Bitboards::B_BISHOPS] |
+           bitboards[FenParser::Bitboards::B_ROOKS] | bitboards[FenParser::Bitboards::B_QUEEN]   | bitboards[FenParser::Bitboards::B_KING];
 }
 
 uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
@@ -141,7 +215,7 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
 
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
-    uint64_t king = bitboards[W_KING];
+    uint64_t king = bitboards[FenParser::Bitboards::W_KING];
     uint64_t enemy_captures = get_black_captures(white, black);
     if (enemy_captures & king)
         return true;
@@ -149,9 +223,10 @@ bool Board::white_king_in_check(uint64_t white, uint64_t black) {
     return false;
 }
 
+// also dont use rn, but eh
 bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 
-    uint64_t king = bitboards[B_KING];
+    uint64_t king = bitboards[FenParser::Bitboards::B_KING];
     uint64_t enemy_captures = get_white_captures(white, black);
 
     if (enemy_captures & king)
@@ -169,165 +244,30 @@ void Board::update_all_piece_attacks() {
     }
 }
 
-/* INIT */
-
-void Board::init() {
-
-
-    // Selection window with empty colored squares to choose white/black.
-    
-    // this kinda doesn't matter right now.
-    // init_players();
-
-    // Init map of square names to bits.
-    BBHelper::init_name_to_bit();
-
-    // okey so in here somehwere we can find the players and see if we need to flip the board
-    // graphically. bitboards const.
-
-    // Board::init_bitboards_from_fen(fen);
-    bitboards = {
-        w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
-        b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
-    };
-
-    bitboard_names = {
-        'P', 'N', 'B', 'R', 'Q', 'K',
-        'p', 'n', 'b', 'r', 'q', 'k',
-    };
-
-
-    init_get_board_square_size(board_square_size, win_h, win_w);
-    // init_board_coords();
-
-    // for now i wont flip the board if we have two human players.
-    // so for now we'll assume one player is an Engine but as a Human.
-
-    init_main_window_squares();
-
-    // I like this for now. Keeps it in init and only runs if debug enabled.
-    if (Debug::enabled) Board::init_bitboard_window_squares();
-
-    // What needs to happen if fen string is invalid.
-
-    // "8/8/8/2k5/3pP3/8/8/4K3 b - e3 0 1" enpassant check test fen.
-
-    // pass into board
-    // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
-    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    init_position_from_fen(ep_discovered_check);
-}
-
-// void Board::init_players() {
-
-//     bool is_white = true; //temp
-
-//     white_player = new Human(is_white);
-//     black_player = new Engine(!is_white);
-
-// }
-
-void Board::init_get_board_square_size(uint32_t& sz, const unsigned win_h, const unsigned win_w) {
-    if ((win_h % GRID_SZ) != 0 | (win_w % GRID_SZ) != 0) die("Window size must support eight squares.");
-    sz = win_h / GRID_SZ;
-}
-
-void Board::init_main_window_squares() {
-
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
-        sf::Vector2f pos = normalised_pos * (float)board_square_size;
-        
-        sf::RectangleShape rec(sf::Vector2f(board_square_size, board_square_size));
-
-        rec.setPosition(pos);
-        rec.setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-        squares.insert(squares.begin(), rec);
-    }
-}
-
-void Board::init_bitboard_window_squares() {
-
-    // From A8-H1.
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
-        sf::Vector2f pos = normalised_pos * (float)board_square_size;
-        bitboard_window_squares.emplace_back(sf::Vector2f(board_square_size, board_square_size));
-        bitboard_window_squares[i].setPosition(pos);
-    }
-}
-
-void Board::init_position_from_fen(std::string fen) {
-
-    /* Parses fen string and appropriately initialises bitboards. */
-
-    std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
-
-
-    // I want these hardcoded tokens to have seperate functions.
-    std::string board = fen_tokens[0];
-    int rank = 7, file = 0;
-    for (char ch : board) {
-
-        if (ch == '/') {
-            rank--;
-            file = 0;
-        } else if (isdigit(ch)) {
-            file += ch - '0';
-        } else if (isalpha(ch)) {
-            int bit = rank * 8 + (7 - file);
-
-            create_piece(ch, bit);
-            file++;
-
-            // Get correct piece type bitboard from ch.
-            uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
-            BBHelper::set_bit_by_ref(bitboard, bit);
-        }
-    }
-
-    is_whites_turn = (fen_tokens[1] == "w");
-
-    // need to let the correct pawn know that this is now available.
-    std::string en_passant_target = fen_tokens[3];
-
-    if (en_passant_target == "-") 
-        return;
-    
-    uint8_t bit = BBHelper::square_name_to_bit(en_passant_target);
-    
-    uint64_t en_passant_bit = 1ULL << bit;
-
-    // get pawn that can capture here.
-    // append bit to its en_passant_captures.
-
-    // Parse more tokens later if we want to.
-}
-
 void Board::create_piece(const char id, uint8_t bit) {
 
+    std::cout << "creating... " << id << "\n";
+    // takes square size because it has to load textures etc..
+    // renderer should do that.
     switch (toupper(id)) {
 
         case 'P':
-            pieces.emplace_back(new Pawn(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Pawn(id, bit));
             break;
         case 'N':
-            pieces.emplace_back(new Knight(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Knight(id, bit));
             break;
         case 'B':
-            pieces.emplace_back(new Bishop(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Bishop(id, bit));
             break;
         case 'R':
-            pieces.emplace_back(new Rook(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Rook(id, bit));
             break;
         case 'Q':
-            pieces.emplace_back(new Queen(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new Queen(id, bit));
             break;
         case 'K':
-            pieces.emplace_back(new King(id, main_window, bit, board_square_size));
+            pieces.emplace_back(new King(id, bit));
             break;
         default: break;
     }
@@ -345,143 +285,6 @@ void Board::create_piece(const char id, uint8_t bit) {
 //     }
 // }
 
-/* RENDER */
-
-// I'm thinking render belongs in its own module. With as much sfml logic as possible.
-void Board::render() {
-    render_main_window();
-    if (Debug::enabled) render_bitboard_window();
-}
-
-void Board::render_main_window() {
-
-    /* 
-    *
-    *   Captures change the square color to stand out more, thus must
-    *   be rendered before we redraw the squares vector to not have any
-    *   delay when using waitEvent().
-    * 
-    */
-
-    main_window.clear();
-    if (selected_piece) render_capture_highlights();
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {main_window.draw(squares[i]);}
-    if (selected_piece) render_move_highlights();
-
-    // render_board_coords();
-
-    for (auto& piece : pieces) {piece->draw(main_window);}
-    main_window.display();
-}
-
-void Board::render_move_highlights() {
-
-    /* Renders turqoise circles to the square the selected piece can move. */
-    
-    float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
-    float radius = board_square_size * radius_percent_of_squares;
-
-    sf::Color circle_color = TURQOISE;
-
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        
-        // Squares indexed from A8 to H1, forgive me thus.
-        uint8_t square = GRID_NUM_SQUARES - i - 1;
-
-        if (!BBHelper::get_bit(selected_piece->moves, i)) continue;
-        
-        sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
-        sf::Vector2f pos = normalised_pos * (float)board_square_size;
-
-        // Offset to centre circle in square. Top left placed at pos.
-        pos.x += ((float)board_square_size / 2) - radius;
-        pos.y += ((float)board_square_size / 2) - radius;
-
-        sf::CircleShape circle;
-
-        circle.setPosition(pos);
-        circle.setRadius(radius);
-        circle.setFillColor(circle_color);
-
-        main_window.draw(circle);
-    }
-}
-
-void Board::render_capture_highlights() {
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (BBHelper::get_bit(selected_piece->captures, i)) 
-            squares[i].setFillColor(TURQOISE);
-    }
-}
-
-void Board::render_bitboard_window() {
-    bitboard_window.clear();
-    for (auto& squ : bitboard_window_squares) {bitboard_window.draw(squ);}
-    Debug::draw_cycle_bitboard(bitboard_window, win_w, win_h, bitboards, bitboard_names, bitboard_vec_index, bitboard_window_squares);
-    bitboard_window.display();
-}
-
-/* RUN */
-
-void Board::run() {
-    while (main_window.isOpen()) {
-        handle_events();
-        render();
-    }
-    free_pieces(); 
-}
-
-/* RUN -> EVENT HANDLING */
-
-void Board::handle_events() {
-
-    sf::Event event;
-
-    if (main_window.waitEvent(event)) {
-        on_main_window_event(event);
-    }
-
-    if (bitboard_window.isOpen()) {
-        sf::Event debug_event;
-        while (bitboard_window.pollEvent(debug_event)) {
-            on_bitboard_window_event(debug_event);
-        }
-    }
-}
-
-void Board::on_main_window_event(sf::Event &event) {
-
-
-    if (event.type == sf::Event::Closed) main_window.close();
-    if (event.type == sf::Event::KeyPressed) on_key_pressed(event);
-    if (event.type == sf::Event::MouseButtonPressed) on_mouse_press(event);
-}
-
-void Board::on_bitboard_window_event(sf::Event &event) {
-    if (event.type == sf::Event::Closed) bitboard_window.close();
-}
-
-/* KEYPRESSES */
-
-void Board::on_key_pressed(sf::Event &event) {
-
-    auto key = event.key.code;
-
-    switch (key) {
-        case sf::Keyboard::Tab:
-            if (!bitboard_window.isOpen() && Debug::enabled) bitboard_window.create(sf::VideoMode(win_w, win_h), bitboard_names[bitboard_vec_index]);
-            bitboard_vec_index = (bitboard_vec_index + 1) % bitboards.size();
-            bitboard_window.setTitle(bitboard_names[bitboard_vec_index]);
-            break;
-        case sf::Keyboard::Z:
-            if (Debug::enabled) {
-                undo_move();
-                is_whites_turn = !is_whites_turn;
-            }
-        default: 
-            return;
-    }   
-}
 
 void Board::undo_move() {
 
@@ -491,8 +294,8 @@ void Board::undo_move() {
     Move& last_move = MoveLogger::move_history.back();
 
     // Just so if we undo a move whilst user has piece selected we don't get funny business.
-    if (selected_piece) 
-        reset_move_and_capture_highlights(selected_piece->bit);
+    // if (selected_piece) 
+    //     reset_move_and_capture_highlights(selected_piece->bit);
 
     uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.moved_id, bitboards);
 
@@ -516,89 +319,32 @@ void Board::undo_move() {
     MoveLogger::move_history.pop_back();
 }
 
-/* MOUSE PRESSES */
-
-void Board::on_mouse_press(sf::Event &event) {
-
-    auto mouse_press = event.mouseButton.button;
-
-    switch (mouse_press) {
-        case sf::Mouse::Left:
-            on_left_mouse_press();
-            break;
-    }
-}
-
-void Board::on_left_mouse_press() {
-
-    /* 
-     * Handles left mouse presses wowza!
-     *
-     * If we return early in this function it essentially just means wait until next left mouse press. 
-     * 
-     */
-
-    uint8_t clicked_bit = mouse_win_pos_to_bit();
-
-    if (!selected_piece) {
-        selected_piece = select_piece(clicked_bit);
-        return;
-    }
-
-    // If our click is not an move/capture then go again/reset.
-    if (!BBHelper::get_bit(selected_piece->moves, clicked_bit) && !BBHelper::get_bit(selected_piece->captures, clicked_bit)) {
-
-        // Let user select a new piece without clicking to reset.
-        reset_move_and_capture_highlights(selected_piece->bit);
-        selected_piece = select_piece(clicked_bit); // Can be null which is fine ofc.
-        return;
-    }
-
-    // Below be executed if we have a selected piece and click on a valid move/capture square.
-    uint8_t old_bit = selected_piece->bit;
-
-    handle_piece_move(clicked_bit);
-    reset_move_and_capture_highlights(old_bit);    
-    
-    // MoveLogger::show_algebraic_move_history();
-
-    is_whites_turn = !is_whites_turn;
-}
-
 /* PIECE FUNCTIONALITY */
 
 Piece* Board::select_piece(uint8_t clicked_bit) {
 
+    // perhaps just make a an event_handler function. does make sense.
+    // does need squares though
     Piece* piece = get_piece(clicked_bit);
-    if (!piece) return nullptr;
+    if (!piece) 
+        return nullptr;
 
     // TODO:
     // Works fine but will eventually be a dependancy nightmare, perhaps move checks to gamestate class.
-    // bool can_white_move()
+    // bool can_white_movcreatee()
     // bool can_black_move()
     
-    if (!piece->is_white && is_whites_turn) return nullptr;
-    if (piece->is_white && !is_whites_turn) return nullptr;
+    if (!piece->is_white && is_whites_turn) 
+        return nullptr;
 
-    // Highlight the square they clicked on.
-    squares[clicked_bit].setFillColor(TURQOISE);
+    if (piece->is_white && !is_whites_turn) 
+        return nullptr;
 
     // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
     piece->strip_pseudo_legal_attacks(*this);
     
     return piece;
-}
-
-void Board::reset_move_and_capture_highlights(uint8_t selected_bit) {
-
-    squares[selected_bit].setFillColor(is_square_black(selected_bit) ? MEDIUM_BROWN : WARM_CREAM);
-    
-    for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-        if (!BBHelper::get_bit(selected_piece->captures, i)) continue;
-        squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
-    }
-    selected_piece = nullptr;
 }
 
 Piece* Board::get_piece(uint8_t clicked_bit) {
@@ -613,7 +359,8 @@ Piece* Board::get_piece(uint8_t clicked_bit) {
 bool Board::bit_has_piece(uint8_t clicked_bit) {
     
     for (auto& bitboard : bitboards) {
-        if (bitboard & (1ULL << clicked_bit)) return true;
+        if (bitboard & (1ULL << clicked_bit)) 
+            return true;
     }
     return false;
 }
@@ -663,6 +410,7 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     // handle_move();
     // split it up.
 
+        // yeah i want this split up .
     for (auto& bitboard: bitboards) {
 
         // goes first because otherwise we move the piece before checking if enpassant.
@@ -695,6 +443,7 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
+    // can do this in one loop and pass both bits.
     if (bit_has_piece(clicked_bit))
         return false;
 
@@ -704,9 +453,9 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!bit_has_piece(ep_capture_bit))
         return false;
 
-    // this is the only place we use en_passant_captures...
+    // this is the only place we use en_passant_capture_bit...
     // could just have this is == 0ULL or smth.
-    if (!(pawn->en_passant_captures & (1ULL << (ep_capture_bit))))
+    if (!(pawn->en_passant_capture_bit & (1ULL << (ep_capture_bit))))
         return false;
 
     /* 

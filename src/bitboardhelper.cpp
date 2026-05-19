@@ -1,5 +1,5 @@
 #include "bitboardhelper.hpp"
-#include "util.hpp"
+#include "sfml_app.hpp"
 
 #include <cmath>
 
@@ -34,11 +34,11 @@ int BBHelper::square_to_bit(int square) {
     return GRID_NUM_SQUARES - square - 1;
 }
 
-int BBHelper::bit_to_square(int bit) {
+uint8_t BBHelper::bit_to_square(uint8_t bit) {
     return GRID_NUM_SQUARES - bit - 1;
 }
 
-void BBHelper::set_bit_by_ref(uint64_t& b, int bit) {
+void BBHelper::set_bit_by_ref(uint64_t& b, uint8_t bit) {
     b |= (1ULL << bit);
 }
 

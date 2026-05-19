@@ -1,4 +1,3 @@
-
 #include "fenparser.hpp"
 
 std::vector<std::string> FenParser::split(const std::string& str) {
@@ -56,5 +55,4 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitbo
         return dummy;
 
     return bitboards[index];
-    
 }

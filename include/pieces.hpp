@@ -3,58 +3,41 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
-
 #include <vector>
 #include <string>
 #include <filesystem>
 #include <cstdint>
 
-#include "util.hpp"
-
-// get rid of this thing ffs.
-enum class Color {BLACK, WHITE};
-
-class Board;
+class Board; // this is only here for stip pseudo legal moves.
 
 class Piece {
 
 protected:
-    uint8_t board_square_size;
 
     sf::Texture texture;
-    sf::Sprite sprite;
-    
-    sf::RenderWindow& window;
-
-
-    std::string resolve_texture_path();
 
 
 public:
-    Piece(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz);
+    Piece(char id, uint8_t b);
 
     bool is_white;
-    bool has_moved = false;
+
+    sf::Sprite sprite;
 
     char id;
 
     uint64_t moves = 0ULL;
     uint64_t captures = 0ULL;
-    uint64_t bit = 0ULL;
-    
-    virtual std::string get_texture_path();
+    uint8_t bit;
 
     void set_bit(uint8_t bit);
     uint8_t get_bit();
-
-    void draw(sf::RenderWindow& window);
 
     // All instances return the moves and assign this->captures.
     virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) = 0;
 
     void strip_pseudo_legal_attacks(Board& board);
     virtual void strip_pseudo_legal_special_moves(Board& board) = 0;
-
     
     uint64_t get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_south_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb);
@@ -70,14 +53,10 @@ public:
 
 class Pawn : public Piece {
 public:
-    Pawn(char id, sf::RenderWindow& w, uint8_t bitboard, int b_squ_sz) : 
-        Piece(id, w, bitboard, b_squ_sz) {}
+    Pawn(char id, uint8_t bitboard) : 
+        Piece(id, bitboard) {}
     
-    uint64_t en_passant_captures = 0ULL;
-    
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
+    uint64_t en_passant_capture_bit = 0ULL;
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
@@ -91,17 +70,9 @@ public:
 
 class Knight : public Piece {
 public:
-    const int offsets[8][2] = {
-        {-2, -1}, {-2, 1}, {2, -1}, {2, 1},
-        {-1, -2}, {1, -2}, {-1, 2}, {1, 2}
-    };
 
-    Knight(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, w, b, b_squ_sz) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
+    Knight(char id, uint8_t b) : 
+        Piece(id, b) {}
     
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
         
@@ -111,12 +82,8 @@ public:
 
 class Bishop : public Piece {
 public:
-    Bishop(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, w, b, b_squ_sz) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
+    Bishop(char id, uint8_t b) : 
+        Piece(id, b) {}
     
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
@@ -125,12 +92,8 @@ public:
 
 class Rook : public Piece {
 public:
-    Rook(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, w, b, b_squ_sz) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
+    Rook(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
     
@@ -139,12 +102,8 @@ public:
 
 class Queen : public Piece {
 public:
-    Queen(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, w, b, b_squ_sz) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
+    Queen(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
@@ -153,12 +112,8 @@ public:
 
 class King : public Piece {
 public:
-    King(char id, sf::RenderWindow& w, uint8_t b, int b_squ_sz) : 
-        Piece(id, w, b, b_squ_sz) {}
-
-    virtual std::string get_texture_path() override {
-        return resolve_texture_path();
-    }
+    King(char id, uint8_t b) : 
+        Piece(id, b) {}
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
     
