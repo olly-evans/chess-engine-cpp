@@ -6,11 +6,11 @@
 
 /*  
     
-    Methods for SFML events.
+    Methods for handling SFML events in SFMLApp.
     
 */
 
-int SFMLApp::mouse_win_pos_to_bit() {
+uint32_t SFMLApp::mouse_win_pos_to_bit() {
     // May need to be broken up into smaller functions.
     sf::Vector2i mouse_window_pos = sf::Mouse::getPosition(main_window);
     sf::Vector2i mouse_square_pos((mouse_window_pos.x / board_square_size),

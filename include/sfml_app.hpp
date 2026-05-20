@@ -72,7 +72,7 @@ public:
 
     /* EVENT HANDLING */
 
-    int mouse_win_pos_to_bit();
+    uint32_t mouse_win_pos_to_bit();
 
     void handle_events();
     void on_main_window_event(sf::Event &event);

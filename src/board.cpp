@@ -38,7 +38,7 @@ Board::Board() {
 
 void Board::init() {
 
-    pieces.reserve(32); /* Means vector should remain in contiguous region and not be completely reallocated. */
+    pieces.reserve(NUM_PIECE_TYPES*3); /* Means vector should remain in contiguous region and not be completely reallocated. */
 
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();

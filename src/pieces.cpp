@@ -18,6 +18,8 @@ Piece::Piece(char id, uint8_t b) :
 
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
+
+    this->file = BBHelper::get_piece_file(this->bit);
     // this->has_moved = true;
 }
 
@@ -266,13 +268,12 @@ uint64_t Piece::get_north_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint64_t north_west_moves = 0ULL;
     const uint8_t north_west_offset = 9;
 
-    uint8_t piece_file = BBHelper::get_piece_file(piece);
     uint8_t move_file;
         
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
         // this will be until we hit the end of the board, always 7 if no pieces in the way.
-        move_file = piece_file - i;
+        move_file = this->file - i;
 
         if (w_bb & north_west_moves) break;
         if (b_bb & north_west_moves) break;
@@ -291,14 +292,11 @@ uint64_t Piece::get_north_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint64_t north_east_moves = 0ULL;
     const uint8_t north_east_offset = 7;
 
-    uint8_t piece_file;
     uint8_t move_file;
     
-    piece_file = BBHelper::get_piece_file(piece);
-
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
-        move_file = piece_file + i;
+        move_file = this->file + i;
 
         if (w_bb & north_east_moves) break;
         if (b_bb & north_east_moves) break;
@@ -317,16 +315,12 @@ uint64_t Piece::get_south_west_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint64_t north_west_moves = 0ULL;
     const uint8_t north_west_offset = 7;
 
-    uint8_t piece_file;
     uint8_t move_file;
-
-    // Perhaps a bitboard function.
-    piece_file = BBHelper::get_piece_file(piece);
 
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
         // this will be until we hit the end of the board, always 7 if no pieces in the way.
-        move_file = piece_file - i;
+        move_file = this->file - i;
 
         if (w_bb & north_west_moves) break;
         if (b_bb & north_west_moves) break;
@@ -345,14 +339,11 @@ uint64_t Piece::get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     uint64_t north_east_moves = 0ULL;
     const uint8_t north_east_offset = 9;
 
-    uint8_t piece_file;
     uint8_t move_file;
     
-    piece_file = BBHelper::get_piece_file(piece);
-
     for (uint8_t i = 0; i < GRID_SZ; i++) {
 
-        move_file = piece_file + i;
+        move_file = this->file + i;
 
         if (w_bb & north_east_moves) break;
         if (b_bb & north_east_moves) break;
@@ -526,9 +517,8 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     moves |= (king >> 8);
     moves |= (king >> 9);
 
-    uint8_t kings_file = BBHelper::get_piece_file(king);
-    if (kings_file == 7) moves &= ~BBHelper::file_masks[kings_file];
-    if (kings_file == 0) moves &= ~BBHelper::file_masks[kings_file];
+    if (this->file == 7) moves &= ~BBHelper::file_masks[this->file];
+    if (this->file == 0) moves &= ~BBHelper::file_masks[this->file];
 
     uint64_t enemy_occupancy = (is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);

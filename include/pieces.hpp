@@ -25,7 +25,9 @@ public:
 
     uint64_t moves = 0ULL; /* Bits a piece can move to with no captuere. */
     uint64_t captures = 0ULL; /* A bitboard of active bits a piece can capture an enemy piece on. */
+
     uint8_t bit; /* Where the piece is on a bitboard, where bit 0 is H1 and 8 is H2. */
+    uint8_t file;
 
 public:
     Piece(char id, uint8_t b);
