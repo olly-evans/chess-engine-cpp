@@ -14,6 +14,9 @@
 #include <cmath>
 #include <array>
 
+constexpr uint8_t NUM_PIECE_TYPES = 12; /* White rook, black pawn etc.. */
+
+
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
 //     virtual void index_to_2d(int i) = 0;
@@ -34,7 +37,6 @@ private:
 
     /* BITBOARDS */
 
-    
     uint64_t w_pawns = 0ULL;
     uint64_t w_knights = 0ULL;
     uint64_t w_bishops = 0ULL;
@@ -83,7 +85,7 @@ public:
     std::vector<std::shared_ptr<Piece>> pieces;
 
     static std::vector<uint64_t> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
-    std::array<char, 12> bitboard_names; /* Maps bitboard to a char r,R,p,P etc.. */
+    std::array<char, NUM_PIECE_TYPES> bitboard_names; /* Maps bitboard to a char r,R,p,P etc.. */
 
 public:
     Board();
