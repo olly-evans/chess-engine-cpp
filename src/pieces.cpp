@@ -20,6 +20,8 @@ void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
 
     this->file = BBHelper::get_piece_file(this->bit);
+    
+    // this->rank = BBHelper::get_piece_rank(this->bit);
     // this->has_moved = true;
 }
 

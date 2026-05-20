@@ -72,8 +72,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - debugging option to view a bitboard, just one for now.
 
-- when using set_bit, auto-calculate file/rank.
-
 - player and engine users in init() somehwere.
 
 - gui to select color for user in init().

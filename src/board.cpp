@@ -21,7 +21,8 @@
 
 std::vector<uint64_t> Board::bitboards;
 
-Board::Board() {
+Board::Board(std::string fen) :
+    fen(fen){
 
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
@@ -43,18 +44,7 @@ void Board::init() {
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
    
-    // I like this for now. Keeps it in init and only runs if debug enabled.
-    // if (Debug::enabled) Board::init_bitboard_window_squares();
-
-    // What needs to happen if fen string is invalid.
-
-
-    // pass into board
-    // good check test: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    // std::string ep_discovered_check = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
-    // std::string fen = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1";
-    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
-    // std::string fen = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1";
+    // What needs to happen if fen string is invalid.   
     load_position_from_fen(fen);
 }
 
@@ -69,7 +59,7 @@ void Board::init() {
 
 void Board::load_position_from_fen(std::string fen) {
 
-    /* Parses fen string and appropriately initialises bitboards. */
+    /* Parses fen string to appropriately initialise bitboards and create needed pieces. */
 
     std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
@@ -395,6 +385,9 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     // split it up.
 
         // yeah i want this split up .
+
+    // perhaps use the move in move_history this way its normalised data not specific.
+    
     for (auto& bitboard: bitboards) {
 
         // goes first because otherwise we move the piece before checking if enpassant.
