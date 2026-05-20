@@ -29,6 +29,10 @@ public:
 
     static void append_move(Move move);
     static void show_algebraic_move_history();
+    static void show_algebraic_moves();
+    static void move_to_algebraic_notation(Move move);
+
+
 
     static void log_move(Board& board,
                           uint8_t clicked_bit, 

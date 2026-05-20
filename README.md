@@ -73,3 +73,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - debugging option to view a bitboard, just one for now.
 
 - when using set_bit, auto-calculate file/rank.
+
+-fix movelogging to print the last move in algebraic notation not the whole move history with each print.

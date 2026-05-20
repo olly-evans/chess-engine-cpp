@@ -101,7 +101,7 @@ void SFMLApp::on_left_mouse_press() {
     board.handle_piece_move(clicked_bit);
     reset_move_and_capture_highlights(old_bit);    
     
-    MoveLogger::show_algebraic_move_history();
+    MoveLogger::show_algebraic_moves();
 
     board.is_whites_turn = !board.is_whites_turn;
 }
