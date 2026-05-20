@@ -7,23 +7,16 @@ std::vector<Move> MoveLogger::move_history;
 
 void MoveLogger::show_algebraic_move_history() {
 
-    if (move_history.size() < 1) return;
+    if (move_history.empty()) 
+        return;
 
-    // std::cout << "Updated Move History:\n";
-
-    // std::cout << "\033[2J\033[1;1H";
-
-    // dont print whole think, call after movehistory appended, get .back()
-    // and print info for this one move.
-    // that way it appends in terminal.
     for (int i = 0; i < move_history.size(); i++) {
-        
         move_to_algebraic_notation(move_history[i]);
     }
 }
 
 void MoveLogger::show_algebraic_moves() {
-    if (move_history.size() < 1)
+    if (move_history.empty())
         return;
 
     Move& last_move = move_history.back();

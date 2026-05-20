@@ -25,14 +25,12 @@ struct Move {
 class MoveLogger {
 public:
 
-    static std::vector<Move> move_history;
+    static std::vector<Move> move_history; /* Vector of move structs containing the moves played throughout the game. */
 
-    static void append_move(Move move);
+public:
     static void show_algebraic_move_history();
     static void show_algebraic_moves();
     static void move_to_algebraic_notation(Move move);
-
-
 
     static void log_move(Board& board,
                           uint8_t clicked_bit, 

@@ -12,6 +12,7 @@
 #include <sstream>
 #include <iostream>
 #include <cmath>
+#include <array>
 
 // class AbstractBoard {
 //     virtual void die(std::string) = 0;
@@ -76,14 +77,13 @@ private:
 public:
 
 
-    bool is_whites_turn = true;
+    bool is_whites_turn = true; /* Who's turn is it, allows user to select a piece depending. */
     
-    Piece* selected_piece = nullptr;
+    Piece* selected_piece = nullptr; /* Pointer to user selected piece. */
     std::vector<std::shared_ptr<Piece>> pieces;
 
-    // Vector of all bitboards.
-    static std::vector<uint64_t> bitboards; // White in order of piece value, then black in order of piece value. 12 elements.
-    std::vector<char> bitboard_names;
+    static std::vector<uint64_t> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
+    std::array<char, 12> bitboard_names; /* Maps bitboard to a char r,R,p,P etc.. */
 
 public:
     Board();

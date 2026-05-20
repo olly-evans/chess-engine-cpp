@@ -8,7 +8,7 @@
 #include <filesystem>
 #include <cstdint>
 
-class Board; // this is only here for stip pseudo legal moves.
+class Board; // this is only here for strip pseudo legal moves.
 
 class Piece {
 
@@ -16,19 +16,19 @@ protected:
 
     sf::Texture texture;
 
+public:
+    bool is_white; /* Color of piece bool assigned in constructor for readability as opposed to isupper(piece->id) etc..*/
+
+    sf::Sprite sprite; /* Assigned sprite to draw for this piece from SFMLApp::texture_cache. */
+
+    char id; /* Contains piece and its color, r = Black Rook and R = White Rook as in fen notation. */
+
+    uint64_t moves = 0ULL; /* Bits a piece can move to with no captuere. */
+    uint64_t captures = 0ULL; /* A bitboard of active bits a piece can capture an enemy piece on. */
+    uint8_t bit; /* Where the piece is on a bitboard, where bit 0 is H1 and 8 is H2. */
 
 public:
     Piece(char id, uint8_t b);
-
-    bool is_white;
-
-    sf::Sprite sprite;
-
-    char id;
-
-    uint64_t moves = 0ULL;
-    uint64_t captures = 0ULL;
-    uint8_t bit;
 
     void set_bit(uint8_t bit);
     uint8_t get_bit();
