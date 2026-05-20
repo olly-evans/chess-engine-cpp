@@ -29,12 +29,6 @@ class Board {
 
 private:
 
-    /* GAMESTATE */
-    
-    // probably in app at some point.
-    // Player* white_player;
-    // Player* black_player;
-
     /* BITBOARDS */
 
     uint64_t w_pawns = 0ULL;
@@ -51,7 +45,7 @@ private:
     uint64_t b_queen = 0ULL;
     uint64_t b_king = 0ULL;    
 
-        /*
+    /*
 
     uint64_t w_pawns bitboard initial positions example.
 
@@ -78,10 +72,9 @@ private:
 
 public:
 
-
     bool is_whites_turn = true; /* Who's turn is it, allows user to select a piece depending. */
     
-    Piece* selected_piece = nullptr; /* Pointer to user selected piece. */
+    std::shared_ptr<Piece> selected_piece = nullptr; /* Pointer to user selected piece. */
     std::vector<std::shared_ptr<Piece>> pieces;
 
     static std::vector<uint64_t> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
@@ -118,8 +111,8 @@ public:
     /* PIECE FUNCTIONALITY */
     
     void create_piece(const char ch, uint8_t bit);
-    Piece* select_piece(uint8_t bit);
-    Piece* get_piece(uint8_t clicked_bit);
+    std::shared_ptr<Piece> select_piece(uint8_t bit);
+    std::shared_ptr<Piece> get_piece(uint8_t clicked_bit);
     void remove_piece(uint8_t piece_to_remove_bit);
 
     bool bit_has_piece(uint8_t clicked_bit);

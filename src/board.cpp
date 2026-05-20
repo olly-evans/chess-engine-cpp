@@ -13,8 +13,7 @@
 #include <cmath>
 
 // class AbstractBoard {
-//     virtual void die(std::string) = 0;
-//
+//     Board::Board() {}
 //     .
 //     .
 //     .
@@ -39,24 +38,11 @@ Board::Board() {
 
 void Board::init() {
 
-
-    // Selection window with empty colored squares to choose white/black.
-    
-    // this kinda doesn't matter right now.
-    // init_players();
+    pieces.reserve(32); /* Means vector should remain in contiguous region and not be completely reallocated. */
 
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
-
-    // okey so in here somehwere we can find the players and see if we need to flip the board
-    // graphically. bitboards const.
-
-    // constructor???
-    
-
-    // for now i wont flip the board if we have two human players.
-    // so for now we'll assume one player is an Engine but as a Human.
-
+   
     // I like this for now. Keeps it in init and only runs if debug enabled.
     // if (Debug::enabled) Board::init_bitboard_window_squares();
 
@@ -298,7 +284,7 @@ void Board::undo_move() {
     BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
     BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
     
-    Piece* moved_piece = get_piece(last_move.end_bit);
+    std::shared_ptr<Piece> moved_piece = get_piece(last_move.end_bit);
     moved_piece->set_bit(last_move.start_bit);
     
     // If the move didn't involve a capture we can clean up and return early.
@@ -317,11 +303,11 @@ void Board::undo_move() {
 
 /* PIECE FUNCTIONALITY */
 
-Piece* Board::select_piece(uint8_t clicked_bit) {
+std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
 
     // perhaps just make a an event_handler function. does make sense.
     // does need squares though
-    Piece* piece = get_piece(clicked_bit);
+    std::shared_ptr<Piece> piece = get_piece(clicked_bit);
     if (!piece) 
         return nullptr;
 
@@ -343,11 +329,14 @@ Piece* Board::select_piece(uint8_t clicked_bit) {
     return piece;
 }
 
-Piece* Board::get_piece(uint8_t clicked_bit) {
+std::shared_ptr<Piece> Board::get_piece(uint8_t clicked_bit) {
 
     for (auto& piece : pieces) {
-        if (clicked_bit == piece->bit) 
-            return piece.get();
+        if (!(clicked_bit == piece->bit))
+            continue;
+
+        std::shared_ptr<Piece> tmp = piece;
+        return tmp;
     }
     return nullptr;
 }
@@ -433,8 +422,8 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
 
-    Pawn* pawn = dynamic_cast<Pawn*>(selected_piece);
-
+    std::shared_ptr<Pawn> pawn = std::dynamic_pointer_cast<Pawn>(selected_piece);
+    
     if (!pawn) 
         return false;
 
