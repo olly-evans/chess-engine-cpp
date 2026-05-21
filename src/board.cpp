@@ -186,6 +186,7 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
 
         enemy_captures = get_white_captures(white_occ, black_occ);
     }  
+    
     return enemy_captures;
 }
 

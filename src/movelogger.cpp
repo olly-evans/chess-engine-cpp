@@ -60,6 +60,7 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
     uint8_t capture_bit;
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
+    // thisll e interesting when we add castling
     bool is_ep_capture = board.is_enpassant_capture(clicked_bit);
     bool has_capture   = board.bit_has_piece(clicked_bit) || is_ep_capture;
 
@@ -67,10 +68,14 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
 
     // find the bitboards char to set id of captured piece.
     
-    // can i do this without a loop.
-    // id -> bitboard_names.
+    // i want to get the captured_id.
+    // we have a capture_bit.
 
-    // dont know the id of the captured piece, cant think of a better way to do this rn.
+    // convert bit to id.
+    // in other words bit to index in bitboards.
+
+    // or all bitboards then check if BBHelper
+
     uint8_t i;
     for (i = 0; i < board.bitboard_names.size(); i++) {
         if (board.bitboards[i] & (1ULL << capture_bit))

@@ -100,11 +100,8 @@ void SFMLApp::on_left_mouse_press() {
 
     Move move = MoveLogger::format_move(board, clicked_bit); // not sure what arguments to take here.
     MoveLogger::log_move(move);
-    // board.make_move(move);
-
-    // take move.
-    // board.handle_piece_move(clicked_bit);
     board.make_move(move);
+    
     reset_move_and_capture_highlights(old_bit);    
     
     MoveLogger::show_algebraic_moves();
