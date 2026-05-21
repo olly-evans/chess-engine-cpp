@@ -51,7 +51,9 @@ void MoveLogger::log_move(Board& board,
                           ) {
     
     /* Logs move and calculates has_capture, captured_id and capture_bit for Move struct */
+    
 
+    // need all this formatting before move in leftmousepress.
     uint8_t capture_bit;
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
@@ -61,7 +63,9 @@ void MoveLogger::log_move(Board& board,
     capture_bit = (!is_ep_capture) ? clicked_bit : ep_capture_bit;
 
     // find the bitboards char to set id of captured piece.
-
+    
+    // can i do this without a loop.
+    // id -> bitboard_names.
     uint8_t i;
     for (i = 0; i < board.bitboard_names.size(); i++) {
         if (board.bitboards[i] & (1ULL << capture_bit))

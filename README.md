@@ -35,7 +35,7 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - for castling, occupancy call and & all bitboards.
 
-- extract fen token code to functions in fenparser. 
+- extract fen token code to functions in fenparser, pass bitboards vector into the position one.
 
 - add global bitboard viewer to debug, overhaul piece cycle to be more dynamic. Wanna init a window and use it to print debug shit.
 
@@ -43,26 +43,13 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - continue with algebraic move logging.
 
-- perhaps is piece->bit changes we just auto calc the file/rank.
-
 - check bitboards are equal with temp ones we store before undoing move.
 
 - get_piece() probably doesnt have to use a pointer to get the piece on a certain bit we can just loop through the bitboards.
 
 - draw by fifty move rule, draw by threefold repitition.
 
-- may have to extract run logic from board. would make sense.
-
-- shared pointer to vector elements.
-
-- isolate event handling to an instantiated class.
-- then insantiate it perhaps in an app class where we have run()
-
 - continue passing enpassant square in fen string.
-
--have map of square names to bits now so can use that more throughout.
-
-- why are we adding the capture bit to captures not the move that does the capture???
 
 - split up handle_piece_move function, enpassant/normal moves
 

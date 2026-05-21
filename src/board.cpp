@@ -377,14 +377,10 @@ void Board::handle_piece_move(uint8_t clicked_bit) {
     /* Process clicked_bit into a move */
     
     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
+
+    // werre doing this in log move too it would seem
     uint8_t ep_capture_bit = (selected_piece->is_white) ? clicked_bit - 8 : clicked_bit + 8;
     bool is_ep_capture = is_enpassant_capture(clicked_bit);
-
-    // handle_enpassant_move();
-    // handle_move();
-    // split it up.
-
-        // yeah i want this split up .
 
     // perhaps use the move in move_history this way its normalised data not specific.
     
