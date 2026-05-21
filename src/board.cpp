@@ -21,8 +21,8 @@
 
 std::vector<uint64_t> Board::bitboards;
 
-Board::Board(std::string fen) :
-    fen(fen){
+Board::Board(std::string fen) : fen(fen)
+{
 
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
@@ -43,7 +43,7 @@ void Board::init() {
 
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
-   
+    
     // What needs to happen if fen string is invalid.   
     load_position_from_fen(fen);
 }
@@ -60,10 +60,12 @@ void Board::init() {
 void Board::load_position_from_fen(std::string fen) {
 
     /* Parses fen string to appropriately initialise bitboards and create needed pieces. */
+    // Am not expecting malicious fen string input as of right now, will handle it when i can be bothered.
 
     std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
 
     // I want these hardcoded tokens to have seperate functions.
+    // Difficult though, needs bitboards.
     std::string position = fen_tokens[0];
 
     // parse_fen_position();
@@ -109,13 +111,13 @@ void Board::load_position_from_fen(std::string fen) {
 /* BITBOARD METHODS */
 
 uint64_t Board::white_occupancy() {
-    return bitboards[FenParser::Bitboards::W_PAWNS] | bitboards[FenParser::Bitboards::W_KNIGHTS] | bitboards[FenParser::Bitboards::W_BISHOPS] |
-           bitboards[FenParser::Bitboards::W_ROOKS] | bitboards[FenParser::Bitboards::W_QUEEN]   | bitboards[FenParser::Bitboards::W_KING];
+    return bitboards[FenParser::W_PAWNS] | bitboards[FenParser::W_KNIGHTS] | bitboards[FenParser::W_BISHOPS] |
+           bitboards[FenParser::W_ROOKS] | bitboards[FenParser::W_QUEEN]   | bitboards[FenParser::W_KING];
 }
 
 uint64_t Board::black_occupancy() {
-    return bitboards[FenParser::Bitboards::B_PAWNS] | bitboards[FenParser::Bitboards::B_KNIGHTS] | bitboards[FenParser::Bitboards::B_BISHOPS] |
-           bitboards[FenParser::Bitboards::B_ROOKS] | bitboards[FenParser::Bitboards::B_QUEEN]   | bitboards[FenParser::Bitboards::B_KING];
+    return bitboards[FenParser::Bitboards::B_PAWNS] | bitboards[FenParser::B_KNIGHTS] | bitboards[FenParser::B_BISHOPS] |
+           bitboards[FenParser::B_ROOKS] | bitboards[FenParser::B_QUEEN]   | bitboards[FenParser::B_KING];
 }
 
 uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
