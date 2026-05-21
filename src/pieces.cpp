@@ -19,7 +19,6 @@ Piece::Piece(char id, uint8_t b) :
 
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
-
     this->file = BBHelper::get_piece_file(this->bit);
     
     // this->rank = BBHelper::get_piece_rank(this->bit);

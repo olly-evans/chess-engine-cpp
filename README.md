@@ -51,8 +51,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - continue passing enpassant square in fen string.
 
-- split up handle_piece_move function, enpassant/normal moves
-
 - castling, this'll be easy right!!
 
 - dirty_moves bool, can avoid recalculating moves perhaps, perhaps store a white | black uint64_t, if white_occupancy | black_occupancy != to this we can recalculate.
