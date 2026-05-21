@@ -14,6 +14,7 @@ Piece::Piece(char id, uint8_t b) :
     bit(b) {
     
     is_white = (isupper(this->id));
+    file = BBHelper::get_piece_file(this->bit);
 }
 
 void Piece::set_bit(uint8_t bit) {

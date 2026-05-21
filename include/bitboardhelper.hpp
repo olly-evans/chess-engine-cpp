@@ -54,7 +54,7 @@ public:
     static uint64_t clear_bit(uint64_t b, int bit);
     static bool get_bit(uint64_t b, int square);
     static uint8_t get_first_bit(uint64_t b);
-    static uint8_t get_piece_file(uint64_t piece);
+    static uint8_t get_piece_file(uint8_t piece_bit);
 
 
 

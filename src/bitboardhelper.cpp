@@ -86,8 +86,8 @@ uint8_t BBHelper::get_first_bit(uint64_t b) {
     return -1;
 }
 
-uint8_t BBHelper::get_piece_file(uint64_t piece) {
-    return GRID_SZ - ((BBHelper::get_first_bit(piece)) % GRID_SZ) - 1;
+uint8_t BBHelper::get_piece_file(uint8_t piece_bit) {
+    return GRID_SZ - (piece_bit % GRID_SZ) - 1;
 }
 
 uint8_t BBHelper::get_set_bits(uint64_t b) {
