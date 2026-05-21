@@ -351,62 +351,79 @@ void Board::remove_piece(uint8_t piece_to_remove_bit) {
     }
 }
 
-void Board::handle_piece_move(uint8_t clicked_bit) {
+// pass in move.
+// should be able to handle things more objectively, format_move() handles deciding whether theres a capture and where etc..
+// void Board::handle_piece_move(uint8_t clicked_bit) {
 
-    /*
+//     /*
 
-        This function is a bit funny. For it to be called selected_piece
-        must not be null so no check needed.
+//         This function is a bit funny. For it to be called selected_piece
+//         must not be null so no check needed.
 
-        Essentially we find the bitboard of the selected piece type and update
-        it.
+//         Essentially we find the bitboard of the selected piece type and update
+//         it.
 
-        Find the bitboard of the clicked bit if any, clear the bitboard bit and
-        place the selected_piece there by updating its piece->bit.
+//         Find the bitboard of the clicked bit if any, clear the bitboard bit and
+//         place the selected_piece there by updating its piece->bit.
 
-        If a piece is selected we cannot attack/move to a friendly piece, so no
-        need for that logic.
+//         If a piece is selected we cannot attack/move to a friendly piece, so no
+//         need for that logic.
 
-    */
+//     */
 
-    /* Log Move */
-
-    // prob dont need selected bit and that if passing in whole board.
-    MoveLogger::log_move(*this, clicked_bit, selected_piece->bit, selected_piece->id);
-
-    /* Process clicked_bit into a move */
+//     /* Process clicked_bit into a move */
     
-    // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
+//     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
 
-    // werre doing this in log move too it would seem
-    uint8_t ep_capture_bit = (selected_piece->is_white) ? clicked_bit - 8 : clicked_bit + 8;
-    bool is_ep_capture = is_enpassant_capture(clicked_bit);
+//     // werre doing this in log move too it would seem
+//     uint8_t ep_capture_bit = (selected_piece->is_white) ? clicked_bit - 8 : clicked_bit + 8;
+//     bool is_ep_capture = is_enpassant_capture(clicked_bit);
 
-    // perhaps use the move in move_history this way its normalised data not specific.
+//     // perhaps use the move in move_history this way its normalised data not specific.
     
-    for (auto& bitboard: bitboards) {
+//     for (auto& bitboard: bitboards) {
 
-        // goes first because otherwise we move the piece before checking if enpassant.
+//         // goes first because otherwise we move the piece before checking if enpassant.
 
-        if (is_ep_capture && BBHelper::get_bit(bitboard, ep_capture_bit)) {
+//         if (is_ep_capture && BBHelper::get_bit(bitboard, ep_capture_bit)) {
 
-            // Enpassant capture.
-            bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
-            remove_piece(ep_capture_bit);
-        } else if (BBHelper::get_bit(bitboard, selected_piece->bit)){
+//             // Enpassant capture.
+//             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
+//             remove_piece(ep_capture_bit);
+//         } else if (BBHelper::get_bit(bitboard, selected_piece->bit)){
 
-            // No capture, just a move.
-            bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
-            bitboard = BBHelper::set_bit(bitboard, clicked_bit);
-        } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
+//             // No capture, just a move.
+//             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
+//             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
+//         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
 
-            // Normal capture.
-            bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
-            remove_piece(clicked_bit);
-        } 
+//             // Normal capture.
+//             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
+//             remove_piece(clicked_bit);
+//         } 
+//     }
+
+//     selected_piece->set_bit(clicked_bit); 
+// }
+
+
+void Board::make_move(Move move) {
+
+    // do we have capture.
+    // if we do find captured_id bitboard.
+
+    if (move.has_capture) {
+        uint64_t& captured = FenParser::get_fen_char_bitboard(move.captured_id, bitboards);
+        BBHelper::clear_bit_by_ref(captured, move.capture_bit);
+        remove_piece(move.capture_bit);
     }
 
-    selected_piece->set_bit(clicked_bit); 
+    uint64_t& moved = FenParser::get_fen_char_bitboard(move.moved_id, bitboards);
+    BBHelper::clear_bit_by_ref(moved, move.start_bit);
+    BBHelper::set_bit_by_ref(moved, move.end_bit);
+
+
+    selected_piece->set_bit(move.end_bit);
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {

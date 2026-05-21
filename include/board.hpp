@@ -15,15 +15,14 @@
 #include <array>
 
 constexpr uint8_t NUM_PIECE_TYPES = 12; /* White rook, black pawn etc.. */
-
 // constexpr std::string FEN = "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1"; // DISCOVERED EP CHECK.
 // constexpr std::string FEN = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"; // NORMAL.
 // constexpr std::string FEN = "3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"; // IDK
 
+struct Move; // move in make_move
 
 // class AbstractBoard {
-//     virtual void die(std::string) = 0;
-//     virtual void index_to_2d(int i) = 0;
+// 
 //     .
 //     .
 //     .
@@ -124,5 +123,7 @@ public:
     bool bit_has_piece(uint8_t clicked_bit);
 
     void handle_piece_move(uint8_t clicked_bit);
+    void make_move(Move move);
+
     bool is_enpassant_capture(uint8_t clicked_bit);
 };

@@ -11,7 +11,6 @@
 struct Move {
     
     char moved_id;
-
     uint64_t start_bit;
     uint64_t end_bit;
 
