@@ -44,16 +44,19 @@ void MoveLogger::move_to_algebraic_notation(Move move) {
     }
 }
 
-void MoveLogger::log_move(Board& board,
-                          uint8_t clicked_bit, 
-                          uint8_t moved_bit, 
-                          char moved_id
-                          ) {
-    
-    /* Logs move and calculates has_capture, captured_id and capture_bit for Move struct */
-    
+void MoveLogger::log_move(Move move) {    
+    MoveLogger::move_history.push_back(move);
+}
 
-    // need all this formatting before move in leftmousepress.
+// bool MoveLogger::check_draw_by_threefold_repetition() {
+
+// }
+
+Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
+
+    char moved_id = board.selected_piece->id;
+    uint8_t moved_bit = board.selected_piece->bit;
+
     uint8_t capture_bit;
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
@@ -66,11 +69,14 @@ void MoveLogger::log_move(Board& board,
     
     // can i do this without a loop.
     // id -> bitboard_names.
+
+    // dont know the id of the captured piece, cant think of a better way to do this rn.
     uint8_t i;
     for (i = 0; i < board.bitboard_names.size(); i++) {
         if (board.bitboards[i] & (1ULL << capture_bit))
             break;
     }
+
     char captured_id = board.bitboard_names[i];
 
     // Fill out move data.
@@ -80,10 +86,5 @@ void MoveLogger::log_move(Board& board,
                  has_capture, 
                  captured_id,
                  capture_bit};
-
-    MoveLogger::move_history.push_back(move);
+    return move;
 }
-
-// bool MoveLogger::check_draw_by_threefold_repetition() {
-
-// }

@@ -32,9 +32,8 @@ public:
     static void show_algebraic_moves();
     static void move_to_algebraic_notation(Move move);
 
-    static void log_move(Board& board,
-                          uint8_t clicked_bit, 
-                          uint8_t moved_bit, 
-                          char moved_id
-                        );
+    static void log_move(Move move);
+
+    static Move format_move(Board& board, uint8_t clicked_bit);
+
 };  

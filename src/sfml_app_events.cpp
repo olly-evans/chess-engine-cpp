@@ -98,8 +98,8 @@ void SFMLApp::on_left_mouse_press() {
     // Below be executed if we have a selected piece and click on a valid move/capture square.
     uint8_t old_bit = board.selected_piece->bit;
 
-    // Move move = MoveLogger::format_move(this*); // not sure what arguments to take here.
-    // MoveLogger::log_move(move);
+    Move move = MoveLogger::format_move(board, clicked_bit); // not sure what arguments to take here.
+    MoveLogger::log_move(move);
     // board.make_move(move);
 
     // take move.
