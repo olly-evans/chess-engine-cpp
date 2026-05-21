@@ -18,11 +18,12 @@ static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
 
 constexpr auto WINDOW_NAME = "Chess";
 
-const sf::Color WARM_CREAM(240, 217, 181);
-const sf::Color MEDIUM_BROWN(181, 136, 99);
+const sf::Color WARM_CREAM(229, 195, 165);
+const sf::Color MEDIUM_BROWN(201, 126, 66);
 const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
-const sf::Color TURQOISE(50, 200, 150);
+const sf::Color TURQUOISE(50, 200, 150);
+const sf::Color SKY_BLUE(61, 153, 212);
 
 class SFMLApp {
 private:
@@ -33,7 +34,6 @@ private:
     sf::RenderWindow main_window;
     
     Board& board;
-
 
     std::vector<sf::RectangleShape> squares;
 

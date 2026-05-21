@@ -148,7 +148,7 @@ void SFMLApp::render_move_highlights() {
     float radius_percent_of_squares = 0.2; // Use this to change radius, care as its radius not diameter.
     float radius = board_square_size * radius_percent_of_squares;
 
-    sf::Color circle_color = TURQOISE;
+    sf::Color circle_color = SKY_BLUE;
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         
@@ -177,11 +177,11 @@ void SFMLApp::render_move_highlights() {
 void SFMLApp::render_capture_highlights() {
 
     // Selecting a piece means it gets a capture highlight so here we are.
-    squares[board.selected_piece->bit].setFillColor(TURQOISE);
+    squares[board.selected_piece->bit].setFillColor(SKY_BLUE);
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         if (BBHelper::get_bit(board.selected_piece->captures, i)) 
-            squares[i].setFillColor(TURQOISE);
+            squares[i].setFillColor(SKY_BLUE);
     }
 }
 

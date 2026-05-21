@@ -63,4 +63,5 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - okey so in init somehwere we can find the players and see if we need to flip the board graphically. bitboards const. for now i wont flip the board if we have two human players. so for now we'll assume one player is an Engine but as a Human.
 
-- look at texture_cache upon undoing moves.
+- how am i going to give a newly created piece a texture/sprite.
+

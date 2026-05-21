@@ -9,12 +9,15 @@
 #include <cstdint>
 #include <string>
 
-Piece::Piece(char id, uint8_t b) : 
-    id(id), 
-    bit(b) {
+Piece::Piece(char id, uint8_t b) : id(id), bit(b) 
+{
     
     is_white = (isupper(this->id));
     file = BBHelper::get_piece_file(this->bit);
+
+    // need to assign it a texture from the cache.
+    // texture_cache[id] = std::move(texture);
+
 }
 
 void Piece::set_bit(uint8_t bit) {
