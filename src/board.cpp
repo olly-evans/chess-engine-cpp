@@ -35,6 +35,8 @@ Board::Board(std::string fen) : fen(fen)
     };
 };
 
+Board::~Board() {}
+
 /* INIT */
 
 void Board::init() {
@@ -224,6 +226,7 @@ void Board::update_all_piece_attacks() {
 
 void Board::create_piece(const char id, uint8_t bit) {
 
+    // board may need texture_cache
     switch (toupper(id)) {
 
         case 'P':

@@ -87,6 +87,7 @@ public:
 
 public:
     Board(std::string fen);
+    ~Board();
 
     /* INIT */
 
