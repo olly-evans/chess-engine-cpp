@@ -379,7 +379,8 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
-    bool piece_attacked = (pawn->is_white) ? (black_occupancy() & clicked_bit) : (white_occupancy() & clicked_bit);
+    bool piece_attacked = (pawn->is_white) ? (black_occupancy() & clicked_bit) : 
+                                             (white_occupancy() & clicked_bit);
 
     if (piece_attacked)
         return false;
@@ -387,7 +388,7 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     uint8_t color_ep_offset = pawn->is_white ? -8 : 8;
     uint8_t ep_capture_bit = clicked_bit + color_ep_offset;
     bool enemy_on_ep_bit = (pawn->is_white) ? (black_occupancy() & ep_capture_bit) : 
-                            (white_occupancy() & ep_capture_bit);
+                                              (white_occupancy() & ep_capture_bit);
 
     if (!enemy_on_ep_bit)
         return false;
@@ -398,8 +399,8 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
         return false;
 
     // /* 
-    //    Get to here and: we have a pawn selected, there is no piece on clicked_bit, 
-    //    there is a piece on ep_capture_bit and ep_capture_bit is a 
+    //    Get to here and: we have a pawn selected, there is no enemy piece on clicked_bit, 
+    //    there is an enemy piece on ep_capture_bit and ep_capture_bit is a 
     //    valid en passant capture.
     // */
 
