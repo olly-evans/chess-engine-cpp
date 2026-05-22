@@ -359,9 +359,6 @@ void Board::remove_piece(uint8_t piece_to_remove_bit) {
 
 void Board::make_move(Move move) {
 
-    // do we have capture.
-    // if we do find captured_id bitboard.
-
     if (move.has_capture) {
         uint64_t& captured = FenParser::get_fen_char_bitboard(move.captured_id, bitboards);
         BBHelper::clear_bit_by_ref(captured, move.capture_bit);
@@ -372,7 +369,6 @@ void Board::make_move(Move move) {
     BBHelper::clear_bit_by_ref(moved, move.start_bit);
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
-
     selected_piece->set_bit(move.end_bit);
 }
 
@@ -380,17 +376,31 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
 
     std::shared_ptr<Pawn> pawn = std::dynamic_pointer_cast<Pawn>(selected_piece);
     
+    // for now we could literally just check if the clicked_bit == capture bit.
+    // then must be either castle or en passant.
+    // and then we can just check if its a king or pawn instead of this tripe.
+    // not using this right now regardless.
+
     if (!pawn) 
         return false;
 
     // can do this in one loop and pass both bits.
-    if (bit_has_piece(clicked_bit))
+
+    // just get occupancy???
+    // if (bit_has_piece(clicked_bit))
+    //     return false;
+
+    bool piece_attacked = (pawn->is_white) ? (black_occupancy() & clicked_bit) : (white_occupancy() & clicked_bit);
+
+    if (piece_attacked)
         return false;
 
     uint8_t color_ep_offset = pawn->is_white ? -8 : 8;
     uint8_t ep_capture_bit = clicked_bit + color_ep_offset;
+    bool enemy_on_ep_bit = (pawn->is_white) ? (black_occupancy() & ep_capture_bit) : 
+                            (white_occupancy() & ep_capture_bit);
 
-    if (!bit_has_piece(ep_capture_bit))
+    if (!enemy_on_ep_bit)
         return false;
 
     // this is the only place we use en_passant_capture_bit...
@@ -398,11 +408,11 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!(pawn->en_passant_capture_bit & (1ULL << (ep_capture_bit))))
         return false;
 
-    /* 
-       Get to here and: we have a pawn selected, there is no piece on clicked_bit, 
-       there is a piece on ep_capture_bit and ep_capture_bit is a 
-       valid en passant capture.
-    */
+    // /* 
+    //    Get to here and: we have a pawn selected, there is no piece on clicked_bit, 
+    //    there is a piece on ep_capture_bit and ep_capture_bit is a 
+    //    valid en passant capture.
+    // */
 
     return true;  
 }

@@ -48,19 +48,20 @@ void MoveLogger::log_move(Move move) {
     MoveLogger::move_history.push_back(move);
 }
 
-// bool MoveLogger::check_draw_by_threefold_repetition() {
-
-// }
-
 Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
 
     char moved_id = board.selected_piece->id;
     uint8_t moved_bit = board.selected_piece->bit;
 
-    uint8_t capture_bit;
+    uint8_t capture_bit = -1;
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
-    // thisll e interesting when we add castling
+    // thisll be interesting when we add castling
+
+    // can we compare clicked_bit to capture bit for enpassant check.
+    // at this point flow we dont know the capture bit for certain.
+
+    // can we decipher capture bit before this check, becuase then it becomes very simple.
     bool is_ep_capture = board.is_enpassant_capture(clicked_bit);
     bool has_capture   = board.bit_has_piece(clicked_bit) || is_ep_capture;
 
@@ -93,3 +94,7 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
                  capture_bit};
     return move;
 }
+
+// bool MoveLogger::check_draw_by_threefold_repetition() {
+
+// }

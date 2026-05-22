@@ -37,7 +37,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
     /* 
     *
     *  Strips piece members this->moves and this->captures of attacks that would result 
-    *  in a friendly king check by simulating all of the moves. Yes, slow af but works
+    *  in a friendly king check by simulating all of the moves. Yes, slow but works
     *  for now.
     * 
     */
