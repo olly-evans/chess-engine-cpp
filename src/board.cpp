@@ -357,62 +357,6 @@ void Board::remove_piece(uint8_t piece_to_remove_bit) {
     }
 }
 
-// pass in move.
-// should be able to handle things more objectively, format_move() handles deciding whether theres a capture and where etc..
-// void Board::handle_piece_move(uint8_t clicked_bit) {
-
-//     /*
-
-//         This function is a bit funny. For it to be called selected_piece
-//         must not be null so no check needed.
-
-//         Essentially we find the bitboard of the selected piece type and update
-//         it.
-
-//         Find the bitboard of the clicked bit if any, clear the bitboard bit and
-//         place the selected_piece there by updating its piece->bit.
-
-//         If a piece is selected we cannot attack/move to a friendly piece, so no
-//         need for that logic.
-
-//     */
-
-//     /* Process clicked_bit into a move */
-    
-//     // White moving up, black moves down. Capture bit for EP is clicked_bit +-8 bits depending on color.
-
-//     // werre doing this in log move too it would seem
-//     uint8_t ep_capture_bit = (selected_piece->is_white) ? clicked_bit - 8 : clicked_bit + 8;
-//     bool is_ep_capture = is_enpassant_capture(clicked_bit);
-
-//     // perhaps use the move in move_history this way its normalised data not specific.
-    
-//     for (auto& bitboard: bitboards) {
-
-//         // goes first because otherwise we move the piece before checking if enpassant.
-
-//         if (is_ep_capture && BBHelper::get_bit(bitboard, ep_capture_bit)) {
-
-//             // Enpassant capture.
-//             bitboard = BBHelper::clear_bit(bitboard, ep_capture_bit);
-//             remove_piece(ep_capture_bit);
-//         } else if (BBHelper::get_bit(bitboard, selected_piece->bit)){
-
-//             // No capture, just a move.
-//             bitboard = BBHelper::clear_bit(bitboard, selected_piece->bit);
-//             bitboard = BBHelper::set_bit(bitboard, clicked_bit);
-//         } else if (BBHelper::get_bit(bitboard, clicked_bit)) {
-
-//             // Normal capture.
-//             bitboard = BBHelper::clear_bit(bitboard, clicked_bit);
-//             remove_piece(clicked_bit);
-//         } 
-//     }
-
-//     selected_piece->set_bit(clicked_bit); 
-// }
-
-
 void Board::make_move(Move move) {
 
     // do we have capture.
