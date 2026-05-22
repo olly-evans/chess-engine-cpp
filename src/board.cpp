@@ -375,20 +375,9 @@ void Board::make_move(Move move) {
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
 
     std::shared_ptr<Pawn> pawn = std::dynamic_pointer_cast<Pawn>(selected_piece);
-    
-    // for now we could literally just check if the clicked_bit == capture bit.
-    // then must be either castle or en passant.
-    // and then we can just check if its a king or pawn instead of this tripe.
-    // not using this right now regardless.
 
     if (!pawn) 
         return false;
-
-    // can do this in one loop and pass both bits.
-
-    // just get occupancy???
-    // if (bit_has_piece(clicked_bit))
-    //     return false;
 
     bool piece_attacked = (pawn->is_white) ? (black_occupancy() & clicked_bit) : (white_occupancy() & clicked_bit);
 
