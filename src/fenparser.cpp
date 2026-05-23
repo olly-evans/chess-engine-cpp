@@ -87,19 +87,40 @@ void FenParser::parse_fen_position(Board& board, std::string fen_pos_sub_str) {
 
 void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target) {
     
-    /* Take "e4" as a string and highlight it as an enpassant capture for one turn. */
-    
+    /* Take "e4" for example, as a string and highlight it as an enpassant capture for one turn. */
+
     if (ep_target.length() > 2)
         std::cerr << "En Passant target square in fen invalid." << "\n";
 
     if (ep_target == "-")
         return;
     
-    uint8_t bit = BBHelper::square_name_to_bit(ep_target);
-    
-    uint64_t en_passant_bit = 1ULL << bit;
+    uint8_t bit = BBHelper::square_name_to_bit(ep_target);    
 
-    // find a pawn if any that can capture.
+    uint64_t capturing_pawns;
 
-    return;
+    if (board.is_whites_turn) {
+     
+        // +9, +7 for white, ep_target is square behind moved pawn.
+        uint8_t sw_shift = bit - 7;
+        uint8_t se_shift = bit - 9;
+
+        bool south_west = board.bitboards[W_PAWNS] & (1ULL << sw_shift);
+        bool south_east = board.bitboards[W_PAWNS] & (1ULL << se_shift); 
+
+        if (!south_west && !south_east) 
+            return;
+
+        
+        if (south_west) {
+            std::shared_ptr<Pawn> pawn_south_west = std::dynamic_pointer_cast<Pawn>(board.get_piece(sw_shift));
+            BBHelper::set_bit_by_ref(pawn_south_west->captures, sw_shift);
+        } else if (south_east) {
+            std::shared_ptr<Pawn> pawn_south_east = std::dynamic_pointer_cast<Pawn>(board.get_piece(se_shift));
+            BBHelper::set_bit_by_ref(pawn_south_east->captures, se_shift);
+        }
+
+        // this is overwritten by pawn captures = 0ULL at start of moves for pawn. not working anyway though rn.
+    }
+
 }

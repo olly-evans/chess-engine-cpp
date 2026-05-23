@@ -127,6 +127,7 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 
     uint64_t moves = 0ULL;
     this->captures = 0ULL; // Reset so previous highlights not rendered.
+    // need to reset this somewhere else.
 
     uint64_t black_pawn_start_rank = BBHelper::rank_masks[6];
 
@@ -137,7 +138,7 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     if (w_bb & (pawn >> 8) | b_bb & (pawn >> 8)) return moves;
     moves |= (pawn >> 8);
 
-    // Or doesn't seem right but works so eh.
+    // The OR doesn't seem right but works so eh.
     if (!(pawn & (black_pawn_start_rank)) | (w_bb & (pawn >> 16))) return moves;
     moves |= (pawn >> 16);
     
@@ -146,7 +147,6 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 
 uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
-    const uint64_t no_enpassant = 0ULL;
     uint64_t en_passant_moves = 0ULL;
 
     uint64_t pawn = (1ULL << this->bit);
@@ -157,10 +157,10 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     uint64_t east = (pawn >> 1);
 
     if (!(enemy_pawns & west) && !(enemy_pawns & east))
-        return no_enpassant;
+        return 0ULL;
 
     if (MoveLogger::move_history.empty())
-        return no_enpassant;
+        return 0ULL;
 
     Move& last_move = MoveLogger::move_history.back();
 
@@ -174,22 +174,22 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     // this->enpassant_captures, shows the capture square
     // move to clicked bit, remove clicked_bit << 8, clicked_bit >> 8. in board.
 
-    if (enemy_pawns & (west) && west_moved_two && this->is_white) {
+    if (enemy_pawns & west && west_moved_two && this->is_white) {
         en_passant_moves |= (west << 8);
         this->en_passant_capture_bit |= west;
     }
 
-    if (enemy_pawns & (east) && east_moved_two && this->is_white) {
+    if (enemy_pawns & east && east_moved_two && this->is_white) {
         en_passant_moves |= (east << 8);
         this->en_passant_capture_bit |= east;
     }
 
-    if (enemy_pawns & (west) && west_moved_two && !this->is_white) {
+    if (enemy_pawns & west && west_moved_two && !this->is_white) {
         en_passant_moves |= (west >> 8);
         this->en_passant_capture_bit |= west;
     }
 
-    if (enemy_pawns & (east) && east_moved_two && !this->is_white) {
+    if (enemy_pawns & east && east_moved_two && !this->is_white) {
         en_passant_moves |= (east >> 8);
         this->en_passant_capture_bit |= east;
     }
