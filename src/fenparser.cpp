@@ -99,7 +99,7 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
 
     uint64_t capturing_pawns;
 
-    // job for tomorrow is to make this work for both colors.
+    // we can make this shorter lol
     if (board.is_whites_turn) {
      
         // +9, +7 for white, ep_target is square behind moved pawn.
@@ -112,21 +112,41 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
         if (!south_west && !south_east) 
             return;
         
+        uint8_t capture_bit = fen_bit - 8; 
         if (south_west) {
             std::shared_ptr<Pawn> pawn_south_west = std::dynamic_pointer_cast<Pawn>(board.get_piece(sw_shift));
             
-            // Bit from fen is square behind pawn, capture bit thus the appropriate 8 bit shift.
-            uint8_t w_capture_bit = fen_bit - 8; 
-
             BBHelper::set_bit_by_ref(pawn_south_west->captures, fen_bit);
-            BBHelper::set_bit_by_ref(pawn_south_west->en_passant_capture_bit, w_capture_bit);
+            BBHelper::set_bit_by_ref(pawn_south_west->en_passant_capture_bit, capture_bit);
+
         } else if (south_east) {
             std::shared_ptr<Pawn> pawn_south_east = std::dynamic_pointer_cast<Pawn>(board.get_piece(se_shift));
             
-            uint8_t b_capture_bit = fen_bit + 8; 
-
             BBHelper::set_bit_by_ref(pawn_south_east->captures, fen_bit);
-            BBHelper::set_bit_by_ref(pawn_south_east->en_passant_capture_bit, b_capture_bit);
+            BBHelper::set_bit_by_ref(pawn_south_east->en_passant_capture_bit, capture_bit);
+        }
+    } else {
+        uint8_t ne_shift = fen_bit + 7;
+        uint8_t nw_shift = fen_bit + 9;
+
+        bool north_east = board.bitboards[B_PAWNS] & (1ULL << ne_shift);
+        bool north_west = board.bitboards[B_PAWNS] & (1ULL << nw_shift); 
+
+        if (!north_east && !north_west) 
+            return;
+        
+        uint8_t capture_bit = fen_bit + 8; 
+        if (north_east) {
+            std::shared_ptr<Pawn> pawn_north_east = std::dynamic_pointer_cast<Pawn>(board.get_piece(ne_shift));
+            
+            BBHelper::set_bit_by_ref(pawn_north_east->captures, fen_bit);
+            BBHelper::set_bit_by_ref(pawn_north_east->en_passant_capture_bit, capture_bit);
+
+        } else if (north_west) {
+            std::shared_ptr<Pawn> pawn_north_west = std::dynamic_pointer_cast<Pawn>(board.get_piece(nw_shift));
+            
+            BBHelper::set_bit_by_ref(pawn_north_west->captures, fen_bit);
+            BBHelper::set_bit_by_ref(pawn_north_west->en_passant_capture_bit, capture_bit);
         }
     }
 }
