@@ -86,16 +86,13 @@ void Pawn::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
         moves = get_white_pawn_moves(pawn, w_bb, b_bb);
 
         // enpassant
-        uint64_t enpassant_captures = get_enpassant(w_bb, b_bb);
-        this->captures |= enpassant_captures;
+        this->captures |= get_enpassant(w_bb, b_bb);
         
         // promotions.
     } else {
 
         moves = get_black_pawn_moves(pawn , w_bb, b_bb);
-
-        uint64_t enpassant_captures = get_enpassant(w_bb, b_bb);
-        this->captures |= enpassant_captures;
+        this->captures |= get_enpassant(w_bb, b_bb);
     }
 
     moves = BBHelper::remove_friendly_pieces(moves, b_bb);
@@ -117,7 +114,7 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) return moves;
     moves |= (pawn << 8);
 
-    // Or doesn't seem right but works so eh.
+    // Or doesn't seem right
     if (!(pawn & (white_pawn_start_rank)) | (b_bb & (pawn << 16))) return moves;
     moves |= (pawn << 16);
 
@@ -571,4 +568,3 @@ bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 void King::strip_pseudo_legal_special_moves(Board& board) {
     return;
 }
-
