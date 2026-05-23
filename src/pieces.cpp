@@ -250,16 +250,10 @@ void Bishop::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     uint64_t bishop = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 
-    uint64_t north_west_moves = get_north_west_moves(bishop, w_bb, b_bb);
-    uint64_t north_east_moves = get_north_east_moves(bishop, w_bb, b_bb);
-
-    uint64_t south_west_moves = get_south_west_moves(bishop, w_bb, b_bb);
-    uint64_t south_east_moves = get_south_east_moves(bishop, w_bb, b_bb);
-
-    moves |= north_west_moves;
-    moves |= north_east_moves;
-    moves |= south_west_moves;
-    moves |= south_east_moves;
+    moves |= get_north_west_moves(bishop, w_bb, b_bb);
+    moves |= get_north_east_moves(bishop, w_bb, b_bb);
+    moves |= get_south_west_moves(bishop, w_bb, b_bb);
+    moves |= get_south_east_moves(bishop, w_bb, b_bb);
 
     uint64_t enemy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
@@ -373,15 +367,10 @@ void Rook::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
     uint64_t rook = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 
-    uint64_t north_moves = get_north_moves(rook, w_bb, b_bb);
-    uint64_t south_moves = get_south_moves(rook, w_bb, b_bb);
-    uint64_t west_moves = get_west_moves(rook, w_bb, b_bb);
-    uint64_t east_moves = get_east_moves(rook, w_bb, b_bb);
-
-    moves |= north_moves;
-    moves |= south_moves;
-    moves |= west_moves;
-    moves |= east_moves;
+    moves |= get_north_moves(rook, w_bb, b_bb);
+    moves |= get_south_moves(rook, w_bb, b_bb);
+    moves |= get_west_moves(rook, w_bb, b_bb);
+    moves |= get_east_moves(rook, w_bb, b_bb);
 
     uint64_t enemy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy);
