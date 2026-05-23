@@ -1,5 +1,6 @@
 #include "fenparser.hpp"
 
+
 std::vector<std::string> FenParser::split(const std::string& str) {
     std::vector<std::string> tokens;
     std::istringstream iss(str);
@@ -29,7 +30,7 @@ std::vector<std::string> FenParser::split_with_delimiter(std::string s, const st
 }
 
     
-uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitboards) {
+uint64_t& FenParser::get_fen_char_bitboard(char ch, std::array<uint64_t, NUM_PIECE_TYPES>& bitboards) {
 
     static uint64_t dummy = 0ULL;
     int index = -1;
@@ -51,9 +52,32 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::vector<uint64_t>& bitbo
         default: return dummy; 
     }
 
-    if (index < 0 || index >= (int)bitboards.size()) 
+    if (index < 0 || index >= NUM_PIECE_TYPES) 
         return dummy;
 
-    return bitboards[index];
+    return bitboards.at(index);
 }
 
+/* PARSE */
+
+// void FenParser::parse_fen_position() {
+//     uint8_t rank = 7, file = 0;
+//     for (char ch : position) {
+
+//         if (ch == '/') {
+//             rank--;
+//             file = 0;
+//         } else if (isdigit(ch)) {
+//             file += ch - '0';
+//         } else if (isalpha(ch)) {
+//             uint8_t bit = rank * 8 + (7 - file);
+
+//             create_piece(ch, bit);
+//             file++;
+
+//             // Get correct piece type bitboard from ch.
+//             uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
+//             BBHelper::set_bit_by_ref(bitboard, bit);
+//         }
+//     }
+// }

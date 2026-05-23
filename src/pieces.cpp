@@ -522,10 +522,10 @@ bool King::can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb) {
 
     /*
     enum CastlingRights {
-    W_KINGSIDE  = 1 << 0,
-    W_QUEENSIDE = 1 << 1,
-    B_KINGSIDE  = 1 << 2,
-    B_QUEENSIDE = 1 << 3,
+        W_KINGSIDE  = 1 << 0,
+        W_QUEENSIDE = 1 << 1,
+        B_KINGSIDE  = 1 << 2,
+        B_QUEENSIDE = 1 << 3,
     };
 
     uint8_t castling_rights = W_KINGSIDE | W_QUEENSIDE | B_KINGSIDE | B_QUEENSIDE;

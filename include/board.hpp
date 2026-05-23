@@ -12,7 +12,6 @@
 #include <cmath>
 #include <array>
 
-constexpr uint8_t NUM_PIECE_TYPES = 12; /* White rook, black pawn etc.. */
 
 struct Move;
 
@@ -77,7 +76,7 @@ public:
     std::shared_ptr<Piece> selected_piece = nullptr; /* Pointer to user selected piece. */
     std::vector<std::shared_ptr<Piece>> pieces;
 
-    static std::vector<uint64_t> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
+    static std::array<uint64_t, NUM_PIECE_TYPES> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
     std::array<char, NUM_PIECE_TYPES> bitboard_names; /* Maps bitboard to a char r,R,p,P etc.. */
 
 public:

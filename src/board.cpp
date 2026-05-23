@@ -19,7 +19,7 @@
 //     .
 // };
 
-std::vector<uint64_t> Board::bitboards;
+std::array<uint64_t, NUM_PIECE_TYPES> Board::bitboards;
 
 Board::Board(std::string fen) : fen(fen)
 {
@@ -90,6 +90,7 @@ void Board::load_position_from_fen(std::string fen) {
             BBHelper::set_bit_by_ref(bitboard, bit);
         }
     }
+
 
     is_whites_turn = (fen_tokens[1] == "w");
 

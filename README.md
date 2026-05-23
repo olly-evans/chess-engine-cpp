@@ -65,3 +65,4 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - how am i going to give a newly created piece a texture/sprite.
 
+- CHANGE EVERYTHING TO NOT USE VECTORS USE ARRAYS GOOD GOD.
