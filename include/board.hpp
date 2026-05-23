@@ -15,18 +15,13 @@
 
 struct Move;
 
-// class AbstractBoard {
-// 
-//     .
-//     .
-//     .
-// };
-
 class Board {
 
 private:
     
     std::string fen;
+
+    FenParser fen_parser;
 
     /* BITBOARDS */
 

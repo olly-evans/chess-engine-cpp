@@ -12,18 +12,11 @@
 #include <iostream>
 #include <cmath>
 
-// class AbstractBoard {
-//     Board::Board() {}
-//     .
-//     .
-//     .
-// };
 
 std::array<uint64_t, NUM_PIECE_TYPES> Board::bitboards;
 
-Board::Board(std::string fen) : fen(fen)
-{
-
+Board::Board(std::string fen) : fen(fen), fen_parser()
+{    
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
         b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
@@ -40,8 +33,7 @@ Board::~Board() {}
 /* INIT */
 
 void Board::init() {
-
-    pieces.reserve(NUM_PIECE_TYPES*3); /* Means vector should remain in contiguous region and not be completely reallocated. */
+    pieces.reserve(NUM_PIECE_TYPES*3); /* Means vector should remain in contiguous region and not be reallocated. */
 
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
@@ -64,32 +56,14 @@ void Board::load_position_from_fen(std::string fen) {
     /* Parses fen string to appropriately initialise bitboards and create needed pieces. */
     // Am not expecting malicious fen string input as of right now, will handle it when i can be bothered.
 
-    std::vector<std::string> fen_tokens = FenParser::split_with_delimiter(fen, " ");
+    std::vector<std::string> fen_tokens = fen_parser.split_with_delimiter(fen, " ");
 
     // I want these hardcoded tokens to have seperate functions.
     // Difficult though, needs bitboards.
     std::string position = fen_tokens[0];
 
     // parse_fen_position();
-    uint8_t rank = 7, file = 0;
-    for (char ch : position) {
-
-        if (ch == '/') {
-            rank--;
-            file = 0;
-        } else if (isdigit(ch)) {
-            file += ch - '0';
-        } else if (isalpha(ch)) {
-            uint8_t bit = rank * 8 + (7 - file);
-
-            create_piece(ch, bit);
-            file++;
-
-            // Get correct piece type bitboard from ch.
-            uint64_t& bitboard = FenParser::get_fen_char_bitboard(ch, bitboards);
-            BBHelper::set_bit_by_ref(bitboard, bit);
-        }
-    }
+    fen_parser.parse_fen_position(*this, position);
 
 
     is_whites_turn = (fen_tokens[1] == "w");
@@ -114,13 +88,13 @@ void Board::load_position_from_fen(std::string fen) {
 /* BITBOARD METHODS */
 
 uint64_t Board::white_occupancy() {
-    return bitboards[FenParser::W_PAWNS] | bitboards[FenParser::W_KNIGHTS] | bitboards[FenParser::W_BISHOPS] |
-           bitboards[FenParser::W_ROOKS] | bitboards[FenParser::W_QUEEN]   | bitboards[FenParser::W_KING];
+    return bitboards[fen_parser.W_PAWNS] | bitboards[fen_parser.W_KNIGHTS] | bitboards[fen_parser.W_BISHOPS] |
+           bitboards[fen_parser.W_ROOKS] | bitboards[fen_parser.W_QUEEN]   | bitboards[fen_parser.W_KING];
 }
 
 uint64_t Board::black_occupancy() {
-    return bitboards[FenParser::Bitboards::B_PAWNS] | bitboards[FenParser::B_KNIGHTS] | bitboards[FenParser::B_BISHOPS] |
-           bitboards[FenParser::B_ROOKS] | bitboards[FenParser::B_QUEEN]   | bitboards[FenParser::B_KING];
+    return bitboards[fen_parser.Bitboards::B_PAWNS] | bitboards[fen_parser.B_KNIGHTS] | bitboards[fen_parser.B_BISHOPS] |
+           bitboards[fen_parser.B_ROOKS] | bitboards[fen_parser.B_QUEEN]   | bitboards[fen_parser.B_KING];
 }
 
 uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
@@ -197,7 +171,7 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
 
 bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 
-    uint64_t king = bitboards[FenParser::Bitboards::W_KING];
+    uint64_t king = bitboards[fen_parser.Bitboards::W_KING];
     uint64_t enemy_captures = get_black_captures(white, black);
     if (enemy_captures & king)
         return true;
@@ -208,7 +182,7 @@ bool Board::white_king_in_check(uint64_t white, uint64_t black) {
 // also dont use rn, but eh
 bool Board::black_king_in_check(uint64_t white, uint64_t black) {
 
-    uint64_t king = bitboards[FenParser::Bitboards::B_KING];
+    uint64_t king = bitboards[fen_parser.Bitboards::B_KING];
     uint64_t enemy_captures = get_white_captures(white, black);
 
     if (enemy_captures & king)
@@ -248,7 +222,8 @@ void Board::create_piece(const char id, uint8_t bit) {
         case 'K':
             pieces.emplace_back(new King(id, bit));
             break;
-        default: break;
+        default: 
+            break;
     }
 }
 
@@ -276,7 +251,7 @@ void Board::undo_move() {
     // if (selected_piece) 
     //     reset_move_and_capture_highlights(selected_piece->bit);
 
-    uint64_t& moved_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.moved_id, bitboards);
+    uint64_t& moved_piece_bitboard = fen_parser.get_fen_char_bitboard(last_move.moved_id, bitboards);
 
     BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
     BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
@@ -292,7 +267,7 @@ void Board::undo_move() {
 
     // capture_bit changes depending on move type in handle_piece_move.
     create_piece(last_move.captured_id, last_move.capture_bit);
-    uint64_t& captured_piece_bitboard = FenParser::get_fen_char_bitboard(last_move.captured_id, bitboards);
+    uint64_t& captured_piece_bitboard = fen_parser.get_fen_char_bitboard(last_move.captured_id, bitboards);
     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
 
     MoveLogger::move_history.pop_back();
@@ -361,12 +336,12 @@ void Board::remove_piece(uint8_t piece_to_remove_bit) {
 void Board::make_move(Move move) {
 
     if (move.has_capture) {
-        uint64_t& captured = FenParser::get_fen_char_bitboard(move.captured_id, bitboards);
+        uint64_t& captured = fen_parser.get_fen_char_bitboard(move.captured_id, bitboards);
         BBHelper::clear_bit_by_ref(captured, move.capture_bit);
         remove_piece(move.capture_bit);
     }
 
-    uint64_t& moved = FenParser::get_fen_char_bitboard(move.moved_id, bitboards);
+    uint64_t& moved = fen_parser.get_fen_char_bitboard(move.moved_id, bitboards);
     BBHelper::clear_bit_by_ref(moved, move.start_bit);
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
