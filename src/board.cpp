@@ -54,30 +54,23 @@ void Board::init() {
 void Board::load_position_from_fen(std::string fen) {
 
     /* Parses fen string to appropriately initialise bitboards and create needed pieces. */
+
     // Am not expecting malicious fen string input as of right now, will handle it when i can be bothered.
 
     std::vector<std::string> fen_tokens = fen_parser.split_with_delimiter(fen, " ");
 
-    // I want these hardcoded tokens to have seperate functions.
-    // Difficult though, needs bitboards.
     std::string position = fen_tokens[0];
-
-    // parse_fen_position();
     fen_parser.parse_fen_position(*this, position);
 
-
-    is_whites_turn = (fen_tokens[1] == "w");
+    std::string turn = fen_tokens[1];
+    is_whites_turn = (turn == "w");
 
     // parse_fen_enp();
     // need to let the correct pawn know that this is now available.
     std::string en_passant_target = fen_tokens[3];
+    fen_parser.parse_and_set_fen_enpassant(*this, en_passant_target);
 
-    if (en_passant_target == "-") 
-        return;
     
-    uint8_t bit = BBHelper::square_name_to_bit(en_passant_target);
-    
-    uint64_t en_passant_bit = 1ULL << bit;
 
     // get pawn that can capture here.
     // append bit to its en_passant_capture_bit.

@@ -12,9 +12,7 @@
 constexpr uint8_t GRID_SZ = 8;
 constexpr uint8_t GRID_NUM_SQUARES = GRID_SZ * GRID_SZ;
 
-constexpr uint16_t WINDOW_HEIGHT = 1280;
 constexpr uint16_t WINDOW_WIDTH = 1280;
-static_assert(WINDOW_HEIGHT == WINDOW_WIDTH, "Window must be square.");
 
 constexpr auto WINDOW_NAME = "Chess";
 

@@ -84,3 +84,22 @@ void FenParser::parse_fen_position(Board& board, std::string fen_pos_sub_str) {
         }
     }
 }
+
+void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target) {
+    
+    /* Take "e4" as a string and highlight it as an enpassant capture for one turn. */
+    
+    if (ep_target.length() > 2)
+        std::cerr << "En Passant target square in fen invalid." << "\n";
+
+    if (ep_target == "-")
+        return;
+    
+    uint8_t bit = BBHelper::square_name_to_bit(ep_target);
+    
+    uint64_t en_passant_bit = 1ULL << bit;
+
+    // find a pawn if any that can capture.
+
+    return;
+}

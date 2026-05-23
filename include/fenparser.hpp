@@ -26,5 +26,7 @@ public:
     /* PARSING */
 
     void parse_fen_position(Board& board, std::string fen_pos_sub_str);
+    void parse_and_set_fen_enpassant(Board& board, std::string ep_target);
+
 
 };
