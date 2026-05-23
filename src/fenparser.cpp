@@ -89,6 +89,9 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
     
     /* Take "e4" for example, as a string and highlight it as an enpassant capture for one turn. */
 
+    // be careful, was resetting this->captures for the dynamic cast piece. might be worth looking into.
+    // i commented it out and it works still so idk.
+    
     if (ep_target.length() > 2)
         std::cerr << "En Passant target square in fen invalid." << "\n";
 
