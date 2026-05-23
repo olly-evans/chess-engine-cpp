@@ -95,32 +95,38 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
     if (ep_target == "-")
         return;
     
-    uint8_t bit = BBHelper::square_name_to_bit(ep_target);    
+    uint8_t fen_bit = BBHelper::square_name_to_bit(ep_target);    
 
     uint64_t capturing_pawns;
 
+    // job for tomorrow is to make this work for both colors.
     if (board.is_whites_turn) {
      
         // +9, +7 for white, ep_target is square behind moved pawn.
-        uint8_t sw_shift = bit - 7;
-        uint8_t se_shift = bit - 9;
+        uint8_t sw_shift = fen_bit - 7;
+        uint8_t se_shift = fen_bit - 9;
 
         bool south_west = board.bitboards[W_PAWNS] & (1ULL << sw_shift);
         bool south_east = board.bitboards[W_PAWNS] & (1ULL << se_shift); 
 
         if (!south_west && !south_east) 
             return;
-
         
         if (south_west) {
             std::shared_ptr<Pawn> pawn_south_west = std::dynamic_pointer_cast<Pawn>(board.get_piece(sw_shift));
-            BBHelper::set_bit_by_ref(pawn_south_west->captures, sw_shift);
+            
+            // Bit from fen is square behind pawn, capture bit thus the appropriate 8 bit shift.
+            uint8_t w_capture_bit = fen_bit - 8; 
+
+            BBHelper::set_bit_by_ref(pawn_south_west->captures, fen_bit);
+            BBHelper::set_bit_by_ref(pawn_south_west->en_passant_capture_bit, w_capture_bit);
         } else if (south_east) {
             std::shared_ptr<Pawn> pawn_south_east = std::dynamic_pointer_cast<Pawn>(board.get_piece(se_shift));
-            BBHelper::set_bit_by_ref(pawn_south_east->captures, se_shift);
+            
+            uint8_t b_capture_bit = fen_bit + 8; 
+
+            BBHelper::set_bit_by_ref(pawn_south_east->captures, fen_bit);
+            BBHelper::set_bit_by_ref(pawn_south_east->en_passant_capture_bit, b_capture_bit);
         }
-
-        // this is overwritten by pawn captures = 0ULL at start of moves for pawn. not working anyway though rn.
     }
-
 }

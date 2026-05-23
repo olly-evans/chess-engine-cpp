@@ -348,16 +348,16 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     if (!pawn) 
         return false;
 
-    bool piece_attacked = (pawn->is_white) ? (black_occupancy() & clicked_bit) : 
-                                             (white_occupancy() & clicked_bit);
+    bool piece_attacked = (pawn->is_white) ? (black_occupancy() & (1ULL << clicked_bit)) 
+                                           : (white_occupancy() & (1ULL << clicked_bit));
 
     if (piece_attacked)
         return false;
 
     uint8_t color_ep_offset = pawn->is_white ? -8 : 8;
     uint8_t ep_capture_bit = clicked_bit + color_ep_offset;
-    bool enemy_on_ep_bit = (pawn->is_white) ? (black_occupancy() & ep_capture_bit) : 
-                                              (white_occupancy() & ep_capture_bit);
+    bool enemy_on_ep_bit = (pawn->is_white) ? (black_occupancy() & (1ULL << ep_capture_bit)) 
+                                            : (white_occupancy() & (1ULL << ep_capture_bit));
 
     if (!enemy_on_ep_bit)
         return false;

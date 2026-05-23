@@ -104,7 +104,7 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     /* White pawns as of right now will always march in the northern direction. */
 
     uint64_t moves = 0ULL;
-    this->captures = 0ULL;
+    // this->captures = 0ULL;
 
     uint64_t white_pawn_start_rank = BBHelper::rank_masks[1];
 
@@ -126,7 +126,7 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     /* Black pawns as of right now will always march in the southern direction. */
 
     uint64_t moves = 0ULL;
-    this->captures = 0ULL; // Reset so previous highlights not rendered.
+    // this->captures = 0ULL; // Reset so previous highlights not rendered.
     // need to reset this somewhere else.
 
     uint64_t black_pawn_start_rank = BBHelper::rank_masks[6];

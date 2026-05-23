@@ -83,6 +83,8 @@ void SFMLApp::on_left_mouse_press() {
 
     if (!board.selected_piece) {
         board.selected_piece = board.select_piece(clicked_bit);
+        std::cout << board.selected_piece->bit << "\n";
+        std:: cout << board.selected_piece->captures << "\n";
         return;
     }
 
