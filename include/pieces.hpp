@@ -18,7 +18,7 @@ protected:
 
 public:
     bool is_white; /* Color of piece bool assigned in constructor for readability as opposed to isupper(piece->id) etc..*/
-
+    
     sf::Sprite sprite; /* Assigned sprite to draw for this piece from SFMLApp::texture_cache. */
 
     char id; /* Contains piece and its color, r = Black Rook and R = White Rook as in fen notation. */

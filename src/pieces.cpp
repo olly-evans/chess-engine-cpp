@@ -13,6 +13,7 @@ Piece::Piece(char id, uint8_t b) : id(id), bit(b)
 {
     
     is_white = (isupper(this->id));
+
     file = BBHelper::get_piece_file(this->bit);
 
     // need to assign it a texture from the cache.
@@ -23,7 +24,6 @@ Piece::Piece(char id, uint8_t b) : id(id), bit(b)
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
     this->file = BBHelper::get_piece_file(this->bit);
-    
     // this->rank = BBHelper::get_piece_rank(this->bit);
     // this->has_moved = true;
 }
@@ -47,6 +47,7 @@ void Piece::strip_pseudo_legal_attacks(Board& board) {
     // Lets try and do this better.
     std::vector<uint8_t> move_bits = BBHelper::get_bit_vector(attacks);
 
+    // perhaps use move struct. not essential but is semantic
     for (uint8_t move_bit : move_bits) {
 
         uint64_t enemy_captures = board.get_simulated_enemy_captures(this, this->bit, move_bit, move_bit);
@@ -104,14 +105,19 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     /* White pawns as of right now will always march in the northern direction. */
 
     uint64_t moves = 0ULL;
-    // this->captures = 0ULL;
+    uint64_t captures = 0ULL;
 
     uint64_t white_pawn_start_rank = BBHelper::rank_masks[1];
 
-    if (b_bb & (pawn << 9)) this->captures |= ((pawn & ~BBHelper::file_masks[7]) << 9);
-    if (b_bb & (pawn << 7)) this->captures |= ((pawn & ~BBHelper::file_masks[0]) << 7);
+    if (b_bb & (pawn << 9)) 
+        captures |= ((pawn & ~BBHelper::file_masks[7]) << 9);
+    if (b_bb & (pawn << 7)) 
+        captures |= ((pawn & ~BBHelper::file_masks[0]) << 7);
 
-    if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) return moves;
+    this->captures = captures;
+
+    if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) 
+        return moves;
     moves |= (pawn << 8);
 
     // Or doesn't seem right
@@ -126,15 +132,19 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     /* Black pawns as of right now will always march in the southern direction. */
 
     uint64_t moves = 0ULL;
-    // this->captures = 0ULL; // Reset so previous highlights not rendered.
-    // need to reset this somewhere else.
+    uint64_t captures = 0ULL;
 
     uint64_t black_pawn_start_rank = BBHelper::rank_masks[6];
 
     // Find the captures, mask out ones that overlap to next file.
-    if (w_bb & (pawn >> 9)) this->captures |= (pawn & ~BBHelper::file_masks[0]) >> 9;
-    if (w_bb & (pawn >> 7)) this->captures |= (pawn & ~BBHelper::file_masks[7]) >> 7;
+    if (w_bb & (pawn >> 9)) 
+        captures = (pawn & ~BBHelper::file_masks[0]) >> 9;
+    if (w_bb & (pawn >> 7)) 
+        captures = (pawn & ~BBHelper::file_masks[7]) >> 7;
     
+    this->captures ^= captures; // will be a bitwise operation for this i can do.
+    // problem is want to keep this->captures first time round.
+
     if (w_bb & (pawn >> 8) | b_bb & (pawn >> 8)) return moves;
     moves |= (pawn >> 8);
 
@@ -209,6 +219,9 @@ void Pawn::strip_pseudo_legal_special_moves(Board& board) {
     bool in_check = friendly_king & enemy_captures;
 
     // so apparently en_passant_capture_bit isnt the move bit its the capture bit, whos idea was that
+
+    // okay keep it but call it something better i think.
+    
     if (in_check && BBHelper::get_bit(this->en_passant_capture_bit, ep_capture_bit))
         this->captures = BBHelper::clear_bit(this->captures, ep_move_bit);
 }

@@ -49,8 +49,6 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 
 - draw by fifty move rule, draw by threefold repitition.
 
-- continue passing enpassant square in fen string.
-
 - castling, this'll be easy right!!
 
 - dirty_moves bool, can avoid recalculating moves perhaps, perhaps store a white | black uint64_t, if white_occupancy | black_occupancy != to this we can recalculate.
@@ -66,3 +64,10 @@ The full blog is available here: [Blog](https://olly-evans.github.io/chess/)
 - how am i going to give a newly created piece a texture/sprite.
 
 - CHANGE EVERYTHING TO NOT USE VECTORS USE ARRAYS GOOD GOD.
+
+- continue passing enpassant square in fen string, would debug with captures resetting in getting moves function as is now. loord. render it seperately perhaps.
+do we need the enpassant capture bit in is_enpassant_check, can we derive it in there.
+
+this->enpassant. that simple i think, should probably be like this for normal enpassant too as well as from the fen.
+
+- seem enpassant capture with the fen, make a few more moves and we can capture the fen ep square again??? seems to be whats happening.
