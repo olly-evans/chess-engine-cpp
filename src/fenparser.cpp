@@ -126,12 +126,13 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
         // std::cout << "fen, left pawn bit" << pawn_south_west->bit << "\n";
         BBHelper::set_bit_by_ref(pawn_south_west->captures, fen_bit);
         BBHelper::set_bit_by_ref(pawn_south_west->en_passant_capture_bit, capture_bit);
-
+        BBHelper::set_bit_by_ref(pawn_south_west->enpassant_from_fen, fen_bit);
     } else if (capturing_pawn_right) {
         std::shared_ptr<Pawn> pawn_south_east = std::dynamic_pointer_cast<Pawn>(board.get_piece(right));
         // std::cout << "fen, right pawn bit" << pawn_south_east->bit << "\n";
 
         BBHelper::set_bit_by_ref(pawn_south_east->captures, fen_bit);
         BBHelper::set_bit_by_ref(pawn_south_east->en_passant_capture_bit, capture_bit);
+        BBHelper::set_bit_by_ref(pawn_south_east->enpassant_from_fen, fen_bit);
     }
 }

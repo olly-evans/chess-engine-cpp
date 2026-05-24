@@ -107,18 +107,18 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     /* White pawns as of right now will always march in the northern direction. */
 
     uint64_t moves = 0ULL;
-    // this->captures = 0ULL;
+    uint64_t captures = 0ULL;
 
     uint64_t white_pawn_start_rank = BBHelper::rank_masks[1];
 
     if (b_bb & (pawn << 9)) 
-        this->captures |= ((pawn & ~BBHelper::file_masks[7]) << 9);
+        captures |= ((pawn & ~BBHelper::file_masks[7]) << 9);
 
     if (b_bb & (pawn << 7)) 
-        this->captures |= ((pawn & ~BBHelper::file_masks[0]) << 7);
+        captures |= ((pawn & ~BBHelper::file_masks[0]) << 7);
 
     
-    // this->captures = captures; 
+    this->captures = captures | this->enpassant_from_fen; 
 
     if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) 
         return moves;
@@ -136,17 +136,20 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     /* Black pawns as of right now will always march in the southern direction. */
 
     uint64_t moves = 0ULL;
-    // this->captures = 0ULL;
+    uint64_t captures = 0ULL;
 
     uint64_t black_pawn_start_rank = BBHelper::rank_masks[6];
 
     // Find the captures, mask out ones that overlap to next file.
     if (w_bb & (pawn >> 9)) 
-        this->captures = (pawn & ~BBHelper::file_masks[0]) >> 9;
+        captures = (pawn & ~BBHelper::file_masks[0]) >> 9;
+
     if (w_bb & (pawn >> 7)) 
-        this->captures = (pawn & ~BBHelper::file_masks[7]) >> 7;
+        captures = (pawn & ~BBHelper::file_masks[7]) >> 7;
     
-    // this->captures = captures; 
+    // enpassent_from_fen non-zero with a bit set if we have an enpassant square in the fen string.
+    // first turn only of course, doesnt need to be reset i dont think, would be funny if pawn promotes and we cahnge the piece type though.
+    this->captures = captures | this->enpassant_from_fen; 
 
     if (w_bb & (pawn >> 8) | b_bb & (pawn >> 8)) return moves;
     moves |= (pawn >> 8);

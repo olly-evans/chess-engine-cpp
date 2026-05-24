@@ -59,6 +59,7 @@ public:
         Piece(id, bitboard) {}
     
     uint64_t en_passant_capture_bit = 0ULL;
+    uint64_t enpassant_from_fen = 0ULL;
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) override;
 
