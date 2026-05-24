@@ -92,8 +92,12 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
     // be careful, was resetting this->captures for the dynamic cast piece. might be worth looking into.
     // i commented it out and it works still so idk.
 
+
+    // its this, this is setting multiple pawns this->captures
+
+    
     if (ep_target.length() > 2)
-        std::cerr << "En Passant target square in fen invalid." << "\n";
+        std::cerr << "Invalid fen En Passant square" << "\n";
 
     if (ep_target == "-")
         return;
@@ -119,12 +123,14 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
     if (capturing_pawn_left) {
         std::shared_ptr<Pawn> pawn_south_west = std::dynamic_pointer_cast<Pawn>(board.get_piece(left));
         
+        // std::cout << "fen, left pawn bit" << pawn_south_west->bit << "\n";
         BBHelper::set_bit_by_ref(pawn_south_west->captures, fen_bit);
         BBHelper::set_bit_by_ref(pawn_south_west->en_passant_capture_bit, capture_bit);
 
     } else if (capturing_pawn_right) {
         std::shared_ptr<Pawn> pawn_south_east = std::dynamic_pointer_cast<Pawn>(board.get_piece(right));
-        
+        // std::cout << "fen, right pawn bit" << pawn_south_east->bit << "\n";
+
         BBHelper::set_bit_by_ref(pawn_south_east->captures, fen_bit);
         BBHelper::set_bit_by_ref(pawn_south_east->en_passant_capture_bit, capture_bit);
     }

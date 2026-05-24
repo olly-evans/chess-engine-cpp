@@ -290,7 +290,7 @@ std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
     // piece->moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy()); 
     piece->strip_pseudo_legal_attacks(*this); // Essentially adds check checks.
-    
+
     return piece;
 }
 
