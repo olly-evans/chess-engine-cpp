@@ -24,7 +24,8 @@ std::array<uint64_t, NUM_PIECE_TYPES> Board::bitboards;
 
 Board::Board(std::string fen) : fen(fen), fen_parser()
 {    
-    castling_rights = 0x00;
+    selected_piece = nullptr;
+    castling_rights = 0;
 
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
@@ -88,6 +89,11 @@ void Board::load_position_from_fen(std::string fen) {
     // append bit to its en_passant_capture_bit.
 
     // Parse more tokens later if we want to.
+}
+
+
+void Board::set_castling_rights_bit(uint8_t bit) {
+    castling_rights |= (1 << bit);
 }
 
 /* BITBOARD METHODS */

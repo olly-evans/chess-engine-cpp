@@ -66,11 +66,15 @@ private:
 
 public:
 
-    bool is_whites_turn = true; /* Who's turn is it, allows user to select a piece depending. */
+    // Board::flip_turn () {
+        // is_whites_turn = !is_whites_turn;
+    //}
+
+    bool is_whites_turn = true; /* Who's turn is it, default white. Set from fen too though. */
     
     uint8_t castling_rights;
 
-    std::shared_ptr<Piece> selected_piece = nullptr; /* Pointer to user selected piece. */
+    std::shared_ptr<Piece> selected_piece; /* Pointer to user selected piece. */
     std::vector<std::shared_ptr<Piece>> pieces;
 
     static std::array<uint64_t, NUM_PIECE_TYPES> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
@@ -86,6 +90,7 @@ public:
     // void init_players();
 
     void load_position_from_fen(std::string fen);
+    void set_castling_rights_bit(uint8_t bit);
 
     /* BITBOARD METHODS */
 
