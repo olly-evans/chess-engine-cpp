@@ -9,6 +9,8 @@
 #include "movelogger.hpp"
 
 #include "pieces/pawn.hpp"
+#include "pieces/knight.hpp"
+#include "pieces/bishop.hpp"
 
 #include <sstream>
 #include <iostream>
