@@ -65,13 +65,12 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::array<uint64_t, NUM_PIE
 
 /* PARSE */
 
-void FenParser::parse_fen_position(Board& board, std::string fen_pos_sub_str) {
+void FenParser::parse_fen_position(Board& board, std::string piece_placement) {
 
     // Perhaps store in board the rooks and kings for castling.
 
-    
     uint8_t rank = 7, file = 0;
-    for (char ch : fen_pos_sub_str) {
+    for (char ch : piece_placement) {
 
         if (ch == '/') {
             rank--;

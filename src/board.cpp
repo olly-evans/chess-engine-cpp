@@ -149,9 +149,11 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
 
 uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture) {
 
-    /* take in a proposed move, simulate it with temporary bitboards and 
+    /* Take a proposed move, simulate it with temporary bitboards and 
     *  return the enemy colors captures. 
+    *
     *  Note: Even for one move its expensive as must update all color moves/captures.
+    * 
     */
     
     uint64_t white_occ;
@@ -217,19 +219,6 @@ void Board::create_piece(const char id, uint8_t bit) {
             break;
     }
 }
-
-
-
-// void init_board_coords() {
-//     // only need to place numbers vert and letters hor.
-
-//     // if % 8 == 0, then its a number.
-
-//     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
-//         if ()
-//     }
-// }
-
 
 void Board::undo_move() {
 
