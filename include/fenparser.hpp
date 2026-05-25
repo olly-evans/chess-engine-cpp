@@ -20,6 +20,8 @@ public:
     std::vector<std::string> split(const std::string& str);
     std::vector<std::string> split_with_delimiter(std::string s, const std::string& delimiter);
 
+    /* CHARS AND BITBOARDS */
+
     uint64_t& get_fen_char_bitboard(char ch, std::array<uint64_t, NUM_PIECE_TYPES>& bitboards);
     char get_bitboards_fen_char(uint8_t index);
 
@@ -27,4 +29,5 @@ public:
 
     void parse_fen_position(Board& board, std::string fen_pos_sub_str);
     void parse_and_set_fen_enpassant(Board& board, std::string ep_target);
+    void parse_and_set_fen_castling_rights(Board& board, std::string castling_rights);
 };

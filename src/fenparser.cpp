@@ -89,15 +89,12 @@ void FenParser::parse_fen_position(Board& board, std::string fen_pos_sub_str) {
 
 void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target) {
     
-    /* Take "e4" for example, as a string and highlight it as an enpassant capture for one turn. */
+    /* 
+    *  Take "e4" for example, as a string and highlight it as an enpassant capture for one turn
+    *  in enpassant_from_fen pawn uint64_t member.
+    *
+    */
 
-    // be careful, was resetting this->captures for the dynamic cast piece. might be worth looking into.
-    // i commented it out and it works still so idk.
-
-
-    // its this, this is setting multiple pawns this->captures
-
-    
     if (ep_target.length() > 2)
         std::cerr << "Invalid fen En Passant square" << "\n";
 
@@ -136,5 +133,33 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
         BBHelper::set_bit_by_ref(pawn_south_east->captures, fen_bit);
         BBHelper::set_bit_by_ref(pawn_south_east->en_passant_capture_bit, capture_bit);
         BBHelper::set_bit_by_ref(pawn_south_east->enpassant_from_fen, fen_bit);
+    }
+}
+
+void FenParser::parse_and_set_fen_castling_rights(Board& board, std::string castling_rights) {
+
+    // store the bitboard of the loaded pos perhaps.
+    // just in case.
+    if (castling_rights == "-")
+        return; // castling_rights = 0;
+
+    if (castling_rights.length() > 4)
+        std::cerr << "Castling rights in fen must contain 4 characters or less.";
+
+    for (char ch : castling_rights) {
+        switch (ch) {
+            case 'K':
+                board.castling_rights |= 0x8;
+                break;
+            case 'k':
+                board.castling_rights |= 0x4;
+                break;
+            case 'Q':
+                board.castling_rights |= 0x2;
+                break;
+            case 'q':
+                board.castling_rights |= 0x1;
+                break;
+        }
     }
 }

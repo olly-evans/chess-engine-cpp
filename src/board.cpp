@@ -24,6 +24,8 @@ std::array<uint64_t, NUM_PIECE_TYPES> Board::bitboards;
 
 Board::Board(std::string fen) : fen(fen), fen_parser()
 {    
+    castling_rights = 0x00;
+
     bitboards = {
         w_pawns, w_knights, w_bishops, w_rooks, w_queen, w_king,
         b_pawns, b_knights, b_bishops, b_rooks, b_queen, b_king
@@ -47,6 +49,7 @@ void Board::init() {
     
     // What needs to happen if fen string is invalid.   
     load_position_from_fen(fen);
+    std::cout << "castlign_rights: " << +this->castling_rights << "\n";
 }
 
 // void Board::init_players() {
@@ -77,6 +80,8 @@ void Board::load_position_from_fen(std::string fen) {
     std::string en_passant_target = fen_tokens[3];
     fen_parser.parse_and_set_fen_enpassant(*this, en_passant_target);
 
+    std::string castling_rights = fen_tokens[4];
+    fen_parser.parse_and_set_fen_castling_rights(*this, castling_rights);
     
 
     // get pawn that can capture here.
@@ -381,4 +386,40 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     // */
 
     return true;  
+}
+
+// not used yet.
+bool Board::is_queenside_castle(uint8_t clicked_bit) {
+
+    std::shared_ptr<King> king = std::dynamic_pointer_cast<King>(selected_piece);
+    if (!king)
+        return false;
+
+    bool piece_attacked = (king->is_white) ? (black_occupancy() & (1ULL << clicked_bit)) 
+                                           : (white_occupancy() & (1ULL << clicked_bit));
+
+    if (piece_attacked)
+        return false;
+
+
+    if (king->has_moved)
+        return false;
+
+    uint8_t start_bit_for_col = (king->is_white) ? 3 : 59; // Respective king start bits.
+    uint64_t king_bb = (is_whites_turn) ? this->bitboards[FenParser::W_KING] : this->bitboards[FenParser::B_KING];
+    uint64_t king_start_bb_for_col = (1ULL << start_bit_for_col);
+
+    if (!(king_bb & king_start_bb_for_col))
+        return false;
+
+    uint64_t rook_bb;
+
+    // start_bit == rook->bit
+
+    // has color queenside rook moved.
+
+    // are there pieces blocking the two squares.
+    // can hard-code the two squares.
+
+    return true;
 }

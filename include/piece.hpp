@@ -18,6 +18,7 @@ protected:
 
 public:
     bool is_white; /* Color of piece bool assigned in constructor for readability as opposed to isupper(piece->id) etc..*/
+    bool has_moved;
     
     sf::Sprite sprite; /* Assigned sprite to draw for this piece from SFMLApp::texture_cache. */
 

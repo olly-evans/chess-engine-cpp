@@ -16,6 +16,9 @@ void MoveLogger::show_algebraic_move_history() {
 }
 
 void MoveLogger::show_algebraic_moves() {
+
+    /* prints moves to terminal move by move. */
+    
     if (move_history.empty())
         return;
 
@@ -53,7 +56,7 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
     char moved_id = board.selected_piece->id;
     uint8_t moved_bit = board.selected_piece->bit;
 
-    uint8_t capture_bit = -1;
+    uint8_t capture_bit = -1; // Off the board.
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
     // thisll be interesting when we add castling

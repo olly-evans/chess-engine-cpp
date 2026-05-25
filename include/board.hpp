@@ -68,6 +68,8 @@ public:
 
     bool is_whites_turn = true; /* Who's turn is it, allows user to select a piece depending. */
     
+    uint8_t castling_rights;
+
     std::shared_ptr<Piece> selected_piece = nullptr; /* Pointer to user selected piece. */
     std::vector<std::shared_ptr<Piece>> pieces;
 
@@ -116,4 +118,6 @@ public:
     void make_move(Move move);
 
     bool is_enpassant_capture(uint8_t clicked_bit);
+    bool is_queenside_castle(uint8_t clicked_bit);
+
 };
