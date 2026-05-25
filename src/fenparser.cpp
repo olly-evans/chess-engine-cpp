@@ -66,6 +66,10 @@ uint64_t& FenParser::get_fen_char_bitboard(char ch, std::array<uint64_t, NUM_PIE
 /* PARSE */
 
 void FenParser::parse_fen_position(Board& board, std::string fen_pos_sub_str) {
+
+    // Perhaps store in board the rooks and kings for castling.
+
+    
     uint8_t rank = 7, file = 0;
     for (char ch : fen_pos_sub_str) {
 
@@ -138,7 +142,7 @@ void FenParser::parse_and_set_fen_enpassant(Board& board, std::string ep_target)
 
 void FenParser::parse_and_set_fen_castling_rights(Board& board, std::string castling_rights) {
 
-    // store the bitboard of the loaded pos perhaps.
+    // store the bitboard of the loaded pos perhaps in the pos
     // just in case.
     if (castling_rights == "-")
         return; // castling_rights = 0;

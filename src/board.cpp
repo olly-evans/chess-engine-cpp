@@ -47,10 +47,7 @@ void Board::init() {
 
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
-    
-    // What needs to happen if fen string is invalid.   
     load_position_from_fen(fen);
-    std::cout << "castlign_rights: " << +this->castling_rights << "\n";
 }
 
 // void Board::init_players() {
@@ -68,7 +65,6 @@ void Board::load_position_from_fen(std::string fen) {
 
     // Am not expecting malicious fen string input as of right now, will handle it when i can be bothered.
 
-    // Make this an array jesus.
 
     enum FenTokens {
         PIECE_PLACEMENT = 0,
@@ -79,6 +75,7 @@ void Board::load_position_from_fen(std::string fen) {
         FULL_MOVE_NUM
     };
 
+    // Make this an array jesus.
     std::vector<std::string> fen_tokens = fen_parser.split_with_delimiter(fen, " ");
 
     fen_parser.parse_fen_position(*this, fen_tokens[PIECE_PLACEMENT]);
@@ -91,7 +88,7 @@ void Board::load_position_from_fen(std::string fen) {
 
     // Half-move clock.
     // Full-move clock.
-    
+
     // Parse more tokens later if we want to.
 }
 
@@ -162,7 +159,7 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
     uint64_t enemy_captures;
     
     if (piece->is_white) {
-        // Make fake bitboard with proposed move.
+        // Set fake occupancy bitboard with proposed move.
         white_occ = BBHelper::set_bit(white_occupancy(), end);
         white_occ = BBHelper::clear_bit(white_occ, piece->bit);
 
@@ -182,27 +179,6 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
     }  
     
     return enemy_captures;
-}
-
-bool Board::white_king_in_check(uint64_t white, uint64_t black) {
-
-    uint64_t king = bitboards[fen_parser.Bitboards::W_KING];
-    uint64_t enemy_captures = get_black_captures(white, black);
-    if (enemy_captures & king)
-        return true;
-
-    return false;
-}
-
-// also dont use rn, but eh
-bool Board::black_king_in_check(uint64_t white, uint64_t black) {
-
-    uint64_t king = bitboards[fen_parser.Bitboards::B_KING];
-    uint64_t enemy_captures = get_white_captures(white, black);
-
-    if (enemy_captures & king)
-        return true;
-    return false;
 }
 
 // Don't use this right now but could be useful.
