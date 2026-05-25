@@ -11,6 +11,7 @@
 #include "pieces/pawn.hpp"
 #include "pieces/knight.hpp"
 #include "pieces/bishop.hpp"
+#include "pieces/rook.hpp"
 
 #include <sstream>
 #include <iostream>
