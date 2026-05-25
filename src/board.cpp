@@ -68,26 +68,30 @@ void Board::load_position_from_fen(std::string fen) {
 
     // Am not expecting malicious fen string input as of right now, will handle it when i can be bothered.
 
+    // Make this an array jesus.
+
+    enum FenTokens {
+        PIECE_PLACEMENT = 0,
+        TURN,
+        CASTLING,
+        ENPASSANT_SQUARE,
+        HALF_MOVE_CLOCK,
+        FULL_MOVE_NUM
+    };
+
     std::vector<std::string> fen_tokens = fen_parser.split_with_delimiter(fen, " ");
 
-    std::string position = fen_tokens[0];
-    fen_parser.parse_fen_position(*this, position);
+    fen_parser.parse_fen_position(*this, fen_tokens[PIECE_PLACEMENT]);
 
-    std::string turn = fen_tokens[1];
-    is_whites_turn = (turn == "w");
+    is_whites_turn = (fen_tokens[TURN] == "w");
 
-    // parse_fen_enp();
-    // need to let the correct pawn know that this is now available.
-    std::string en_passant_target = fen_tokens[3];
-    fen_parser.parse_and_set_fen_enpassant(*this, en_passant_target);
+    fen_parser.parse_and_set_fen_castling_rights(*this, fen_tokens[CASTLING]);
 
-    std::string castling_rights = fen_tokens[4];
-    fen_parser.parse_and_set_fen_castling_rights(*this, castling_rights);
+    fen_parser.parse_and_set_fen_enpassant(*this, fen_tokens[ENPASSANT_SQUARE]);
+
+    // Half-move clock.
+    // Full-move clock.
     
-
-    // get pawn that can capture here.
-    // append bit to its en_passant_capture_bit.
-
     // Parse more tokens later if we want to.
 }
 
