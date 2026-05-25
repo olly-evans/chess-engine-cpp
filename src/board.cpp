@@ -5,7 +5,6 @@
 #include "bitboardhelper.hpp"
 #include "player.hpp"
 #include "board.hpp"
-#include "gamestate.hpp"
 #include "movelogger.hpp"
 
 #include "pieces/pawn.hpp"

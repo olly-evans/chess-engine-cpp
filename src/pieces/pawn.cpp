@@ -45,7 +45,8 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 
     
     this->captures = captures | this->enpassant_from_fen; 
-    this->enpassant_from_fen = 0ULL;
+    if (this->has_moved)
+        this->enpassant_from_fen = 0ULL;
 
     if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) 
         return moves;
@@ -77,7 +78,9 @@ uint64_t Pawn::get_black_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     // enpassent_from_fen non-zero with a bit set if we have an enpassant square in the fen string.
     // first turn only of course, doesnt need to be reset i dont think, would be funny if pawn promotes and we cahnge the piece type though.
     this->captures = captures | this->enpassant_from_fen; 
-    this->enpassant_from_fen = 0ULL;
+
+    if (this->has_moved)
+        this->enpassant_from_fen = 0ULL;
 
     if (w_bb & (pawn >> 8) | b_bb & (pawn >> 8)) return moves;
     moves |= (pawn >> 8);

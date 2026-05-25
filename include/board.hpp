@@ -101,14 +101,8 @@ public:
     uint64_t get_black_captures(uint64_t white, uint64_t black); 
     uint64_t get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_t end, uint8_t capture);
 
-    /* CHECK */
-
-    bool white_king_in_check(uint64_t white, uint64_t black);
-    bool black_king_in_check(uint64_t white, uint64_t black);
-
     void update_all_piece_attacks();
 
-    void undo_move();
 
     /* PIECE FUNCTIONALITY */
     
@@ -120,7 +114,9 @@ public:
     bool bit_has_piece(uint8_t clicked_bit);
 
     void handle_piece_move(uint8_t clicked_bit);
+    
     void make_move(Move move);
+    void undo_move();
 
     bool is_enpassant_capture(uint8_t clicked_bit);
     bool is_queenside_castle(uint8_t clicked_bit);
