@@ -12,6 +12,7 @@
 #include "pieces/knight.hpp"
 #include "pieces/bishop.hpp"
 #include "pieces/rook.hpp"
+#include "pieces/queen.hpp"
 
 #include <sstream>
 #include <iostream>
