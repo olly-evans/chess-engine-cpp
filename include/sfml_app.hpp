@@ -2,7 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "pieces.hpp"
+#include "piece.hpp"
 #include "board.hpp"
 
 #include <iostream>

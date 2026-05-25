@@ -1,6 +1,6 @@
 
 #include "pieces/king.hpp"
-#include "pieces.hpp"
+#include "piece.hpp"
 #include "bitboardhelper.hpp"
 #include "fenparser.hpp"
 #include "board.hpp"

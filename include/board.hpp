@@ -2,7 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "pieces.hpp"
+#include "piece.hpp"
 #include "debug.hpp"
 #include "player.hpp"
 #include "fenparser.hpp"

@@ -1,4 +1,4 @@
-#include "pieces.hpp"
+#include "piece.hpp"
 #include "board.hpp"
 #include "bitboardhelper.hpp"
 #include "movelogger.hpp"
@@ -168,12 +168,6 @@ uint64_t Piece::get_south_east_moves(uint64_t piece, uint64_t w_bb, uint64_t b_b
     }
     return north_east_moves;
 }
-
-
-
-/* ROOK */
-
-
 
 uint64_t Piece::get_north_moves(uint64_t piece, uint64_t w_bb, uint64_t b_bb) {
 

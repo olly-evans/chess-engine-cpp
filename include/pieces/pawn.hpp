@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "pieces.hpp"
+#include "piece.hpp"
 
 class Pawn : public Piece {
 public:

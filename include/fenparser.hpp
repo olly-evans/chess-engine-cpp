@@ -4,7 +4,7 @@
 #include <iostream>
 #include <array>
 
-#include "pieces.hpp"
+#include "piece.hpp"
 
 constexpr uint8_t NUM_PIECE_TYPES = 12; /* White rook, black pawn etc.. */
 

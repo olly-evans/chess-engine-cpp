@@ -1,6 +1,6 @@
 #include "SFML/Graphics.hpp"
 
-#include "pieces.hpp"
+#include "piece.hpp"
 #include "debug.hpp"
 #include "bitboardhelper.hpp"
 #include "player.hpp"
