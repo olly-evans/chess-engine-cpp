@@ -5,7 +5,7 @@ project(ChessEngineCPP VERSION 0.1.0 LANGUAGES CXX)
 include(CTest)
 enable_testing()
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/pieces/*.cpp")
 add_executable(ChessEngineCPP ${SOURCES})
 
 set_property(TARGET ChessEngineCPP PROPERTY CXX_STANDARD 17)

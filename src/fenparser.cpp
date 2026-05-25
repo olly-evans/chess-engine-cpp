@@ -2,6 +2,8 @@
 #include "board.hpp"
 #include "bitboardhelper.hpp"
 
+#include "pieces/pawn.hpp"
+
 FenParser::FenParser() {}
 
 std::vector<std::string> FenParser::split(const std::string& str) {

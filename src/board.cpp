@@ -8,6 +8,8 @@
 #include "gamestate.hpp"
 #include "movelogger.hpp"
 
+#include "pieces/pawn.hpp"
+
 #include <sstream>
 #include <iostream>
 #include <cmath>
