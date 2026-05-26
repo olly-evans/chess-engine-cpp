@@ -46,8 +46,9 @@ public:
     void init();
     
     void set_board_square_size(uint16_t& sz);
-    void set_main_window_squares();
-    
+    void init_main_window_squares();
+    void reset_main_window_squares();
+
     std::string resolve_texture_path(char id);
     void load_textures();
     void init_piece_texture_cache();
@@ -63,6 +64,8 @@ public:
 
     void render(); 
     void render_main_window();
+    void render_pieces();
+ 
     void render_move_highlights();
     void render_capture_highlights();
 

@@ -42,11 +42,11 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
 
     if (b_bb & (pawn << 7)) 
         captures |= ((pawn & ~BBHelper::file_masks[0]) << 7);
-
     
     this->captures = captures | this->enpassant_from_fen; 
-    if (this->has_moved)
-        this->enpassant_from_fen = 0ULL;
+
+    // doesnt work, which is good because its awful.
+    this->enpassant_from_fen = 0ULL;
 
     if (w_bb & (pawn << 8) | b_bb & (pawn << 8)) 
         return moves;

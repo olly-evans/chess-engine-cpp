@@ -21,7 +21,7 @@ void SFMLApp::init() {
     board.init();
 
     set_board_square_size(board_square_size);
-    set_main_window_squares();
+    init_main_window_squares();
 
     load_textures();
     init_piece_texture_cache(); // tmp, will be dodgy when we remove pieces.
@@ -40,7 +40,7 @@ uint16_t SFMLApp::get_board_square_size() {
     return board_square_size;
 }
 
-void SFMLApp::set_main_window_squares() {
+void SFMLApp::init_main_window_squares() {
 
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         sf::Vector2f normalised_pos(i % GRID_SZ, i / GRID_SZ);
@@ -53,6 +53,13 @@ void SFMLApp::set_main_window_squares() {
         squares.insert(squares.begin(), rec);
     }
 }
+
+void SFMLApp::reset_main_window_squares() {
+    for (int i = 0; i < squares.size(); i++) {
+        squares.at(i).setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
+    }
+}
+
 
 void SFMLApp::load_textures() {
     for (char id : {'r','n','b','q','k','p','R','N','B','Q','K','P'}) {
@@ -126,6 +133,11 @@ void SFMLApp::render_main_window() {
     if (board.selected_piece) render_move_highlights();
 
     // render_board_coords();
+    render_pieces();
+    main_window.display();
+}
+
+void SFMLApp::render_pieces() {
 
     for (auto& piece : board.pieces) {
         // update_piece_pos();
@@ -137,10 +149,7 @@ void SFMLApp::render_main_window() {
         piece->sprite.setPosition(pos.x, pos.y);
         main_window.draw(piece->sprite);
     }
-
-    main_window.display();
 }
-
 void SFMLApp::render_move_highlights() {
 
     /* Renders turqoise circles to the square the selected piece can move. */
