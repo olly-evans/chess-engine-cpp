@@ -126,10 +126,13 @@ void SFMLApp::render_main_window() {
     */
 
     main_window.clear();
-    if (board.selected_piece) render_capture_highlights(); // rendered before squares updates otherwise delay from waitEvent().
+
+    if (board.selected_piece) render_capture_highlights(); 
+
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         main_window.draw(squares[i]);
     }
+
     if (board.selected_piece) render_move_highlights();
 
     // render_board_coords();
@@ -140,8 +143,6 @@ void SFMLApp::render_main_window() {
 void SFMLApp::render_pieces() {
 
     for (auto& piece : board.pieces) {
-        // update_piece_pos();
-        // std::cout << piece->bit << ", " << piece->id << "\n";
         uint8_t square = BBHelper::bit_to_square(piece->bit);
 
         sf::Vector2f normalised_pos(square % GRID_SZ, square / GRID_SZ);
@@ -150,6 +151,7 @@ void SFMLApp::render_pieces() {
         main_window.draw(piece->sprite);
     }
 }
+
 void SFMLApp::render_move_highlights() {
 
     /* Renders turqoise circles to the square the selected piece can move. */
@@ -201,7 +203,7 @@ void SFMLApp::reset_move_and_capture_highlights(uint8_t selected_bit) {
     for (int i = 0; i < GRID_NUM_SQUARES; i++) {
         if (!BBHelper::get_bit(board.selected_piece->captures, i)) 
             continue;
-
+        
         squares[i].setFillColor(is_square_black(i) ? MEDIUM_BROWN : WARM_CREAM);
     }
     board.selected_piece = nullptr;
