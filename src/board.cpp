@@ -111,18 +111,19 @@ uint64_t Board::black_occupancy() {
 uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
 
     uint64_t white_captures = 0ULL;
+
     for (auto& piece : pieces) {
 
-            if (!piece->is_white)
+            if (!piece.is_white)
                 continue;
             
             // This just means if we pass in a pseudo white/black occupancy we can ignore certain captures.
-            if (!(white & (1ULL << piece->bit)))
+            if (!(white & (1ULL << piece.bit)))
                 continue;
 
-            piece->set_pseudo_legal_attacks(white, black);
+            piece.set_pseudo_legal_attacks(white, black);
 
-            white_captures |= piece->captures;
+            white_captures |= piece.captures;
         }
     return white_captures;
 }
@@ -132,16 +133,16 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
     uint64_t black_captures = 0ULL;
     for (auto& piece : pieces) {
 
-            if (piece->is_white)
+            if (piece.is_white)
                 continue;
             
             // This just means if we pass a pseudo white/black occupancy we can ignore certain captures.
-            if (!(black & (1ULL << piece->bit)))
+            if (!(black & (1ULL << piece.bit)))
                 continue;
 
-            piece->set_pseudo_legal_attacks(white, black);
+            piece.set_pseudo_legal_attacks(white, black);
 
-            black_captures |= piece->captures;
+            black_captures |= piece.captures;
         }
     return black_captures;
 }
@@ -186,8 +187,8 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
 // void Board::update_all_piece_attacks() {
 
 //     for (auto& piece : pieces) {
-//         piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
-//         piece->strip_pseudo_legal_attacks(*this);
+//         piece.set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
+//         piece.strip_pseudo_legal_attacks(*this);
 //     }
 // }
 
@@ -219,38 +220,38 @@ void Board::create_piece(const char id, uint8_t bit) {
     }
 }
 
-void Board::undo_move() {
+// void Board::undo_move() {
 
-    if (MoveLogger::move_history.empty()) 
-        return;
+//     if (MoveLogger::move_history.empty()) 
+//         return;
 
-    Move& last_move = MoveLogger::move_history.back();
+//     Move& last_move = MoveLogger::move_history.back();
 
-    // Just so if we undo a move whilst user has piece selected we don't get funny business.
-    // if (selected_piece) 
-    //     reset_move_and_capture_highlights(selected_piece->bit);
+//     // Just so if we undo a move whilst user has piece selected we don't get funny business.
+//     // if (selected_piece) 
+//     //     reset_move_and_capture_highlights(selected_piece.bit);
 
-    uint64_t& moved_piece_bitboard = fen_parser.get_fen_char_bitboard(last_move.moved_id, bitboards);
+//     uint64_t& moved_piece_bitboard = fen_parser.get_fen_char_bitboard(last_move.moved_id, bitboards);
 
-    BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
-    BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
+//     BBHelper::set_bit_by_ref(moved_piece_bitboard, last_move.start_bit);
+//     BBHelper::clear_bit_by_ref(moved_piece_bitboard, last_move.end_bit);
     
-    std::shared_ptr<Piece> moved_piece = get_piece(last_move.end_bit);
-    moved_piece->set_bit(last_move.start_bit);
+//     std::shared_ptr<Piece> moved_piece = get_piece(last_move.end_bit);
+//     moved_piece.set_bit(last_move.start_bit);
     
-    // If the move didn't involve a capture we can clean up and return early.
-    if (!last_move.has_capture) {
-        MoveLogger::move_history.pop_back(); 
-        return;
-    }
+//     // If the move didn't involve a capture we can clean up and return early.
+//     if (!last_move.has_capture) {
+//         MoveLogger::move_history.pop_back(); 
+//         return;
+//     }
 
-    // capture_bit changes depending on move type in handle_piece_move.
-    create_piece(last_move.captured_id, last_move.capture_bit);
-    uint64_t& captured_piece_bitboard = fen_parser.get_fen_char_bitboard(last_move.captured_id, bitboards);
-    BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
+//     // capture_bit changes depending on move type in handle_piece_move.
+//     create_piece(last_move.captured_id, last_move.capture_bit);
+//     uint64_t& captured_piece_bitboard = fen_parser.get_fen_char_bitboard(last_move.captured_id, bitboards);
+//     BBHelper::set_bit_by_ref(captured_piece_bitboard, last_move.capture_bit);
 
-    MoveLogger::move_history.pop_back();
-}
+//     MoveLogger::move_history.pop_back();
+// }
 
 /* PIECE FUNCTIONALITY */
 
@@ -273,7 +274,7 @@ std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
     if (piece->is_white && !is_whites_turn) 
         return nullptr;
 
-    // piece->moves and captures set.
+    // piece.moves and captures set.
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy()); 
     piece->strip_pseudo_legal_attacks(*this); // Essentially adds check checks.
 
@@ -283,10 +284,10 @@ std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
 std::shared_ptr<Piece> Board::get_piece(uint8_t clicked_bit) {
 
     for (auto& piece : pieces) {
-        if (!(clicked_bit == piece->bit))
+        if (!(clicked_bit == piece.bit))
             continue;
 
-        std::shared_ptr<Piece> tmp = piece;
+        std::shared_ptr<Piece> tmp = std::make_shared<Piece>(piece);
         return tmp;
     }
     return nullptr;
@@ -303,8 +304,8 @@ bool Board::bit_has_piece(uint8_t clicked_bit) {
 
 void Board::remove_piece(uint8_t piece_to_remove_bit) {
 
-    auto it = std::find_if(pieces.begin(), pieces.end(), [piece_to_remove_bit](const std::shared_ptr<Piece>& p) {
-        return p->bit == piece_to_remove_bit;
+    auto it = std::find_if(pieces.begin(), pieces.end(), [piece_to_remove_bit](const Piece& p) {
+        return p.bit == piece_to_remove_bit;
     });
 
     if (it != pieces.end()) {
