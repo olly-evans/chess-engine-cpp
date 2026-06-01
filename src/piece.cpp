@@ -22,6 +22,8 @@ Piece::Piece(char id, uint8_t b) : id(id), bit(b)
 
 }
 
+Piece::~Piece() {}
+
 void Piece::set_bit(uint8_t bit) {
     this->bit = bit;
     this->file = BBHelper::get_piece_file(this->bit);

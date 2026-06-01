@@ -18,6 +18,8 @@ std::vector<std::string> FenParser::split(const std::string& str) {
     return tokens;
 }
 
+FenParser::~FenParser() {}
+
 std::vector<std::string> FenParser::split_with_delimiter(std::string s, const std::string& delimiter) {
 
     std::vector<std::string> tokens;

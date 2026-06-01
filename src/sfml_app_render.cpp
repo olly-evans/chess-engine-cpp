@@ -8,6 +8,8 @@ SFMLApp::SFMLApp(Board& board, const uint16_t w_width) :
     main_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_WIDTH), WINDOW_NAME)
     {};
 
+SFMLApp::~SFMLApp() {}
+
 bool SFMLApp::is_square_black(uint8_t i) {
     uint8_t x = i % GRID_SZ;
     uint8_t y = i / GRID_SZ;

@@ -32,7 +32,8 @@ public:
 
 public:
     Piece(char id, uint8_t b);
-
+    ~Piece();
+    
     void set_bit(uint8_t bit);
     uint8_t get_bit();
 

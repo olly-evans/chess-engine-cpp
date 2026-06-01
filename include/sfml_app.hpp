@@ -40,7 +40,8 @@ private:
 public:
 
     SFMLApp(Board& board, const uint16_t w_width);
-
+    ~SFMLApp();
+    
     bool is_square_black(uint8_t bit);
 
     void init();
