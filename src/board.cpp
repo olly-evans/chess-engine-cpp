@@ -182,14 +182,14 @@ uint64_t Board::get_simulated_enemy_captures(Piece* piece, uint8_t start, uint8_
     return enemy_captures;
 }
 
-// Don't use this right now but could be useful.
-void Board::update_all_piece_attacks() {
+// // Don't use this right now but could be useful.
+// void Board::update_all_piece_attacks() {
 
-    for (auto& piece : pieces) {
-        piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
-        piece->strip_pseudo_legal_attacks(*this);
-    }
-}
+//     for (auto& piece : pieces) {
+//         piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy());
+//         piece->strip_pseudo_legal_attacks(*this);
+//     }
+// }
 
 void Board::create_piece(const char id, uint8_t bit) {
 

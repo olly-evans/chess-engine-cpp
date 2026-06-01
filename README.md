@@ -70,9 +70,11 @@ do we need the enpassant capture bit in is_enpassant_check, can we derive it in 
 
 this->enpassant. that simple i think, should probably be like this for normal enpassant too as well as from the fen.
 
-- seem enpassant capture with the fen, make a few more moves and we can capture the fen ep square again??? seems to be whats happening.
+- seem enpassant capture with the fen, make a few more moves and we can capture the fen ep square again??? seems to be whats happening. The approach causes bugs with captures
 
 
 - fix pawn ep capture bug with moving/leftmouse
 
 - store capture bitboards in board when calculated perhaps.
+
+- i think just extracting the capturing logic from the moves logic would be a start. Hard to 
