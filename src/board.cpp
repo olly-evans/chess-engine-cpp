@@ -278,7 +278,10 @@ std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
     if (piece->is_white && !is_whites_turn) 
         return nullptr;
 
-    // piece->moves and captures set.
+    std::shared_ptr<King> king = std::dynamic_pointer_cast<King>(piece);
+    if (king)
+            king->update_castling_rights(*this);
+            
     piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy()); 
     piece->strip_pseudo_legal_attacks(*this); // Essentially adds check checks.
 
@@ -324,8 +327,8 @@ void Board::make_move(Move move) {
         BBHelper::clear_bit_by_ref(captured, move.capture_bit);
         remove_piece(move.capture_bit);
     }
-    // 1111 & 1110, castling_rights & w_kingside_rook moved
-    castling_rights &= c_rights[move.start_bit];
+
+    // 1111 & 1101, castling_rights & w_kingside_rook moved
 
     // can surely do the same with enpassant.
 

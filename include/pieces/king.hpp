@@ -3,6 +3,11 @@
 #include "piece.hpp"
 
 class King : public Piece {
+private:
+
+    bool can_kingside_castle;
+    bool can_queenside_castle;
+
 public:
     King(char id, uint8_t b) : 
         Piece(id, b) {}
@@ -11,5 +16,6 @@ public:
     
     void strip_pseudo_legal_special_moves(Board& board) override;
 
-    bool can_pseudo_legal_queenside_castle(uint64_t w_bb, uint64_t b_bb);
+    void update_castling_rights(Board& board);
+
 };

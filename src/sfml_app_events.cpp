@@ -1,6 +1,7 @@
 #include "bitboardhelper.hpp"
 #include "movelogger.hpp"
 #include "sfml_app.hpp"
+#include "pieces/king.hpp"
 
 #include "SFML/Graphics.hpp"
 
@@ -82,16 +83,19 @@ void SFMLApp::on_left_mouse_press() {
     uint8_t clicked_bit = mouse_win_pos_to_bit();
 
     if (!board.selected_piece) {
+        
         board.selected_piece = board.select_piece(clicked_bit);
         return;
     }
 
-    // If our click is not an move/capture then go again/reset.
+    // If our click is not a move/capture then go again/reset.
     if (!BBHelper::get_bit(board.selected_piece->moves, clicked_bit) && !BBHelper::get_bit(board.selected_piece->captures, clicked_bit)) {
 
         // Let user select a new piece without clicking to reset.
         reset_move_and_capture_highlights(board.selected_piece->bit);
         board.selected_piece = board.select_piece(clicked_bit); // Can be null which is fine ofc.
+
+        
         return;
     }
 
