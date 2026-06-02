@@ -75,7 +75,7 @@ public:
     uint8_t castling_rights;
 
     std::shared_ptr<Piece> selected_piece; /* Pointer to user selected piece. */
-    std::vector<Piece> pieces;
+    std::vector<std::shared_ptr<Piece>> pieces;
 
     static std::array<uint64_t, NUM_PIECE_TYPES> bitboards; /* Mutable bitboards for each piece r,R,p,P etc.. */
     std::array<char, NUM_PIECE_TYPES> bitboard_names; /* Maps bitboard to a char r,R,p,P etc.. */
