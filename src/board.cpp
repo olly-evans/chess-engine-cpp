@@ -324,14 +324,17 @@ void Board::make_move(Move move) {
         BBHelper::clear_bit_by_ref(captured, move.capture_bit);
         remove_piece(move.capture_bit);
     }
-    
+    // 1111 & 1110, castling_rights & w_kingside_rook moved
     castling_rights &= c_rights[move.start_bit];
+
+    // can surely do the same with enpassant.
 
     uint64_t& moved = fen_parser.get_fen_char_bitboard(move.moved_id, bitboards);
     BBHelper::clear_bit_by_ref(moved, move.start_bit);
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
     selected_piece->set_bit(move.end_bit);
+    std::cout << unsigned(castling_rights) << "\n";
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
