@@ -47,6 +47,8 @@ void Board::init() {
     // Init map of square names to bits.
     BBHelper::init_name_to_bit();
     load_position_from_fen(fen);
+
+    std::cout << unsigned(get_castling_rights()) << "\n";
 }
 
 // void Board::init_players() {
@@ -91,7 +93,9 @@ void Board::load_position_from_fen(std::string fen) {
     // Parse more tokens later if we want to.
 }
 
-
+uint8_t Board::get_castling_rights() {
+    return castling_rights;
+}
 void Board::set_castling_rights_bit(uint8_t bit) {
     castling_rights |= (1 << bit);
 }
@@ -104,7 +108,7 @@ uint64_t Board::white_occupancy() {
 }
 
 uint64_t Board::black_occupancy() {
-    return bitboards[fen_parser.Bitboards::B_PAWNS] | bitboards[fen_parser.B_KNIGHTS] | bitboards[fen_parser.B_BISHOPS] |
+    return bitboards[fen_parser.B_PAWNS] | bitboards[fen_parser.B_KNIGHTS] | bitboards[fen_parser.B_BISHOPS] |
            bitboards[fen_parser.B_ROOKS] | bitboards[fen_parser.B_QUEEN]   | bitboards[fen_parser.B_KING];
 }
 

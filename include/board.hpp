@@ -90,6 +90,8 @@ public:
     // void init_players();
 
     void load_position_from_fen(std::string fen);
+
+    uint8_t get_castling_rights();
     void set_castling_rights_bit(uint8_t bit);
 
     /* BITBOARD METHODS */
