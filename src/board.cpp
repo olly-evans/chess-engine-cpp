@@ -324,6 +324,8 @@ void Board::make_move(Move move) {
         BBHelper::clear_bit_by_ref(captured, move.capture_bit);
         remove_piece(move.capture_bit);
     }
+    
+    castling_rights &= c_rights[move.start_bit];
 
     uint64_t& moved = fen_parser.get_fen_char_bitboard(move.moved_id, bitboards);
     BBHelper::clear_bit_by_ref(moved, move.start_bit);
@@ -365,40 +367,4 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     // */
 
     return true;  
-}
-
-// not used yet.
-bool Board::is_queenside_castle(uint8_t clicked_bit) {
-
-    std::shared_ptr<King> king = std::dynamic_pointer_cast<King>(selected_piece);
-    if (!king)
-        return false;
-
-    bool piece_attacked = (king->is_white) ? (black_occupancy() & (1ULL << clicked_bit)) 
-                                           : (white_occupancy() & (1ULL << clicked_bit));
-
-    if (piece_attacked)
-        return false;
-
-
-    if (king->has_moved)
-        return false;
-
-    uint8_t start_bit_for_col = (king->is_white) ? 3 : 59; // Respective king start bits.
-    uint64_t king_bb = (is_whites_turn) ? this->bitboards[FenParser::W_KING] : this->bitboards[FenParser::B_KING];
-    uint64_t king_start_bb_for_col = (1ULL << start_bit_for_col);
-
-    if (!(king_bb & king_start_bb_for_col))
-        return false;
-
-    uint64_t rook_bb;
-
-    // start_bit == rook->bit
-
-    // has color queenside rook moved.
-
-    // are there pieces blocking the two squares.
-    // can hard-code the two squares.
-
-    return true;
 }

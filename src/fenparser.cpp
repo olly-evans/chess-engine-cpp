@@ -156,10 +156,10 @@ void FenParser::parse_and_set_fen_castling_rights(Board& board, std::string cast
             case 'K':
                 board.set_castling_rights_bit(3);
                 break;
-            case 'k':
+            case 'Q':
                 board.set_castling_rights_bit(2);
                 break;
-            case 'Q':
+            case 'k':
                 board.set_castling_rights_bit(1);
                 break;
             case 'q':

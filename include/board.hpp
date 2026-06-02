@@ -64,11 +64,23 @@ private:
 
     */
 
-public:
+    const uint8_t c_rights[64] = {
+        7,  15, 15, 15, 3,  15, 15, 11,
+        15, 15, 15, 15, 15, 15, 15, 15,
+        15, 15, 15, 15, 15, 15, 15, 15,
+        15, 15, 15, 15, 15, 15, 15, 15,
+        15, 15, 15, 15, 15, 15, 15, 15,
+        15, 15, 15, 15, 15, 15, 15, 15,
+        15, 15, 15, 15, 15, 15, 15, 15,
+        13, 15, 15, 15, 12, 15, 15, 14
+    };
 
-    // Board::flip_turn () {
-        // is_whites_turn = !is_whites_turn;
-    //}
+// can_queenside_castle() {
+    // if white return the bit.
+    // if black return the bit.
+//}
+
+public:
 
     bool is_whites_turn = true; /* Who's turn is it, default white. Set from fen too though. */
     
@@ -121,6 +133,5 @@ public:
     void undo_move();
 
     bool is_enpassant_capture(uint8_t clicked_bit);
-    bool is_queenside_castle(uint8_t clicked_bit);
 
 };
