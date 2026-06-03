@@ -11,7 +11,6 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castli
 
     uint64_t king = (1ULL << this->bit);
     uint64_t moves = 0ULL;
-    bool is_white = (isupper(this->id));
 
     update_castling_rights(castling_rights);
 
@@ -28,13 +27,16 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castli
     if (this->file == 7) moves &= ~BBHelper::file_masks[this->file];
     if (this->file == 0) moves &= ~BBHelper::file_masks[this->file];
 
-    uint64_t enemy_occupancy = (is_white) ? b_bb : w_bb; 
+    uint64_t enemy_occupancy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
 
     // uint64_t enemy_captures = (is_white) ? Board::black_captures() : Board::white_captures();
 
     // appropriately append castling move.
     
+    // if we can from bool and spaces clear.
+
+
     if (this->can_queenside_castle) 
         moves |= (king << 2);
     if (this->can_kingside_castle) 
@@ -55,10 +57,13 @@ void King::update_castling_rights(uint8_t castling_rights) {
 
     if (this->is_white) {
 
-        this->can_kingside_castle = (castling_rights & 8) ? true : false;
-        this->can_queenside_castle = (castling_rights & 4) ? true : false;
-    }
+        // CONDITIONS WRONG11!!!
 
-    this->can_kingside_castle = (castling_rights & 2) ? true : false;
-    this->can_queenside_castle = (castling_rights & 1) ? true : false;
+        // 1111 & 1000
+        this->can_kingside_castle = (castling_rights & (1 << 4)) ? true : false;
+        this->can_queenside_castle = (castling_rights & (1 << 3)) ? true : false;
+        return;
+    }
+    this->can_kingside_castle = (castling_rights & (1 << 2)) ? true : false;
+    this->can_queenside_castle = (castling_rights & (1 << 1)) ? true : false;
 }

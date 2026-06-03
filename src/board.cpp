@@ -320,6 +320,41 @@ void Board::make_move(Move move) {
         remove_piece(move.capture_bit);
     }
 
+    if (move.is_castle) {
+        // get the rook we need, move it.
+        // update its bitboards.
+
+        if (isupper(move.moved_id)) {
+            // which rook do we move and to where.
+            
+            uint8_t rook_bit = (abs(move.start_bit - move.end_bit) == 2) ? 0 : 7;
+
+            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('R', bitboards);
+
+            uint8_t rook_move_bit = (c_rights[rook_bit] == 7) ? 2 : 4;
+            
+            std::shared_ptr<Piece> p = get_piece(rook_bit);
+            p->set_bit(rook_move_bit);
+
+            BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
+            BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
+        } else {
+                        
+            uint8_t rook_bit = (abs(move.start_bit - move.end_bit) == 2) ? 63 : 56;
+
+            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
+
+            uint8_t rook_move_bit = (c_rights[rook_bit] == 14) ? 60 : 58;
+            
+            std::shared_ptr<Piece> p = get_piece(rook_bit);
+            p->set_bit(rook_move_bit);
+
+            BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
+            BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
+
+        }
+    }
+
     // 1111 & 1101, castling_rights & w_kingside_rook moved
     castling_rights &= c_rights[move.start_bit];
     // can surely do the same with enpassant.

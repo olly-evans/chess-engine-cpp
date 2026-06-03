@@ -68,7 +68,7 @@ private:
 
     // Array to map a bit to an integer to &= with castling_rights.
     const uint8_t c_rights[64] = {
-        7,  15, 15, 12, 3,  15, 15, 11, // H1-A1
+        7,  15, 15, 12, 15,  15, 15, 11, // H1-A1
         15, 15, 15, 15, 15, 15, 15, 15, 
         15, 15, 15, 15, 15, 15, 15, 15,
         15, 15, 15, 15, 15, 15, 15, 15,
