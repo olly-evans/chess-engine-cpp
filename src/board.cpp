@@ -48,7 +48,6 @@ void Board::init() {
     BBHelper::init_name_to_bit();
     load_position_from_fen(fen);
 
-    std::cout << unsigned(get_castling_rights()) << "\n";
 }
 
 // void Board::init_players() {
@@ -125,7 +124,7 @@ uint64_t Board::get_white_captures(uint64_t white, uint64_t black) {
             if (!(white & (1ULL << piece->bit)))
                 continue;
 
-            piece->set_pseudo_legal_attacks(white, black);
+            piece->set_pseudo_legal_attacks(white, black, castling_rights);
 
             white_captures |= piece->captures;
         }
@@ -144,7 +143,7 @@ uint64_t Board::get_black_captures(uint64_t white, uint64_t black) {
             if (!(black & (1ULL << piece->bit)))
                 continue;
 
-            piece->set_pseudo_legal_attacks(white, black);
+            piece->set_pseudo_legal_attacks(white, black, castling_rights);
 
             black_captures |= piece->captures;
         }
@@ -263,14 +262,11 @@ std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
 
     // perhaps just make a an event_handler function. does make sense.
     // does need squares though
+
+    // eventually don't use a pointer.
     std::shared_ptr<Piece> piece = get_piece(clicked_bit);
     if (!piece) 
         return nullptr;
-
-    // TODO:
-    // Works fine but will eventually be a dependancy nightmare, perhaps move checks to gamestate class.
-    // bool can_white_movcreatee()
-    // bool can_black_move()
     
     if (!piece->is_white && is_whites_turn) 
         return nullptr;
@@ -278,11 +274,7 @@ std::shared_ptr<Piece> Board::select_piece(uint8_t clicked_bit) {
     if (piece->is_white && !is_whites_turn) 
         return nullptr;
 
-    std::shared_ptr<King> king = std::dynamic_pointer_cast<King>(piece);
-    if (king)
-            king->update_castling_rights(*this);
-            
-    piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy()); 
+    piece->set_pseudo_legal_attacks(white_occupancy(), black_occupancy(), castling_rights); 
     piece->strip_pseudo_legal_attacks(*this); // Essentially adds check checks.
 
     return piece;
@@ -329,7 +321,7 @@ void Board::make_move(Move move) {
     }
 
     // 1111 & 1101, castling_rights & w_kingside_rook moved
-
+    castling_rights &= c_rights[move.start_bit];
     // can surely do the same with enpassant.
 
     uint64_t& moved = fen_parser.get_fen_char_bitboard(move.moved_id, bitboards);
@@ -337,7 +329,6 @@ void Board::make_move(Move move) {
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
     selected_piece->set_bit(move.end_bit);
-    std::cout << unsigned(castling_rights) << "\n";
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
@@ -373,4 +364,8 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     // */
 
     return true;  
+}
+
+bool Board::is_castle_move(uint8_t clicked_bit) {
+    
 }

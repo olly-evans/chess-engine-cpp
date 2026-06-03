@@ -94,8 +94,6 @@ void SFMLApp::on_left_mouse_press() {
         // Let user select a new piece without clicking to reset.
         reset_move_and_capture_highlights(board.selected_piece->bit);
         board.selected_piece = board.select_piece(clicked_bit); // Can be null which is fine ofc.
-
-        
         return;
     }
 

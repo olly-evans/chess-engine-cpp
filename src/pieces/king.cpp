@@ -1,15 +1,19 @@
 
 #include "pieces/king.hpp"
 #include "piece.hpp"
+
 #include "bitboardhelper.hpp"
 #include "fenparser.hpp"
 #include "board.hpp"
 
-void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
+
+void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castling_rights) {
 
     uint64_t king = (1ULL << this->bit);
     uint64_t moves = 0ULL;
     bool is_white = (isupper(this->id));
+
+    update_castling_rights(castling_rights);
 
     moves |= (king << 1);
     moves |= (king << 7);
@@ -29,7 +33,8 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
 
     // uint64_t enemy_captures = (is_white) ? Board::black_captures() : Board::white_captures();
 
-    // black.
+    // appropriately append castling move.
+    
     if (this->can_queenside_castle) 
         moves |= (king << 2);
     if (this->can_kingside_castle) 
@@ -43,18 +48,17 @@ void King::strip_pseudo_legal_special_moves(Board& board) {
     return;
 }
 
-void King::update_castling_rights(Board& board) {
+void King::update_castling_rights(uint8_t castling_rights) {
 
-    if (board.castling_rights == 0)
+    if (castling_rights == 0)
         return; 
 
     if (this->is_white) {
 
-        this->can_kingside_castle = (board.castling_rights & 8) ? true : false;
-
-        this->can_queenside_castle = (board.castling_rights & 4) ? true : false;
+        this->can_kingside_castle = (castling_rights & 8) ? true : false;
+        this->can_queenside_castle = (castling_rights & 4) ? true : false;
     }
 
-    this->can_kingside_castle = (board.castling_rights & 2) ? true : false;
-    this->can_queenside_castle = (board.castling_rights & 1) ? true : false;
+    this->can_kingside_castle = (castling_rights & 2) ? true : false;
+    this->can_queenside_castle = (castling_rights & 1) ? true : false;
 }

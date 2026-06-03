@@ -2,7 +2,7 @@
 #include "bitboardhelper.hpp"
 #include "pieces/bishop.hpp"
 
-void Bishop::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
+void Bishop::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castling_rights) {
     uint64_t bishop = (1ULL << this->bit);
     uint64_t moves = 0ULL;
 

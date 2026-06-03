@@ -3,7 +3,7 @@
 
 #include "pieces/knight.hpp"
 
-void Knight::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
+void Knight::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castling_rights) {
     
     uint64_t knight = 1ULL << this->bit;
     uint64_t moves = 0ULL;

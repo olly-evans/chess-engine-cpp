@@ -64,6 +64,9 @@ private:
 
     */
 
+    /* CASTLING */
+
+    // Array to map a bit to an integer to &= with castling_rights.
     const uint8_t c_rights[64] = {
         7,  15, 15, 12, 3,  15, 15, 11, // H1-A1
         15, 15, 15, 15, 15, 15, 15, 15, 
@@ -75,10 +78,12 @@ private:
         13, 15, 15, 3,  15, 15, 15, 14  // H8-A8
     };
 
-// can_queenside_castle() {
-    // if white return the bit.
-    // if black return the bit.
-//}
+    enum class CastlingRight {
+        B_QUEENSIDE,
+        B_KINGSIDE,
+        W_QUEENSIDE,
+        W_KINGSIDE
+    };
 
 public:
 
@@ -133,5 +138,7 @@ public:
     void undo_move();
 
     bool is_enpassant_capture(uint8_t clicked_bit);
+    void update_castling_rights();
+
 
 };

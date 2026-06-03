@@ -70,6 +70,13 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
 
     capture_bit = (!is_ep_capture) ? clicked_bit : ep_capture_bit;
 
+
+    // check for a castle.
+    bool is_castle = board.is_castle_move();
+
+
+
+
     // find the bitboards char to set id of captured piece.
     
     // i want to get the captured_id.

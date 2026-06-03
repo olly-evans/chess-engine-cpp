@@ -38,7 +38,7 @@ public:
     uint8_t get_bit();
 
     // All instances return the moves and assign this->captures.
-    virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) = 0;
+    virtual void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castling_rights) = 0;
 
     void strip_pseudo_legal_attacks(Board& board);
     virtual void strip_pseudo_legal_special_moves(Board& board) = 0;

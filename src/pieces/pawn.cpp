@@ -4,7 +4,7 @@
 #include "board.hpp"
 #include "movelogger.hpp"
 
-void Pawn::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb) {
+void Pawn::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castling_rights) {
 
 
     uint64_t pawn = 1ULL << this->bit;
