@@ -329,6 +329,7 @@ void Board::make_move(Move move) {
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
     selected_piece->set_bit(move.end_bit);
+
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
@@ -364,8 +365,4 @@ bool Board::is_enpassant_capture(uint8_t clicked_bit) {
     // */
 
     return true;  
-}
-
-bool Board::is_castle_move(uint8_t clicked_bit) {
-    
 }

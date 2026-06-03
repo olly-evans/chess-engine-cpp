@@ -59,22 +59,23 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
     uint8_t capture_bit = -1; // Off the board.
     uint8_t ep_capture_bit = (isupper(moved_id)) ? clicked_bit - 8 : clicked_bit + 8;
 
-    // thisll be interesting when we add castling
+    bool has_capture = false;
 
     // can we compare clicked_bit to capture bit for enpassant check.
     // at this point flow we dont know the capture bit for certain.
 
     // can we decipher capture bit before this check, becuase then it becomes very simple.
     bool is_ep_capture = board.is_enpassant_capture(clicked_bit);
-    bool has_capture   = board.bit_has_piece(clicked_bit) || is_ep_capture;
+    has_capture = board.bit_has_piece(clicked_bit) || is_ep_capture;
 
     capture_bit = (!is_ep_capture) ? clicked_bit : ep_capture_bit;
 
-
     // check for a castle.
-    bool is_castle = board.is_castle_move();
+    // has_capture false by default so handled.
+    bool is_castle = (toupper(moved_id) == 'K' && (abs(moved_bit - clicked_bit) > 1)) ? true : false;
 
-
+    
+    std::cout << "is_castle: " << is_castle << "\n";
 
 
     // find the bitboards char to set id of captured piece.
@@ -101,7 +102,9 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
                  clicked_bit,
                  has_capture, 
                  captured_id,
-                 capture_bit};
+                 capture_bit,
+                 is_castle
+                };
     return move;
 }
 

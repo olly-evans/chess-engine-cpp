@@ -18,7 +18,8 @@ struct Move {
     bool has_capture;
     char captured_id;
     uint8_t capture_bit;
-    
+
+    bool is_castle;    
 };
 
 class MoveLogger {
