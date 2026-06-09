@@ -60,10 +60,10 @@ void King::update_castling_rights(uint8_t castling_rights) {
         // CONDITIONS WRONG11!!!
 
         // 1111 & 1000
-        this->can_kingside_castle = (castling_rights & (1 << 4)) ? true : false;
-        this->can_queenside_castle = (castling_rights & (1 << 3)) ? true : false;
+        this->can_kingside_castle = (castling_rights & (1 << 3)) ? true : false;
+        this->can_queenside_castle = (castling_rights & (1 << 2)) ? true : false;
         return;
     }
-    this->can_kingside_castle = (castling_rights & (1 << 2)) ? true : false;
-    this->can_queenside_castle = (castling_rights & (1 << 1)) ? true : false;
+    this->can_kingside_castle = (castling_rights & (1 << 1)) ? true : false;
+    this->can_queenside_castle = (castling_rights & (1 << 0)) ? true : false;
 }

@@ -72,9 +72,11 @@ this->enpassant. that simple i think, should probably be like this for normal en
 
 - seem enpassant capture with the fen, make a few more moves and we can capture the fen ep square again??? seems to be whats happening. The approach causes bugs with captures
 
-
 - fix pawn ep capture bug with moving/leftmouse
 
 - store capture bitboards in board when calculated perhaps.
 
 - i think just extracting the capturing logic from the moves logic would be a start. Hard to 
+
+
+- FINISH CASTLING LOGIC, ITS A MESS THO BUT CLOSE.
