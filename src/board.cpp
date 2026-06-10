@@ -324,15 +324,25 @@ void Board::make_move(Move move) {
         if (isupper(move.moved_id)) {
             // which rook do we move and to where.
             
-            uint8_t rook_bit = (abs(move.start_bit - move.end_bit) == 2) ? 0 : 7;
+            bool queenside = (BBHelper::square_name_to_bit("c1") == move.end_bit);
+            bool kingside = (BBHelper::square_name_to_bit("g1") == move.end_bit);
 
-            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('R', bitboards);
+            uint8_t rook_bit;
+            uint8_t rook_move_bit;
+            if (queenside) {
+                rook_bit = BBHelper::square_name_to_bit("a1");
+                rook_move_bit = BBHelper::square_name_to_bit("d1");
+            }
 
-            uint8_t rook_move_bit = (c_rights[rook_bit] == 7) ? 2 : 4;
-            
+            if (kingside) {
+                rook_bit = BBHelper::square_name_to_bit("h1");
+                rook_move_bit = BBHelper::square_name_to_bit("f1");
+            }          
+              
             std::shared_ptr<Piece> p = get_piece(rook_bit);
             p->set_bit(rook_move_bit);
 
+            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('R', bitboards);
             BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
             BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
         } else {
@@ -355,9 +365,9 @@ void Board::make_move(Move move) {
             std::shared_ptr<Piece> p = get_piece(rook_bit);
             p->set_bit(rook_move_bit);
 
-            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
-            BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
-            BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
+            uint64_t& black_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
+            BBHelper::clear_bit_by_ref(black_rooks, rook_bit);
+            BBHelper::set_bit_by_ref(black_rooks, rook_move_bit);
         }
     }
 
