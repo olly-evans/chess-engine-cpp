@@ -338,7 +338,7 @@ void Board::make_move(Move move) {
                 rook_bit = BBHelper::square_name_to_bit("h1");
                 rook_move_bit = BBHelper::square_name_to_bit("f1");
             }          
-              
+
             std::shared_ptr<Piece> p = get_piece(rook_bit);
             p->set_bit(rook_move_bit);
 
@@ -372,19 +372,14 @@ void Board::make_move(Move move) {
     }
 
     // 1111 & 1101, castling_rights & w_kingside_rook moved
-    std::cout << "before move : " << unsigned(castling_rights) << "\n";
-    std::cout << "move.start_bit: " << unsigned(move.start_bit) << "\n";
-    std::cout << "c_rights[move.start_bit]: " << unsigned(c_rights[move.start_bit]) << "\n";
-    castling_rights &= c_rights[move.start_bit];
-    std::cout << "after move: " << unsigned(castling_rights) << "\n";
-    // can surely do the same with enpassant.
+    castling_rights &= c_rights[move.start_bit]; // can surely do the same with enpassant.
+
 
     uint64_t& moved = fen_parser.get_fen_char_bitboard(move.moved_id, bitboards);
     BBHelper::clear_bit_by_ref(moved, move.start_bit);
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
     selected_piece->set_bit(move.end_bit);
-
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {
