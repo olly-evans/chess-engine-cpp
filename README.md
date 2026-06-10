@@ -80,3 +80,4 @@ this->enpassant. that simple i think, should probably be like this for normal en
 
 
 - when both castle sides available formatting castle move incorrectly.
+- consider adding enum type to move struct to signifiy type. seperate functions for making different moves.
