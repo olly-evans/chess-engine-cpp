@@ -50,15 +50,6 @@ void Board::init() {
 
 }
 
-// void Board::init_players() {
-
-//     bool is_white = true; //temp
-
-//     white_player = new Human(is_white);
-//     black_player = new Engine(!is_white);
-
-// }
-
 void Board::load_position_from_fen(std::string fen) {
 
     /* Parses fen string to appropriately initialise bitboards and create needed pieces. */
@@ -89,7 +80,6 @@ void Board::load_position_from_fen(std::string fen) {
     // Half-move clock.
     // Full-move clock.
 
-    // Parse more tokens later if we want to.
 }
 
 uint8_t Board::get_castling_rights() {
@@ -321,65 +311,73 @@ void Board::make_move(Move move) {
     }
 
     if (move.is_castle) {
-        if (isupper(move.moved_id)) {
-            // which rook do we move and to where.
-            
-            bool queenside = (BBHelper::square_name_to_bit("c1") == move.end_bit);
-            bool kingside = (BBHelper::square_name_to_bit("g1") == move.end_bit);
-
-            uint8_t rook_bit;
-            uint8_t rook_move_bit;
-            if (queenside) {
-                rook_bit = BBHelper::square_name_to_bit("a1");
-                rook_move_bit = BBHelper::square_name_to_bit("d1");
-            }
-
-            if (kingside) {
-                rook_bit = BBHelper::square_name_to_bit("h1");
-                rook_move_bit = BBHelper::square_name_to_bit("f1");
-            }          
-
-            std::shared_ptr<Piece> p = get_piece(rook_bit);
-            p->set_bit(rook_move_bit);
-
-            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('R', bitboards);
-            BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
-            BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
+        if (isupper(move.moved_id)) {            
+            handle_white_castle_move(move.end_bit);
         } else {
-            
-            bool queenside = (BBHelper::square_name_to_bit("c8") == move.end_bit);
-            bool kingside = (BBHelper::square_name_to_bit("g8") == move.end_bit);
-
-            uint8_t rook_bit;
-            uint8_t rook_move_bit;
-            if (queenside) {
-                rook_bit = BBHelper::square_name_to_bit("a8");
-                rook_move_bit = BBHelper::square_name_to_bit("d8");
-            }
-
-            if (kingside) {
-                rook_bit = BBHelper::square_name_to_bit("h8");
-                rook_move_bit = BBHelper::square_name_to_bit("f8");
-            }
-            
-            std::shared_ptr<Piece> p = get_piece(rook_bit);
-            p->set_bit(rook_move_bit);
-
-            uint64_t& black_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
-            BBHelper::clear_bit_by_ref(black_rooks, rook_bit);
-            BBHelper::set_bit_by_ref(black_rooks, rook_move_bit);
+            handle_black_castle_move(move.end_bit);
         }
     }
 
     // 1111 & 1101, castling_rights & w_kingside_rook moved
     castling_rights &= c_rights[move.start_bit]; // can surely do the same with enpassant.
 
-
     uint64_t& moved = fen_parser.get_fen_char_bitboard(move.moved_id, bitboards);
     BBHelper::clear_bit_by_ref(moved, move.start_bit);
     BBHelper::set_bit_by_ref(moved, move.end_bit);
 
     selected_piece->set_bit(move.end_bit);
+}
+
+void Board::handle_white_castle_move(uint64_t end_bit) {
+    
+    bool queenside = (BBHelper::square_name_to_bit("c1") == end_bit);
+    bool kingside = (BBHelper::square_name_to_bit("g1") == end_bit);
+
+    uint8_t rook_bit;
+    uint8_t rook_move_bit;
+    if (queenside) {
+        rook_bit = BBHelper::square_name_to_bit("a1");
+        rook_move_bit = BBHelper::square_name_to_bit("d1");
+    }
+
+    if (kingside) {
+        rook_bit = BBHelper::square_name_to_bit("h1");
+        rook_move_bit = BBHelper::square_name_to_bit("f1");
+    }          
+
+    std::shared_ptr<Piece> p = get_piece(rook_bit);
+    p->set_bit(rook_move_bit);
+
+    uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('R', bitboards);
+    BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
+    BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
+}
+
+void Board::handle_black_castle_move(uint64_t end_bit) {
+
+    bool queenside = (BBHelper::square_name_to_bit("c8") == end_bit);
+    bool kingside = (BBHelper::square_name_to_bit("g8") == end_bit);
+
+    uint8_t rook_bit;
+    uint8_t rook_move_bit;
+
+    if (queenside) {
+        rook_bit = BBHelper::square_name_to_bit("a8");
+        rook_move_bit = BBHelper::square_name_to_bit("d8");
+    }
+
+    if (kingside) {
+        rook_bit = BBHelper::square_name_to_bit("h8");
+        rook_move_bit = BBHelper::square_name_to_bit("f8");
+    }
+    
+    std::shared_ptr<Piece> p = get_piece(rook_bit);
+    p->set_bit(rook_move_bit);
+
+    uint64_t& black_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
+    BBHelper::clear_bit_by_ref(black_rooks, rook_bit);
+    BBHelper::set_bit_by_ref(black_rooks, rook_move_bit);
+
 }
 
 bool Board::is_enpassant_capture(uint8_t clicked_bit) {

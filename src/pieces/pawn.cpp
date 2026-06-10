@@ -104,6 +104,7 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
 
     uint64_t pawn = (1ULL << this->bit);
 
+    // is this the actual state???
     uint64_t enemy_pawns = this->is_white ? Board::bitboards[FenParser::B_PAWNS] : Board::bitboards[FenParser::W_PAWNS];
 
     uint64_t west = (pawn << 1);

@@ -135,6 +135,9 @@ public:
     void handle_piece_move(uint8_t clicked_bit);
     
     void make_move(Move move);
+    void handle_white_castle_move(uint64_t end_bit);
+    void handle_black_castle_move(uint64_t end_bit);
+
     void undo_move();
 
     bool is_enpassant_capture(uint8_t clicked_bit);
