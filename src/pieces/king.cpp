@@ -29,13 +29,6 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castli
 
     uint64_t enemy_occupancy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
-
-    // append the specific squares if so not this bs.
-    // BBHelper::square_name_to_bit()
-    // if (this->can_queenside_castle) 
-    //     moves |= (king << 2);
-    // if (this->can_kingside_castle) 
-    //     moves |= (king >> 2);
     
     if (this->is_white) {
         if (this->can_kingside_castle) moves |= (1ULL << BBHelper::square_name_to_bit("g1"));

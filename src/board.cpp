@@ -321,9 +321,6 @@ void Board::make_move(Move move) {
     }
 
     if (move.is_castle) {
-        // get the rook we need, move it.
-        // update its bitboards.
-
         if (isupper(move.moved_id)) {
             // which rook do we move and to where.
             
@@ -339,19 +336,28 @@ void Board::make_move(Move move) {
             BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
             BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
         } else {
-                        
-            uint8_t rook_bit = (abs(move.start_bit - move.end_bit) == 2) ? 63 : 56;
+            
+            bool queenside = (BBHelper::square_name_to_bit("c8") == move.end_bit);
+            bool kingside = (BBHelper::square_name_to_bit("g8") == move.end_bit);
 
-            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
+            uint8_t rook_bit;
+            uint8_t rook_move_bit;
+            if (queenside) {
+                rook_bit = BBHelper::square_name_to_bit("a8");
+                rook_move_bit = BBHelper::square_name_to_bit("d8");
+            }
 
-            uint8_t rook_move_bit = (c_rights[rook_bit] == 14) ? 60 : 58;
+            if (kingside) {
+                rook_bit = BBHelper::square_name_to_bit("h8");
+                rook_move_bit = BBHelper::square_name_to_bit("f8");
+            }
             
             std::shared_ptr<Piece> p = get_piece(rook_bit);
             p->set_bit(rook_move_bit);
 
+            uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
             BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
             BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
-
         }
     }
 

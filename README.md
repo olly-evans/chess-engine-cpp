@@ -79,4 +79,4 @@ this->enpassant. that simple i think, should probably be like this for normal en
 - i think just extracting the capturing logic from the moves logic would be a start. Hard to 
 
 
-- FINISH CASTLING LOGIC, ITS A MESS THO BUT CLOSE.
+- when both castle sides available formatting castle move incorrectly.
