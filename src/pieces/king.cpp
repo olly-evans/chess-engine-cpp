@@ -52,8 +52,10 @@ void King::strip_pseudo_legal_special_moves(Board& board) {
 
 void King::update_castling_rights(uint8_t castling_rights) {
 
-    if (castling_rights == 0)
-        return; 
+    if (castling_rights == 0) {
+        this->can_kingside_castle = false;
+        this->can_queenside_castle = false;
+    }
 
     if (this->is_white) {
 
