@@ -30,17 +30,20 @@ void King::set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castli
     uint64_t enemy_occupancy = (this->is_white) ? b_bb : w_bb; 
     this->captures = (moves & enemy_occupancy);
 
-    // uint64_t enemy_captures = (is_white) ? Board::black_captures() : Board::white_captures();
-
-    // appropriately append castling move.
+    // append the specific squares if so not this bs.
+    // BBHelper::square_name_to_bit()
+    // if (this->can_queenside_castle) 
+    //     moves |= (king << 2);
+    // if (this->can_kingside_castle) 
+    //     moves |= (king >> 2);
     
-    // if we can from bool and spaces clear.
-
-
-    if (this->can_queenside_castle) 
-        moves |= (king << 2);
-    if (this->can_kingside_castle) 
-        moves |= (king >> 2);
+    if (this->is_white) {
+        if (this->can_kingside_castle) moves |= (1ULL << BBHelper::square_name_to_bit("g1"));
+        if (this->can_queenside_castle) moves |= (1ULL << BBHelper::square_name_to_bit("c1"));
+    } else {
+        if (this->can_kingside_castle) moves |= (1ULL << BBHelper::square_name_to_bit("g8"));
+        if (this->can_queenside_castle) moves |= (1ULL << BBHelper::square_name_to_bit("c8"));
+    }
 
     moves = BBHelper::remove_friendly_pieces(moves, is_white ? w_bb : b_bb);
     this->moves = BBHelper::remove_enemy_pieces(moves, is_white ? b_bb : w_bb);
@@ -55,17 +58,15 @@ void King::update_castling_rights(uint8_t castling_rights) {
     if (castling_rights == 0) {
         this->can_kingside_castle = false;
         this->can_queenside_castle = false;
+        return;
     }
 
     if (this->is_white) {
-
-        // CONDITIONS WRONG11!!!
-
-        // 1111 & 1000
         this->can_kingside_castle = (castling_rights & (1 << 3)) ? true : false;
         this->can_queenside_castle = (castling_rights & (1 << 2)) ? true : false;
         return;
     }
+
     this->can_kingside_castle = (castling_rights & (1 << 1)) ? true : false;
     this->can_queenside_castle = (castling_rights & (1 << 0)) ? true : false;
 }
