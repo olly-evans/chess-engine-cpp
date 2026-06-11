@@ -348,7 +348,7 @@ void Board::handle_white_castle_move(uint64_t end_bit) {
     std::shared_ptr<Piece> p = get_piece(rook_bit);
     p->set_bit(rook_move_bit);
 
-    uint64_t& white_rooks = fen_parser.get_fen_char_bitboard('R', bitboards);
+    uint64_t& white_rooks = bitboards[fen_parser.W_ROOKS];
     BBHelper::clear_bit_by_ref(white_rooks, rook_bit);
     BBHelper::set_bit_by_ref(white_rooks, rook_move_bit);
 }
@@ -374,7 +374,7 @@ void Board::handle_black_castle_move(uint64_t end_bit) {
     std::shared_ptr<Piece> p = get_piece(rook_bit);
     p->set_bit(rook_move_bit);
 
-    uint64_t& black_rooks = fen_parser.get_fen_char_bitboard('r', bitboards);
+    uint64_t& black_rooks = bitboards[fen_parser.B_ROOKS];
     BBHelper::clear_bit_by_ref(black_rooks, rook_bit);
     BBHelper::set_bit_by_ref(black_rooks, rook_move_bit);
 
