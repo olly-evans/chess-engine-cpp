@@ -298,7 +298,7 @@ void Board::remove_piece(uint8_t piece_to_remove_bit) {
     });
 
     if (it != pieces.end()) {
-        pieces.erase(it);  // remove from vector
+        pieces.erase(it);
     }
 }
 
@@ -335,6 +335,7 @@ void Board::handle_white_castle_move(uint64_t end_bit) {
 
     uint8_t rook_bit;
     uint8_t rook_move_bit;
+    
     if (queenside) {
         rook_bit = BBHelper::square_name_to_bit("a1");
         rook_move_bit = BBHelper::square_name_to_bit("d1");

@@ -74,10 +74,6 @@ Move MoveLogger::format_move(Board& board, uint8_t clicked_bit) {
     // has_capture false by default so handled.
     bool is_castle = (toupper(moved_id) == 'K' && (abs(moved_bit - clicked_bit) > 1)) ? true : false;
 
-    
-    std::cout << "is_castle: " << is_castle << "\n";
-
-
     // find the bitboards char to set id of captured piece.
     
     // i want to get the captured_id.

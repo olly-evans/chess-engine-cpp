@@ -76,8 +76,5 @@ this->enpassant. that simple i think, should probably be like this for normal en
 
 - store capture bitboards in board when calculated perhaps.
 
-- i think just extracting the capturing logic from the moves logic would be a start. Hard to 
-
-
 - when both castle sides available formatting castle move incorrectly.
 - consider adding enum type to move struct to signifiy type. seperate functions for making different moves.
