@@ -48,6 +48,8 @@ uint64_t Pawn::get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb)
     return moves;
 }
 
+
+
 uint64_t Pawn::get_white_pawn_captures(uint64_t pawn, uint64_t b_bb) {
 
     uint64_t captures = 0ULL;
@@ -150,6 +152,19 @@ uint64_t Pawn::get_enpassant(uint64_t w_bb, uint64_t b_bb) {
     }
 
     return en_passant_moves;
+}
+
+bool Pawn::is_black_pawn_promoting() {
+
+    if (BBHelper::rank_masks[1] & (1ULL << this->bit))
+        return true;
+    return false;
+}
+
+bool Pawn::is_white_pawn_promoting() {
+    if (BBHelper::rank_masks[7] & (1ULL << this->bit))
+        return true;
+    return false;
 }
 
 void Pawn::strip_pseudo_legal_special_moves(Board& board) {

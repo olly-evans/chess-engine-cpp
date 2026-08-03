@@ -14,7 +14,6 @@ public:
 
     void set_pseudo_legal_attacks(uint64_t w_bb, uint64_t b_bb, uint8_t castling_rights) override;
 
-    void strip_pseudo_legal_special_moves(Board& board) override;
 
     uint64_t get_white_pawn_moves(uint64_t pawn, uint64_t w_bb, uint64_t b_bb);
     uint64_t get_white_pawn_captures(uint64_t pawn, uint64_t b_bb);
@@ -25,4 +24,9 @@ public:
 
 
     uint64_t get_enpassant(uint64_t w_bb, uint64_t b_bb);
+
+    bool is_black_pawn_promoting();
+    bool is_white_pawn_promoting();
+
+    void strip_pseudo_legal_special_moves(Board& board) override;
 };

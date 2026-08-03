@@ -28,7 +28,6 @@ void SFMLApp::handle_events() {
     if (main_window.waitEvent(event)) {
         on_main_window_event(event);
     }
-
 }
 
 void SFMLApp::on_main_window_event(sf::Event &event) {
